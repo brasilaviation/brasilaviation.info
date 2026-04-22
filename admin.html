@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel BrasilAviation</title>
+    <style>
+        body { font-family: sans-serif; background: #2c3e50; padding: 20px; color: white; }
+        .form { background: #eee; color: #333; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; }
+        input, textarea, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+        button { background: #27ae60; color: white; font-weight: bold; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <h2>Nova Matéria ✈️</h2>
+        <input type="text" id="titulo" placeholder="Título">
+        <input type="text" id="autor" placeholder="Nome do Autor">
+        <select id="categoria">
+            <option value="Notícias">Geral</option>
+            <option value="Azul">Azul</option>
+            <option value="GOL">GOL</option>
+            <option value="Cargueira">Cargueira</option>
+            <option value="Spotting">Spotting</option>
+        </select>
+        <input type="text" id="foto" placeholder="Link da Foto">
+        <input type="text" id="legenda" placeholder="Legenda da Foto">
+        <textarea id="texto" placeholder="Texto da notícia" rows="6"></textarea>
+        <button id="btn">PUBLICAR</button>
+        <p id="msg" style="text-align:center;"></p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+            authDomain: "braviation3.firebaseapp.com",
+            projectId: "braviation3",
+            storageBucket: "braviation3.firebasestorage.app",
+            messagingSenderId: "979009087877",
+            appId: "1:979009087877:web:490bdc36da545d56b87cec"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById('btn').onclick = async () => {
+            const titulo = document.getElementById('titulo').value;
+            const autor = document.getElementById('autor').value;
+            const categoria = document.getElementById('categoria').value;
+            const foto = document.getElementById('foto').value;
+            const legenda = document.getElementById('legenda').value;
+            const texto = document.getElementById('texto').value;
+
+            try {
+                await addDoc(collection(db, "noticias"), {
+                    titulo, autor, categoria, foto, legenda, texto,
+                    data: serverTimestamp(), views: 0
+                });
+                document.getElementById('msg').innerText = "✅ Publicado!";
+                setTimeout(() => location.reload(), 2000);
+            } catch (e) { alert("Erro!"); }
+        };
+    </script>
+</body>
+</html>

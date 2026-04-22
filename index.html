@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrasilAviation.info - Notícias de Aviação</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <button class="menu-toggle" id="menu-open"><i class="fas fa-bars"></i></button>
+            <div class="logo-container">
+                <img src="3_20250925_005418_0002.png" alt="Logo BrasilAviation.info" class="site-logo">
+            </div>
+            <button class="search-toggle" id="search-open"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="search-bar" id="search-bar">
+        <input type="search" placeholder="Pesquisar notícias...">
+    </div>
+
+    <main>
+        <section class="carousel-container">
+            <p style="text-align:center; padding: 50px;">Carregando destaques...</p>
+        </section>
+
+        <section class="feed-container">
+            <h2>Últimas Notícias</h2>
+            <div id="news-feed">
+                <p style="text-align:center; padding: 20px;">Sintonizando frequências...</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="side-menu" id="side-menu">
+        <button class="menu-close" id="menu-close">✕</button>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="#cargueira">Aviação Cargueira</a></li>
+            <li><a href="#spotting">Spotting e Registros</a></li>
+            <li><a href="#militar">Militar e Governamental</a></li>
+            <li class="separator"></li>
+            <li><span>Companhias Aéreas</span></li>
+            <li class="cia-azul"><a href="#azul">Azul</a></li>
+            <li class="cia-gol"><a href="#gol">GOL</a></li>
+            <li class="cia-latam"><a href="#latam">LATAM</a></li>
+        </ul>
+    </nav>
+
+    <footer>
+        <p>&copy; 2023 - 2026 BrasilAviation.info</p>
+    </footer>
+
+    <script type="module" src="./script.js"></script>
+</body>
+</html>

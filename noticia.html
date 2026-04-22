@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrasilAviation.info</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .page-content { max-width: 800px; margin: 20px auto; padding: 15px; }
+        .materia-img { width: 100%; border-radius: 8px; }
+        .legenda { font-size: 0.85rem; color: #555; font-style: italic; margin: 8px 0 25px; padding-left: 10px; border-left: 3px solid green; }
+        .corpo-texto { line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
+        .tag-cat { background: green; color: white; padding: 3px 10px; border-radius: 5px; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" style="color:white; text-decoration:none;"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <img src="3_20250925_005418_0002.png" style="height: 40px;">
+            <div></div>
+        </div>
+    </header>
+
+    <main class="page-content" id="render-noticia">
+        <p>Carregando conteúdo...</p>
+    </main>
+
+    <footer style="background:#2c3e50; color:white; text-align:center; padding:20px;">
+        <p>&copy; 2023 - 2026 BrasilAviation.info</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+            authDomain: "braviation3.firebaseapp.com",
+            projectId: "braviation3",
+            storageBucket: "braviation3.firebasestorage.app",
+            messagingSenderId: "979009087877",
+            appId: "1:979009087877:web:490bdc36da545d56b87cec"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const id = new URLSearchParams(window.location.search).get('id');
+
+        async function carregar() {
+            if(!id) return;
+            const snap = await getDoc(doc(db, "noticias", id));
+            if(snap.exists()) {
+                const n = snap.data();
+                const dataLonga = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'}) : "";
+                document.getElementById('render-noticia').innerHTML = `
+                    <span class="tag-cat">${n.categoria || 'Geral'}</span>
+                    <h1>${n.titulo}</h1>
+                    <p>Por <b>${n.autor}</b> | ${dataLonga}</p>
+                    <img src="${n.foto}" class="materia-img">
+                    <p class="legenda">${n.legenda || ''}</p>
+                    <div class="corpo-texto">${n.texto}</div>
+                `;
+                await updateDoc(doc(db, "noticias", id), { views: increment(1) });
+            }
+        }
+        carregar();
+    </script>
+</body>
+</html>

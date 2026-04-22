@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy, where, Timestamp, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -13,63 +13,64 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function carregarConteudo() {
+// Função para carregar o Portal
+async function carregarPortal() {
     const feed = document.getElementById('news-feed');
-    const carouselContainer = document.querySelector('.carousel-container');
+    const carouselArea = document.getElementById('carousel-area');
+    
+    // Margem de tempo para evitar bugs de fuso horário
+    const margem = new Date();
+    margem.setMinutes(margem.getMinutes() + 10);
+    const agora = Timestamp.fromDate(margem);
 
     try {
-        // 1. CARREGAR DESTAQUES (As 3 mais lidas)
-        const qDestaques = query(collection(db, "noticias"), orderBy("views", "desc"), limit(3));
-        const destaquesSnap = await getDocs(qDestaques);
-        let carouselHTML = '<h2>Destaques</h2>';
+        const q = query(collection(db, "noticias"), where("data", "<=", agora), orderBy("data", "desc"));
+        const snap = await getDocs(q);
+        
+        let feedHTML = "";
+        let carouselHTML = "";
         let i = 0;
-        destaquesSnap.forEach(doc => {
-            const n = doc.data();
-            carouselHTML += `
-                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="window.location.href='noticia.html?id=${doc.id}'" style="cursor:pointer">
-                    <img src="${n.foto}">
-                    <div class="carousel-caption"><h3>${n.titulo}</h3></div>
-                </div>`;
-            i++;
-        });
-        carouselHTML += `<div class="carousel-controls"><button class="prev">❮</button><button class="next">❯</button></div>`;
-        if(i > 0) { carouselContainer.innerHTML = carouselHTML; iniciarCarrossel(); }
 
-        // 2. CARREGAR FEED (Mais recentes)
-        const qFeed = query(collection(db, "noticias"), orderBy("data", "desc"));
-        const feedSnap = await getDocs(qFeed);
-        feed.innerHTML = "";
-        feedSnap.forEach(doc => {
-            const n = doc.data();
-            const dataExtenso = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'}) : "Hoje";
-            feed.innerHTML += `
-                <article class="news-item" onclick="window.location.href='noticia.html?id=${doc.id}'" style="cursor:pointer">
+        snap.forEach(res => {
+            const n = res.data();
+            const id = res.id;
+            const dataExt = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {day:'numeric', month:'long'}) : "";
+
+            if(i < 3) {
+                carouselHTML += `
+                    <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="contarViewEIr('${id}')">
+                        <img src="${n.foto}">
+                        <div class="carousel-caption">${n.titulo}</div>
+                    </div>`;
+            }
+
+            feedHTML += `
+                <article class="news-item" onclick="contarViewEIr('${id}')">
                     <div class="news-photo"><img src="${n.foto}"></div>
                     <div class="news-info">
-                        <span style="color:green; font-weight:bold; font-size:0.7rem; text-transform:uppercase;">${n.categoria || 'Geral'}</span>
+                        <span class="tag">${n.categoria || 'NOTÍCIA'}</span>
                         <h3>${n.titulo}</h3>
-                        <p class="meta">Por ${n.autor} | ${dataExtenso}</p>
+                        <p style="font-size:12px; color:#888;">${dataExt}</p>
                     </div>
                 </article>`;
+            i++;
         });
+
+        if(carouselArea) {
+            carouselArea.querySelectorAll('.carousel-slide').forEach(s => s.remove());
+            carouselArea.insertAdjacentHTML('afterbegin', carouselHTML);
+        }
+        if(feed) feed.innerHTML = feedHTML;
     } catch (e) { console.error(e); }
 }
 
-function iniciarCarrossel() {
-    let current = 0;
-    const slides = document.querySelectorAll('.carousel-slide');
-    const mover = (n) => {
-        slides.forEach(s => s.classList.remove('active'));
-        current = (n + slides.length) % slides.length;
-        slides[current].classList.add('active');
-    }
-    document.querySelector('.next')?.addEventListener('click', (e) => { e.stopPropagation(); mover(++current); });
-    document.querySelector('.prev')?.addEventListener('click', (e) => { e.stopPropagation(); mover(--current); });
-}
+// Função para contar visualização antes de abrir a notícia
+window.contarViewEIr = async (id) => {
+    try {
+        const ref = doc(db, "noticias", id);
+        await updateDoc(ref, { views: increment(1) });
+    } catch (e) { console.log("Erro ao contar view"); }
+    window.location.href = `noticia.html?id=${id}`;
+};
 
-// Menu e Busca
-document.getElementById('menu-open')?.addEventListener('click', () => document.getElementById('side-menu').classList.add('active'));
-document.getElementById('menu-close')?.addEventListener('click', () => document.getElementById('side-menu').classList.remove('active'));
-document.getElementById('search-open')?.addEventListener('click', () => document.getElementById('search-bar').classList.toggle('active'));
-
-carregarConteudo();
+carregarPortal();

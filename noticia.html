@@ -3,68 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation.info</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>Notícia | BrasilAviation.info</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .page-content { max-width: 800px; margin: 20px auto; padding: 15px; }
-        .materia-img { width: 100%; border-radius: 8px; }
-        .legenda { font-size: 0.85rem; color: #555; font-style: italic; margin: 8px 0 25px; padding-left: 10px; border-left: 3px solid green; }
-        .corpo-texto { line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap; }
-        .tag-cat { background: green; color: white; padding: 3px 10px; border-radius: 5px; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+        .noticia-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .noticia-capa { width: 100%; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* ESTILO DA LEGENDA ATUALIZADO */
+        .legenda-foto {
+            display: block;
+            border-left: 5px solid #2e7d32; /* Traço verde */
+            border-radius: 4px;            /* Bordas arredondadas no traço */
+            padding: 2px 0 2px 12px;       /* Ajuste para o arredondado aparecer bem */
+            margin-bottom: 25px;
+            font-size: 13px;
+            font-style: italic;            /* AGORA EM ITÁLICO */
+            font-weight: normal;           /* Removido o negrito */
+            color: #666;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .noticia-titulo { font-size: 26px; font-weight: bold; margin: 10px 0 20px; color: #111; line-height: 1.2; }
+        .noticia-corpo { font-size: 18px; line-height: 1.8; color: #333; text-align: justify; }
+        .noticia-corpo br { content: ""; display: block; margin: 15px 0; }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <a href="index.html" style="color:white; text-decoration:none;"><i class="fas fa-arrow-left"></i> Voltar</a>
-            <img src="3_20250925_005418_0002.png" style="height: 40px;">
-            <div></div>
-        </div>
-    </header>
 
-    <main class="page-content" id="render-noticia">
-        <p>Carregando conteúdo...</p>
-    </main>
+<header>
+    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
+    <img src="3_20250925_005418_0002.png" style="height:30px;">
+    <button class="btn-icon"><i class="fas fa-share-alt"></i></button>
+</header>
 
-    <footer style="background:#2c3e50; color:white; text-align:center; padding:20px;">
-        <p>&copy; 2023 - 2026 BrasilAviation.info</p>
-    </footer>
+<main class="noticia-container">
+    <div id="conteudo-noticia">
+        <p style="text-align:center; padding-top:50px; color:#888;">Buscando informações...</p>
+    </div>
+</main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-            authDomain: "braviation3.firebaseapp.com",
-            projectId: "braviation3",
-            storageBucket: "braviation3.firebasestorage.app",
-            messagingSenderId: "979009087877",
-            appId: "1:979009087877:web:490bdc36da545d56b87cec"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const id = new URLSearchParams(window.location.search).get('id');
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
 
-        async function carregar() {
-            if(!id) return;
-            const snap = await getDoc(doc(db, "noticias", id));
-            if(snap.exists()) {
-                const n = snap.data();
-                const dataLonga = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'}) : "";
-                document.getElementById('render-noticia').innerHTML = `
-                    <span class="tag-cat">${n.categoria || 'Geral'}</span>
-                    <h1>${n.titulo}</h1>
-                    <p>Por <b>${n.autor}</b> | ${dataLonga}</p>
-                    <img src="${n.foto}" class="materia-img">
-                    <p class="legenda">${n.legenda || ''}</p>
-                    <div class="corpo-texto">${n.texto}</div>
-                `;
-                await updateDoc(doc(db, "noticias", id), { views: increment(1) });
-            }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function carregarNoticia() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        if(!id) {
+            document.getElementById('conteudo-noticia').innerHTML = "Matéria não encontrada.";
+            return;
         }
-        carregar();
-    </script>
+
+        try {
+            const docRef = doc(db, "noticias", id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const n = docSnap.data();
+                
+                // Formatação da data para exibição
+                const dataFormatada = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                }) : "";
+
+                document.getElementById('conteudo-noticia').innerHTML = `
+                    <h1 class="noticia-titulo">${n.titulo}</h1>
+                    <p style="font-size:13px; color:#888; margin-bottom:15px;">Publicado em ${dataFormatada}</p>
+                    <img src="${n.foto}" class="noticia-capa">
+                    ${n.legenda ? `<span class="legenda-foto">${n.legenda}</span>` : ''}
+                    <div class="noticia-corpo">${n.texto.replace(/\n/g, '<br>')}</div>
+                `;
+                document.title = n.titulo + " | BrasilAviation.info";
+            } else {
+                document.getElementById('conteudo-noticia').innerHTML = "Essa notícia não existe mais.";
+            }
+        } catch (error) {
+            console.error("Erro ao carregar:", error);
+            document.getElementById('conteudo-noticia').innerHTML = "Erro de conexão ao carregar a notícia.";
+        }
+    }
+    carregarNoticia();
+</script>
 </body>
 </html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institucional - BrasilAviation.info</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .inst-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; color: #333; }
+        .inst-container h1 { color: #2e7d32; font-size: 32px; margin-bottom: 15px; border-left: 6px solid #2e7d32; padding-left: 15px; }
+        .inst-container h2 { font-size: 22px; color: #111; margin: 30px 0 15px; }
+        .inst-container p { line-height: 1.8; margin-bottom: 20px; font-size: 16px; text-align: justify; }
+        .inst-container ul { margin-bottom: 20px; padding-left: 25px; }
+        .inst-container li { margin-bottom: 10px; line-height: 1.6; }
+        
+        /* Equipe Estilizada */
+        .equipe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        @media (max-width: 600px) { .equipe-grid { grid-template-columns: 1fr; } }
+        .card-equipe { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-equipe img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #2e7d32; margin-bottom: 15px; }
+        .card-equipe h3 { font-size: 18px; margin-bottom: 5px; }
+        .card-equipe span { color: #2e7d32; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+
+        /* Formulário de Contato */
+        .contato-form { background: #f4f4f4; padding: 25px; border-radius: 15px; margin-top: 20px; }
+        .contato-form input, .contato-form textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .btn-enviar { background: #2e7d32; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-enviar:hover { background: #1b5e20; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header style="display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 1000;">
+    <button onclick="location.href='index.html'" style="background:none; border:none; font-size: 22px; color: #2e7d32; cursor: pointer;"><i class="fas fa-arrow-left"></i></button>
+    <img src="3_20250925_005418_0002.png" style="height: 35px; margin: 0 auto;">
+</header>
+
+<main class="inst-container">
+
+    <div id="content-sobre" class="hidden">
+        <h1>Sobre o BrasilAviation.info</h1>
+        <p>Fundado em 31 de dezembro de 2023, o <b>BrasilAviation.info</b> consolidou-se como um dos portais independentes mais promissores no cenário da aviação brasileira. Nosso propósito transcende a simples notícia; buscamos documentar a história da aeronáutica nacional através de registros precisos, fotografia de alta qualidade e análises técnicas fundamentadas.</p>
+        
+        <h2>Missão e Valores</h2>
+        <p>Nossa missão é democratizar a informação aeronáutica, aproximando o entusiasta, o profissional e o passageiro comum do universo das operações aéreas. Atuamos sob os pilares da <b>transparência</b>, <b>independência jornalística</b> e <b>ética</b>, garantindo que cada dado publicado seja rigorosamente checado junto a órgãos como a ANAC, DECEA e fontes diretas das companhias.</p>
+
+        <h2>Nossa Equipe</h2>
+        <div class="equipe-grid">
+            <div class="card-equipe">
+                <img src="IMG_7814_edited.jpg" alt="Miguel Barbosa">
+                <h3>Miguel Barbosa</h3>
+                <span>Fundador & Editor-Chefe</span>
+                <p style="text-align: center; font-size: 13px;">Idealizador do projeto, responsável pela direção estratégica e editoria técnica.</p>
+            </div>
+            <div class="card-equipe">
+                <img src="placeholder.jpg" alt="Henrique Saito">
+                <h3>Henrique Saito</h3>
+                <span>Colunista & Redator</span>
+                <p style="text-align: center; font-size: 13px;">Especialista em redação jornalística e cobertura de frotas internacionais.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="content-privacidade" class="hidden">
+        <h1>Política de Privacidade</h1>
+        <p>O <b>BrasilAviation.info</b>, em conformidade com a Lei Geral de Proteção de Dados (LGPD), estabelece compromisso com a segurança das informações dos usuários.</p>
+        
+        <h2>1. Coleta de Dados</h2>
+        <p>Coletamos dados via logs de servidor para monitoramento de segurança e análise de tráfego. Informações como IP, geolocalização aproximada e dados do dispositivo são processados de forma anonimizada para fins estatísticos através do Google Analytics.</p>
+
+        <h2>2. Uso de Cookies</h2>
+        <p>Utilizamos cookies estritamente necessários para o funcionamento do site e cookies de terceiros para exibição de anúncios relevantes. O usuário possui total autonomia para gerenciar e bloquear cookies nas configurações de seu navegador.</p>
+
+        <h2>3. Segurança da Informação</h2>
+        <p>Implementamos certificados SSL de criptografia para garantir que qualquer interação entre seu navegador e nossos servidores ocorra em ambiente seguro. Dados de formulários de contato são armazenados em servidores criptografados e jamais compartilhados com terceiros.</p>
+    </div>
+
+    <div id="content-termos" class="hidden">
+        <h1>Termos de Uso</h1>
+        <p>Ao navegar em nosso portal, você declara estar ciente e de acordo com as seguintes normas:</p>
+
+        <h2>1. Direitos Autorais e Propriedade</h2>
+        <p>Todo o material publicado, incluindo textos, logotipos e fotografias (especialmente de spotting autoral), é protegido pelas Leis de Direitos Autorais. A reprodução, mesmo que parcial, sem a citação da fonte e link original, está sujeita a medidas legais cabíveis.</p>
+
+        <h2>2. Isenção de Responsabilidade</h2>
+        <p>O BrasilAviation.info é um portal informativo. Embora busquemos a exatidão, não nos responsabilizamos por alterações de horários de voos, cancelamentos de operações citadas ou decisões de viagem baseadas em nossas matérias. Recomendamos sempre a consulta aos canais oficiais das companhias aéreas.</p>
+    </div>
+
+    <div id="content-contato" class="hidden">
+        <h1>Fale Conosco</h1>
+        <p>Dúvidas, sugestões de pauta ou parcerias? Utilize o formulário abaixo ou envie um e-mail direto para nossa redação.</p>
+        
+        <div class="contato-form">
+            <input type="text" placeholder="Seu Nome Completo">
+            <input type="email" placeholder="Seu Melhor E-mail">
+            <input type="text" placeholder="Assunto (Ex: Sugestão de Pauta)">
+            <textarea rows="5" placeholder="Escreva sua mensagem aqui..."></textarea>
+            <button class="btn-enviar">ENVIAR MENSAGEM</button>
+        </div>
+        
+        <p style="margin-top: 20px; font-size: 14px; color: #666;"><i class="fas fa-envelope"></i> redação@brasilaviation.info</p>
+    </div>
+
+</main>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+
+    function limpar() {
+        document.querySelectorAll('main > div').forEach(div => div.classList.add('hidden'));
+    }
+
+    limpar();
+
+    if (ref === 'sobre') {
+        document.getElementById('content-sobre').classList.remove('hidden');
+        document.title = "Sobre Nós - BrasilAviation.info";
+    } else if (ref === 'privacidade') {
+        document.getElementById('content-privacidade').classList.remove('hidden');
+        document.title = "Privacidade - BrasilAviation.info";
+    } else if (ref === 'termos') {
+        document.getElementById('content-termos').classList.remove('hidden');
+        document.title = "Termos de Uso - BrasilAviation.info";
+    } else if (ref === 'contato') {
+        document.getElementById('content-contato').classList.remove('hidden');
+        document.title = "Contato - BrasilAviation.info";
+    } else {
+        document.getElementById('content-sobre').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>

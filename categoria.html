@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrasilAviation | Categoria</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilo para o feed de categorias */
+        .feed-container { padding: 15px; max-width: 800px; margin: 0 auto; }
+        .categoria-header { 
+            padding: 20px 15px; 
+            background: #f8f9fa; 
+            border-bottom: 4px solid #2e7d32; 
+            margin-bottom: 20px;
+        }
+        .categoria-header h2 { 
+            color: #1a237e; 
+            text-transform: uppercase; 
+            font-size: 22px; 
+            font-weight: bold;
+        }
+        .empty-msg { text-align: center; padding: 50px; color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="btn-icon" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button>
+    <img src="3_20250925_005418_0002.png" class="site-logo">
+    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-home"></i></button>
+</header>
+
+<div class="categoria-header">
+    <h2 id="titulo-categoria">Carregando...</h2>
+</div>
+
+<main class="feed-container">
+    <div id="cat-feed">
+        </div>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Pegar o nome da categoria pela URL (ex: categoria.html?cat=PINTURA)
+    const urlParams = new URLSearchParams(window.location.search);
+    const catChave = urlParams.get('cat');
+
+    // Mapeamento de nomes bonitos para exibição
+    const nomesFormatados = {
+        'PINTURA': 'Pintura e Adesivos',
+        'DEPORTACAO': 'Deportação',
+        'CURIOSIDADES': 'Curiosidades',
+        'ROTAS': 'Novas Rotas',
+        'PEDIDOS': 'Pedidos e Entregas',
+        'INCIDENTES': 'Incidentes e Acidentes',
+        'COLUNAS': 'Colunas',
+        'CARGUEIRA': 'Aviação Cargueira',
+        'MILITAR': 'Militar',
+        'INFRA': 'Infraestrutura Aeroportuária',
+        'TECNOLOGIA': 'Tecnologia e Inovação',
+        'HISTORIA': 'História e Cultura',
+        'OPINIAO': 'Editorial e Opinião',
+        'RADAR': 'Monitoramento e Radar',
+        'FROTA': 'Movimentação de Frota',
+        'ESPECIAIS': 'Movimentações Especiais',
+        'EXECUTIVA': 'Aviação Executiva',
+        'RELATOS': 'Voos e Relatos'
+    };
+
+    document.getElementById('titulo-categoria').innerText = nomesFormatados[catChave] || catChave;
+
+    async function carregarCategoria() {
+        try {
+            const q = query(
+                collection(db, "noticias"), 
+                where("categoria", "==", catChave), 
+                orderBy("data", "desc")
+            );
+            
+            const snap = await getDocs(q);
+            const feed = document.getElementById('cat-feed');
+            let html = "";
+
+            if (snap.empty) {
+                feed.innerHTML = `<p class="empty-msg">Nenhuma notícia encontrada nesta categoria.</p>`;
+                return;
+            }
+
+            snap.forEach(docSnap => {
+                const n = docSnap.data();
+                html += `
+                    <article class="news-item" onclick="location.href='noticia.html?id=${docSnap.id}'">
+                        <div class="news-photo">
+                            <img src="${n.foto}" alt="Capa">
+                        </div>
+                        <div class="news-info">
+                            <h3>${n.titulo}</h3>
+                            <div class="news-meta">
+                                <span><i class="far fa-calendar"></i> ${n.data.toDate().toLocaleDateString('pt-BR')}</span>
+                                <span><i class="far fa-eye"></i> ${n.views || 0}</span>
+                            </div>
+                        </div>
+                    </article>`;
+            });
+
+            feed.innerHTML = html;
+        } catch (e) {
+            console.error("Erro ao filtrar categoria:", e);
+            document.getElementById('cat-feed').innerHTML = "Erro ao carregar notícias.";
+        }
+    }
+
+    carregarCategoria();
+</script>
+</body>
+</html>

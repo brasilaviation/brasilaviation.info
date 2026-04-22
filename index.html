@@ -3,58 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation.info - Notícias de Aviação</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>BrasilAviation.info | Notícias de Aviação</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Restaurando Estilos de Identidade Visual */
+        .logo-cia { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; vertical-align: middle; }
+        .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Efeito Cortina para Categorias */
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.03); border-radius: 0 0 8px 8px; }
+        .submenu.active { max-height: 1500px; padding-bottom: 10px; }
+        .submenu a { padding: 10px 20px 10px 50px !important; font-size: 13px !important; color: #555 !important; border: none !important; }
+        .menu-arrow { transition: transform 0.3s; font-size: 12px; color: #bbb; }
+        .menu-arrow.rotate { transform: rotate(180deg); }
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <button class="menu-toggle" id="menu-open"><i class="fas fa-bars"></i></button>
-            <div class="logo-container">
-                <img src="3_20250925_005418_0002.png" alt="Logo BrasilAviation.info" class="site-logo">
-            </div>
-            <button class="search-toggle" id="search-open"><i class="fas fa-search"></i></button>
-        </div>
-    </header>
+<header>
+    <button class="btn-icon" id="open-menu"><i class="fas fa-bars"></i></button>
+    <img src="3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation">
+    <button class="btn-icon"><i class="fas fa-search"></i></button>
+</header>
 
-    <div class="search-bar" id="search-bar">
-        <input type="search" placeholder="Pesquisar notícias...">
+<nav class="side-menu" id="side-menu">
+    <div class="menu-close-area">
+        <button class="btn-icon" id="close-menu"><i class="fas fa-times"></i></button>
+    </div>
+    <ul>
+        <li class="menu-section-title">PÁGINAS</li>
+        <li><a href="index.html"><i class="fas fa-home" style="margin-right:12px; color:#2e7d32;"></i> Início</a></li>
+        <li><a href="pagina.html?ref=sobre"><i class="fas fa-info-circle" style="margin-right:12px; color:#2e7d32;"></i> Sobre Nós</a></li>
+        
+        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
+        
+        <li class="menu-section-title">COMPANHIAS</li>
+        <li><a href="companhia.html?cia=azul" class="link-azul"><img src="URL_DA_LOGO_AZUL" class="logo-cia"> Azul</a></li>
+        <li><a href="companhia.html?cia=gol" class="link-gol"><img src="URL_DA_LOGO_GOL" class="logo-cia"> GOL</a></li>
+        <li><a href="companhia.html?cia=latam" class="link-latam"><img src="URL_DA_LOGO_LATAM" class="logo-cia"> LATAM</a></li>
+
+        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
+
+        <li>
+            <a href="javascript:void(0)" onclick="toggleCategorias()" style="display:flex; justify-content:space-between; align-items:center;">
+                <span><i class="fas fa-list-ul" style="margin-right:12px; color:#2e7d32;"></i> Categorias</span>
+                <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
+            </a>
+            <div class="submenu" id="lista-cat">
+                <a href="categoria.html?cat=PINTURA">Pintura/Adesivos</a>
+                <a href="categoria.html?cat=DEPORTACAO">Deportação</a>
+                <a href="categoria.html?cat=CURIOSIDADES">Curiosidades</a>
+                <a href="categoria.html?cat=ROTAS">Novas Rotas</a>
+                <a href="categoria.html?cat=PEDIDOS">Pedidos e Entregas</a>
+                <a href="categoria.html?cat=INCIDENTES">Incidentes e Acidentes</a>
+                <a href="categoria.html?cat=COLUNAS">Colunas</a>
+                <a href="categoria.html?cat=CARGUEIRA">Aviação Cargueira</a>
+                <a href="categoria.html?cat=MILITAR">Militar</a>
+                <a href="categoria.html?cat=INFRA">Infraestrutura</a>
+                <a href="categoria.html?cat=TECNOLOGIA">Tecnologia e Inovação</a>
+                <a href="categoria.html?cat=HISTORIA">História e Cultura</a>
+                <a href="categoria.html?cat=OPINIAO">Editorial e Opinião</a>
+                <a href="categoria.html?cat=RADAR">Radar e Monitoramento</a>
+                <a href="categoria.html?cat=FROTA">Movimentação de Frota</a>
+                <a href="categoria.html?cat=ESPECIAIS">Movimentações Especiais</a>
+                <a href="categoria.html?cat=EXECUTIVA">Aviação Executiva</a>
+                <a href="categoria.html?cat=RELATOS">Voos e Relatos</a>
+            </div>
+        </li>
+
+        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
+        
+        <li class="menu-section-title">ADMINISTRAÇÃO</li>
+        <li><a href="admin.html"><i class="fas fa-lock" style="margin-right:12px; color:#888;"></i> Área Admin</a></li>
+    </ul>
+</nav>
+
+<main>
+    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques</h2>
+    <div class="carousel-wrapper">
+        <div class="carousel-container" id="carousel-area">
+            <button class="carousel-btn btn-prev" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-btn btn-next" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
     </div>
 
-    <main>
-        <section class="carousel-container">
-            <p style="text-align:center; padding: 50px;">Carregando destaques...</p>
-        </section>
+    <h2 class="feed-header" style="margin: 20px 15px 10px; border-bottom:3px solid #2e7d32; display:inline-block; font-weight:bold; font-size:20px;">Últimas Notícias</h2>
+    <div id="news-feed">
+        <p style="padding: 20px; color: #888;">Carregando notícias...</p>
+    </div>
+</main>
 
-        <section class="feed-container">
-            <h2>Últimas Notícias</h2>
-            <div id="news-feed">
-                <p style="text-align:center; padding: 20px;">Sintonizando frequências...</p>
-            </div>
-        </section>
-    </main>
+<script type="module" src="script.js"></script>
+<script>
+    // Lógica do Menu Lateral
+    const menu = document.getElementById('side-menu');
+    document.getElementById('open-menu').onclick = () => menu.classList.add('active');
+    document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
 
-    <nav class="side-menu" id="side-menu">
-        <button class="menu-close" id="menu-close">✕</button>
-        <ul>
-            <li><a href="index.html">Início</a></li>
-            <li><a href="#cargueira">Aviação Cargueira</a></li>
-            <li><a href="#spotting">Spotting e Registros</a></li>
-            <li><a href="#militar">Militar e Governamental</a></li>
-            <li class="separator"></li>
-            <li><span>Companhias Aéreas</span></li>
-            <li class="cia-azul"><a href="#azul">Azul</a></li>
-            <li class="cia-gol"><a href="#gol">GOL</a></li>
-            <li class="cia-latam"><a href="#latam">LATAM</a></li>
-        </ul>
-    </nav>
+    // Função Cortina (Submenu)
+    function toggleCategorias() {
+        document.getElementById('lista-cat').classList.toggle('active');
+        document.getElementById('seta-cat').classList.toggle('rotate');
+    }
 
-    <footer>
-        <p>&copy; 2023 - 2026 BrasilAviation.info</p>
-    </footer>
+    // Navegação Carrossel (Setas e Swipe)
+    let currentIdx = 0;
+    const carousel = document.getElementById('carousel-area');
 
-    <script type="module" src="./script.js"></script>
+    function changeSlide(n) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if (slides.length === 0) return;
+        slides[currentIdx].classList.remove('active');
+        currentIdx = (currentIdx + n + slides.length) % slides.length;
+        slides[currentIdx].classList.add('active');
+    }
+
+    document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); changeSlide(-1); };
+    document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); changeSlide(1); };
+
+    // Gestos (Swipe) Celular
+    let touchStartX = 0;
+    carousel.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+    carousel.addEventListener('touchend', e => {
+        let touchEndX = e.changedTouches[0].screenX;
+        if (touchEndX < touchStartX - 50) changeSlide(1);
+        if (touchEndX > touchStartX + 50) changeSlide(-1);
+    }, {passive: true});
+</script>
 </body>
 </html>

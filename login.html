@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrativo | BrasilAviation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-box { max-width: 350px; margin: 100px auto; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        .login-box img { width: 150px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .btn-login { width: 100%; padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body style="background: #f4f7f6;">
+
+<div class="login-box">
+    <img src="3_20250925_005418_0002.png" alt="Logo">
+    <h3>Acesso Restrito</h3>
+    <input type="email" id="email" placeholder="E-mail do Administrador">
+    <input type="password" id="senha" placeholder="Senha">
+    <button class="btn-login" id="btn-entrar">Entrar no Painel</button>
+    <p id="erro" style="color:red; font-size:12px; margin-top:10px; display:none;">Acesso negado!</p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('btn-entrar').onclick = async () => {
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        const erroMsg = document.getElementById('erro');
+
+        try {
+            await signInWithEmailAndPassword(auth, email, senha);
+            window.location.href = "admin.html"; // Vai para o admin se acertar
+        } catch (error) {
+            erroMsg.style.display = 'block';
+            console.error("Erro ao logar:", error.message);
+        }
+    };
+</script>
+</body>
+</html>

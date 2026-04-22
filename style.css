@@ -1,246 +1,93 @@
-/* RESET BÁSICO */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Geral e Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background: white; color: #333; line-height: 1.6; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-:root {
-    --white: #ffffff;
-    --black: #000000;
-    --brasil-green: #228B22; /* Verde mapa */
-    --brasil-gold: #FFC400;  /* Amarelo texto logo */
-    --brasil-blue: #003399;  /* Azul bandeira/links */
-    --light-gray: #f4f4f4;
+/* Header Fixo */
+header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px 15px; 
+    border-bottom: 1px solid #eee; 
+    position: sticky; 
+    top: 0; 
+    background: white; 
+    z-index: 1000; 
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: var(--white);
-    color: var(--black);
-    line-height: 1.6;
-}
-
-h2 {
-    font-size: 1.2rem;
-    padding: 10px 15px;
-    border-bottom: 2px solid var(--brasil-green);
-    margin-top: 10px;
-}
-
-/* CABEÇALHO */
-header {
-    background-color: var(--white);
-    border-bottom: 1px solid #eee;
-    padding: 10px 15px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-container {
-    flex-grow: 1;
-    text-align: center;
-}
-
-.site-logo {
-    max-height: 50px;
-}
-
-.menu-toggle, .search-toggle {
-    background: none;
-    border: none;
-    font-size: 1.3rem;
-    color: var(--brasil-green);
-    cursor: pointer;
-}
-
-/* BARRA DE PESQUISA */
-.search-bar {
-    display: none; /* Escondido por padrão */
-    padding: 10px;
-    background-color: var(--light-gray);
-}
-
-.search-bar.active {
-    display: block;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* CARROSSEL */
-.carousel-container {
-    width: 100%;
-    position: relative;
-}
-
-.carousel-slide {
-    display: none;
-}
-
-.carousel-slide.active {
-    display: block;
-}
-
-.carousel-slide img {
-    width: 100%;
-    aspect-ratio: 3 / 2; /* Proporção obrigatória */
-    object-fit: cover;
-}
-
-.carousel-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    color: var(--white);
-    padding: 15px;
-}
-
-.carousel-controls {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-}
-
-.prev, .next {
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-    color: var(--white);
-    font-size: 1.5rem;
-    padding: 10px;
-    cursor: pointer;
-}
-
-/* FEED EM LISTA */
-.feed-container {
-    padding: 10px;
-}
-
-.news-item {
-    display: flex;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-.news-photo {
-    width: 40%; /* 40% para a foto */
-    margin-right: 10px;
-}
-
-.news-photo img {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.news-info {
-    width: 60%; /* 60% para o texto */
-}
-
-.news-info h3 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--black);
-    margin-bottom: 5px;
-}
-
-.meta {
-    font-size: 0.75rem;
-    color: #666;
-}
-
-.author {
-    color: var(--brasil-blue); /* Nome do redator em Azul */
-    font-weight: bold;
-}
+.site-logo { height: 35px; cursor: pointer; }
+.btn-icon { background: none; border: none; font-size: 24px; color: #2e7d32; cursor: pointer; padding: 5px; }
 
 /* MENU LATERAL */
-.side-menu {
-    position: fixed;
-    top: 0;
-    left: -250px; /* Escondido à esquerda */
-    width: 250px;
-    height: 100%;
-    background-color: var(--white);
-    z-index: 1001;
-    transition: left 0.3s;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    overflow-y: auto;
+.side-menu { 
+    position: fixed; 
+    top: 0; 
+    left: -100%; 
+    width: 80%; 
+    max-width: 300px; 
+    height: 100%; 
+    background: white; 
+    z-index: 9999 !important; 
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    box-shadow: 5px 0 25px rgba(0,0,0,0.2); 
+    overflow-y: auto; 
+}
+.side-menu.active { left: 0; }
+.menu-close-area { padding: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; }
+.side-menu ul { list-style: none; padding: 10px 0; }
+.menu-section-title { padding: 20px 20px 5px; font-size: 11px; font-weight: bold; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; }
+
+/* AJUSTE DA LOGO PARA FICAR DO TAMANHO DA LETRA */
+.logo-cia {
+    height: 20px;       /* Mesma altura da linha do texto */
+    width: auto;        /* Mantém a proporção sem achatar */
+    max-width: 40px;    /* Impede que logos muito compridas ocupem espaço demais */
+    margin-right: 10px; /* Espaço entre a logo e o nome da empresa */
+    display: inline-block;
+    vertical-align: middle; /* Alinha no meio da linha do texto */
+    object-fit: contain;
 }
 
-.side-menu.active {
-    left: 0;
+.side-menu li a { 
+    display: flex; 
+    align-items: center; 
+    padding: 14px 20px; 
+    text-decoration: none; 
+    color: #333; 
+    font-size: 16px; 
 }
 
-.menu-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--brasil-green);
-    padding: 15px;
-    float: right;
+/* CORES DAS COMPANHIAS NO MENU */
+.link-azul { background: #eef2ff !important; margin: 5px 15px !important; border-radius: 8px; color: #1a237e !important; font-weight: bold !important; }
+.link-gol { background: #fff7ed !important; margin: 5px 15px !important; border-radius: 8px; color: #c2410c !important; font-weight: bold !important; }
+.link-latam { background: #fef2f2 !important; margin: 5px 15px !important; border-radius: 8px; color: #991b1b !important; font-weight: bold !important; }
+
+/* CARROSSEL (DESLIZAR COM O DEDO) */
+.carousel-wrapper { padding: 0 15px; margin-bottom: 20px; position: relative; }
+.carousel-container { 
+    width: 100%; height: 250px; position: relative; overflow: hidden; 
+    border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+    background: #000; touch-action: pan-y;
+}
+.carousel-slide { display: none; width: 100%; height: 100%; animation: fade 0.6s; cursor: pointer; }
+.carousel-slide.active { display: block; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+.carousel-caption { 
+    position: absolute; bottom: 0; width: 100%; 
+    background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
+    color: white; padding: 25px 15px 15px; font-weight: bold; font-size: 18px; 
 }
 
-.side-menu ul {
-    list-style: none;
-    padding-top: 50px;
+/* SETAS ESCURAS */
+.carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7); color: white; border: none;
+    padding: 12px 15px; cursor: pointer; border-radius: 50%; z-index: 10;
 }
+.btn-prev { left: 10px; }
+.btn-next { right: 10px; }
 
-.side-menu li {
-    border-bottom: 1px solid #eee;
-}
+/* FEED DE NOTÍCIAS */
+.news-item { display: flex; padding: 15px; border-bottom: 1px solid #f0f0f0; gap: 15px; align-items: center; }
+.news-photo img { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; }
 
-.side-menu li a {
-    display: block;
-    padding: 12px 15px;
-    color: var(--black);
-    text-decoration: none;
-}
-
-.side-menu .separator {
-    background-color: var(--light-gray);
-    height: 10px;
-}
-
-.side-menu li span {
-    display: block;
-    padding: 12px 15px;
-    font-weight: bold;
-    color: var(--brasil-green);
-}
-
-/* CORES DAS CIAS NO MENU */
-.cia-azul { background-color: rgba(0, 51, 153, 0.1); }
-.cia-azul a { color: var(--brasil-blue) !important; font-weight: bold;}
-
-.cia-gol { background-color: rgba(255, 102, 0, 0.1); }
-.cia-gol a { color: #FF6600 !important; font-weight: bold; }
-
-.cia-latam { background-color: rgba(230, 0, 0, 0.1); }
-.cia-latam a { color: #CC0000 !important; font-weight: bold; }
-
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.8rem;
-    background-color: var(--light-gray);
-    margin-top: 20px;
-}
+@keyframes fade { from { opacity: 0.5; } to { opacity: 1; } }

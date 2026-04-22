@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companhia | BrasilAviation.info</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Banner com Degradê das Companhias */
+        .cia-header {
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            transition: background 0.5s;
+        }
+
+        .cia-logo-display {
+            height: 60px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+        }
+
+        /* Degradês Oficiais */
+        .bg-azul { background: linear-gradient(135deg, #00205b 0%, #0093d1 100%); }
+        .bg-gol { background: linear-gradient(135deg, #ff5a00 0%, #ff8a05 100%); }
+        .bg-latam { background: linear-gradient(135deg, #1b0088 0%, #e8114b 100%); }
+
+        .cia-title { font-size: 28px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .feed-container { padding: 15px; }
+        .empty-msg { text-align: center; padding: 40px; color: #888; }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
+    <img src="3_20250925_005418_0002.png" style="height:30px;">
+    <div></div>
+</header>
+
+<div id="cia-banner" class="cia-header">
+    <img id="cia-logo-img" src="" class="cia-logo-display" alt="">
+    <div id="cia-nome" class="cia-title">Carregando...</div>
+</div>
+
+<main class="feed-container">
+    <h2 style="margin-bottom:15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Notícias Recentes</h2>
+    <div id="news-feed-cia">
+        </div>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 1. Identificar qual companhia foi clicada
+    const params = new URLSearchParams(window.location.search);
+    const cia = params.get('cia'); // 'azul', 'gol' ou 'latam'
+
+    // 2. Configurar a identidade visual
+    const configCia = {
+        azul: { nome: "Azul", classe: "bg-azul", logo: "COLE_URL_AZUL_GRANDE" },
+        gol: { nome: "GOL", classe: "bg-gol", logo: "COLE_URL_GOL_GRANDE" },
+        latam: { nome: "LATAM", classe: "bg-latam", logo: "COLE_URL_LATAM_GRANDE" }
+    };
+
+    if (configCia[cia]) {
+        document.getElementById('cia-banner').classList.add(configCia[cia].classe);
+        document.getElementById('cia-nome').innerText = configCia[cia].nome;
+        document.getElementById('cia-logo-img').src = configCia[cia].logo;
+        document.title = configCia[cia].nome + " | BrasilAviation.info";
+        carregarNoticiasCia(configCia[cia].nome);
+    }
+
+    // 3. Buscar notícias no Firebase filtradas pela companhia (categoria)
+    async function carregarNoticiasCia(nomeCia) {
+        const feed = document.getElementById('news-feed-cia');
+        try {
+            // Buscamos matérias onde o campo 'categoria' seja igual ao nome da companhia
+            const q = query(
+                collection(db, "noticias"), 
+                where("categoria", "==", nomeCia.toUpperCase()), 
+                orderBy("data", "desc")
+            );
+            
+            const snap = await getDocs(q);
+            let html = "";
+
+            if (snap.empty) {
+                feed.innerHTML = `<div class="empty-msg">Nenhuma notícia da ${nomeCia} encontrada.</div>`;
+                return;
+            }
+
+            snap.forEach(doc => {
+                const n = doc.data();
+                html += `
+                    <article class="news-item" onclick="window.location.href='noticia.html?id=${doc.id}'">
+                        <div class="news-photo"><img src="${n.foto}"></div>
+                        <div class="news-info">
+                            <h3>${n.titulo}</h3>
+                            <p style="font-size:12px; color:#888;">${n.data.toDate().toLocaleDateString('pt-BR')}</p>
+                        </div>
+                    </article>`;
+            });
+            feed.innerHTML = html;
+        } catch (e) {
+            console.error(e);
+            feed.innerHTML = "Erro ao carregar notícias.";
+        }
+    }
+</script>
+</body>
+</html>

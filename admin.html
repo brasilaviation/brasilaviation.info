@@ -2,65 +2,237 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel BrasilAviation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin | BrasilAviation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #2c3e50; padding: 20px; color: white; }
-        .form { background: #eee; color: #333; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; }
-        input, textarea, select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { background: #27ae60; color: white; font-weight: bold; border: none; cursor: pointer; }
+        .admin-container { padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #2e7d32; color: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .btn-novo { background: #1a237e; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; margin-bottom: 20px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-novo:hover { background: #0d145a; }
+
+        .post-admin-card { display: flex; align-items: center; gap: 15px; background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .post-admin-card img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+        .post-admin-info { flex-grow: 1; }
+        .post-admin-info h3 { font-size: 14px; margin-bottom: 5px; color: #333; }
+        
+        #edit-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; z-index: 10000; padding: 15px; overflow-y: auto; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; max-width: 700px; margin: 0 auto; }
+        
+        label { font-size: 12px; font-weight: bold; color: #1a237e; text-transform: uppercase; display: block; margin-top: 10px; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
+        
+        .toolbar { display: flex; flex-wrap: wrap; gap: 5px; background: #f8f8f8; padding: 12px; border: 1px solid #ddd; border-radius: 10px 10px 0 0; margin-top: 10px; }
+        .toolbar button { background: white; border: 1px solid #ccc; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-size: 14px; transition: 0.2s; }
+        .toolbar button:hover { background: #eef; border-color: #1a237e; }
+
+        #editor-container { 
+            min-height: 300px; border: 1px solid #ddd; padding: 15px; border-top: none; 
+            background: white; border-radius: 0 0 10px 10px; overflow-y: auto; outline: none; 
+            font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; font-size: 15px;
+        }
+
+        .modal-footer { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-acao { flex: 1; padding: 14px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
+        
+        .btn-logout { background: #fff1f1; border: 1px solid #ff4444; color: #ff4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="form">
-        <h2>Nova Matéria ✈️</h2>
-        <input type="text" id="titulo" placeholder="Título">
-        <input type="text" id="autor" placeholder="Nome do Autor">
-        <select id="categoria">
-            <option value="Notícias">Geral</option>
-            <option value="Azul">Azul</option>
-            <option value="GOL">GOL</option>
-            <option value="Cargueira">Cargueira</option>
-            <option value="Spotting">Spotting</option>
-        </select>
-        <input type="text" id="foto" placeholder="Link da Foto">
-        <input type="text" id="legenda" placeholder="Legenda da Foto">
-        <textarea id="texto" placeholder="Texto da notícia" rows="6"></textarea>
-        <button id="btn">PUBLICAR</button>
-        <p id="msg" style="text-align:center;"></p>
+
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee;">
+    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
+    <h2 style="font-size: 18px; color: #1a237e;">Painel BrasilAviation</h2>
+    <button id="btn-logout" class="btn-logout">Sair</button>
+</header>
+
+<div class="admin-container">
+    <div class="stats-grid">
+        <div class="stat-card"><h2 id="total-posts">0</h2><p>Matérias Postadas</p></div>
+        <div class="stat-card"><h2 id="total-views">0</h2><p>Total de Cliques</p></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    <button class="btn-novo" onclick="abrirCriador()"><i class="fas fa-plus-circle"></i> Escrever Nova Matéria</button>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-            authDomain: "braviation3.firebaseapp.com",
-            projectId: "braviation3",
-            storageBucket: "braviation3.firebasestorage.app",
-            messagingSenderId: "979009087877",
-            appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    <h3 style="margin-bottom: 15px; color: #555;">Suas Notícias</h3>
+    <div id="admin-list">Buscando informações no Firebase...</div>
+</div>
+
+<div id="edit-modal">
+    <div class="modal-content">
+        <h3 id="modal-titulo" style="color: #1a237e; margin-bottom: 15px;">Nova Matéria</h3>
+        <input type="hidden" id="edit-id">
+        
+        <label>Título da Matéria:</label>
+        <input type="text" id="edit-titulo" placeholder="Ex: GOL anuncia novas rotas para 2026">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <label>Categoria:</label>
+                <select id="edit-categoria">
+                    <option value="AZUL">AZUL</option>
+                    <option value="GOL">GOL</option>
+                    <option value="LATAM">LATAM</option>
+                    <option value="PINTURA">Pintura/Adesivos</option>
+                    <option value="DEPORTACAO">Deportação</option>
+                    <option value="CURIOSIDADES">Curiosidades</option>
+                    <option value="ROTAS">Novas Rotas</option>
+                    <option value="PEDIDOS">Pedidos e Entregas</option>
+                    <option value="INCIDENTES">Incidentes e Acidentes</option>
+                    <option value="CARGUEIRA">Aviação Cargueira</option>
+                    <option value="MILITAR">Militar</option>
+                    <option value="INFRA">Infraestrutura</option>
+                    <option value="TECNOLOGIA">Tecnologia</option>
+                    <option value="HISTORIA">História e Cultura</option>
+                    <option value="OPINIAO">Editorial e Opinião</option>
+                    <option value="RADAR">Monitoramento e Radar</option>
+                    <option value="FROTA">Movimentação de Frota</option>
+                    <option value="EXECUTIVA">Aviação Executiva</option>
+                    <option value="RELATOS">Voos e Relatos</option>
+                </select>
+            </div>
+            <div>
+                <label>Escritor (Autor):</label>
+                <select id="edit-autor">
+                    <option value="Henrique Saito">Henrique Saito</option>
+                    <option value="Miguel Barbosa">Miguel Barbosa</option>
+                    <option value="Murilo Marinho">Murilo Marinho</option>
+                    <option value="BrasilAviation Team">BrasilAviation Team</option>
+                </select>
+            </div>
+        </div>
+
+        <label>Link da Imagem de Capa:</label>
+        <input type="text" id="edit-foto" placeholder="https://exemplo.com/foto.jpg">
+        
+        <label>Legenda da Foto:</label>
+        <input type="text" id="edit-legenda" placeholder="Créditos da imagem">
+
+        <div class="toolbar">
+            <button onclick="fCmd('bold')"><b>B</b></button>
+            <button onclick="fCmd('italic')"><i>I</i></button>
+            <button onclick="fCmd('underline')"><u>U</u></button>
+            <button onclick="hLink()"><i class="fas fa-link"></i> Link</button>
+            <button onclick="fCmd('insertUnorderedList')"><i class="fas fa-list-ul"></i></button>
+        </div>
+        <div id="editor-container" contenteditable="true"></div>
+
+        <div class="modal-footer">
+            <button class="btn-acao" onclick="fecharModal()" style="background: #f4f4f4;">Cancelar</button>
+            <button class="btn-acao" onclick="enviarDados()" style="background: #2e7d32; color: white;">Salvar e Publicar</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, deleteDoc, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) window.location.href = "login.html";
+        else carregarTudo();
+    });
+
+    document.getElementById('btn-logout').onclick = () => signOut(auth);
+
+    async function carregarTudo() {
+        try {
+            const q = query(collection(db, "noticias"), orderBy("data", "desc"));
+            const snap = await getDocs(q);
+            let html = ""; let views = 0;
+
+            snap.forEach(res => {
+                const n = res.data();
+                views += (n.views || 0);
+                html += `
+                    <div class="post-admin-card">
+                        <img src="${n.foto}">
+                        <div class="post-admin-info">
+                            <h3>${n.titulo}</h3>
+                            <small>Por: ${n.autor || 'BrasilAviation'} | ${n.categoria} | <i class="fas fa-eye"></i> ${n.views || 0}</small>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-icon" onclick="abrirEditor('${res.id}', \`${n.titulo}\`, \`${n.foto}\`, \`${n.legenda || ''}\`, '${n.categoria}', '${n.autor || ''}')"><i class="fas fa-edit" style="color:#1a237e"></i></button>
+                            <button class="btn-icon" onclick="apagar('${res.id}')"><i class="fas fa-trash" style="color:#b91c1c"></i></button>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('admin-list').innerHTML = html || "Ainda não há matérias.";
+            document.getElementById('total-posts').innerText = snap.size;
+            document.getElementById('total-views').innerText = views;
+        } catch (e) { console.error(e); }
+    }
+
+    window.fCmd = (c) => document.execCommand(c, false, null);
+    window.hLink = () => {
+        const u = prompt("URL do link (ex: https://google.com):");
+        if(u) document.execCommand("createLink", false, u);
+    };
+
+    window.abrirCriador = () => {
+        document.getElementById('edit-id').value = "";
+        document.getElementById('modal-titulo').innerText = "Nova Matéria";
+        document.getElementById('edit-titulo').value = "";
+        document.getElementById('edit-foto').value = "";
+        document.getElementById('edit-legenda').value = "";
+        document.getElementById('edit-autor').value = "Miguel Barbosa";
+        document.getElementById('editor-container').innerHTML = "";
+        document.getElementById('edit-modal').style.display = 'block';
+    };
+
+    window.abrirEditor = async (id, t, f, l, c, a) => {
+        document.getElementById('edit-id').value = id;
+        document.getElementById('modal-titulo').innerText = "Editar Matéria";
+        document.getElementById('edit-titulo').value = t;
+        document.getElementById('edit-foto').value = f;
+        document.getElementById('edit-legenda').value = l;
+        document.getElementById('edit-categoria').value = c;
+        document.getElementById('edit-autor').value = a || "BrasilAviation Team";
+        
+        const docs = await getDocs(collection(db, "noticias"));
+        docs.forEach(d => { if(d.id === id) document.getElementById('editor-container').innerHTML = d.data().texto; });
+        document.getElementById('edit-modal').style.display = 'block';
+    };
+
+    window.fecharModal = () => document.getElementById('edit-modal').style.display = 'none';
+
+    window.enviarDados = async () => {
+        const id = document.getElementById('edit-id').value;
+        const dados = {
+            titulo: document.getElementById('edit-titulo').value,
+            categoria: document.getElementById('edit-categoria').value,
+            autor: document.getElementById('edit-autor').value,
+            foto: document.getElementById('edit-foto').value,
+            legenda: document.getElementById('edit-legenda').value,
+            texto: document.getElementById('editor-container').innerHTML,
+            data: Timestamp.now()
         };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
 
-        document.getElementById('btn').onclick = async () => {
-            const titulo = document.getElementById('titulo').value;
-            const autor = document.getElementById('autor').value;
-            const categoria = document.getElementById('categoria').value;
-            const foto = document.getElementById('foto').value;
-            const legenda = document.getElementById('legenda').value;
-            const texto = document.getElementById('texto').value;
+        if(id) await updateDoc(doc(db, "noticias", id), dados);
+        else { dados.views = 0; await setDoc(doc(collection(db, "noticias")), dados); }
+        
+        fecharModal();
+        carregarTudo();
+    };
 
-            try {
-                await addDoc(collection(db, "noticias"), {
-                    titulo, autor, categoria, foto, legenda, texto,
-                    data: serverTimestamp(), views: 0
-                });
-                document.getElementById('msg').innerText = "✅ Publicado!";
-                setTimeout(() => location.reload(), 2000);
-            } catch (e) { alert("Erro!"); }
-        };
-    </script>
+    window.apagar = async (id) => { if(confirm("Deseja mesmo excluir esta matéria?")) { await deleteDoc(doc(db, "noticias", id)); carregarTudo(); } };
+</script>
 </body>
 </html>

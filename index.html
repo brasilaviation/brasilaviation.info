@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,12 +7,93 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; overflow: hidden; }
-        .carousel-slide.active { display: block; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .news-meta { font-size: 11px; color: #777; margin-top: 5px; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f9; transition: 0.3s; }
         body.dark-mode { background: #121212; color: #eee; }
+
+        /* --- CONFIGURAÇÃO DO CARROSSEL --- */
+        .carousel-wrapper { 
+            padding: 0 15px; /* Espaço nas laterais para a sombra não cortar */
+            margin-bottom: 20px;
+        }
+
+        .carousel-container { 
+            position: relative; 
+            aspect-ratio: 3/2; 
+            width: 100%; 
+            background: #000; 
+            border-radius: 18px; /* Bordas arredondadas no container */
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra elegante */
+        }
+
+        .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; }
+        .carousel-slide.active { display: block; }
+        
+        .carousel-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+            border-radius: 18px; /* Garante que a imagem siga o arredondado */
+        }
+
+        /* Legenda sobre a imagem */
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 30px 15px 15px;
+            color: white;
+            text-align: left;
+        }
+
+        .badge-cat {
+            background-color: #2e7d32;
+            color: white;
+            padding: 5px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+            letter-spacing: 0.8px;
+        }
+
+        .carousel-caption h3 {
+            margin: 0;
+            font-size: 19px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        /* Botões de navegação */
+        .carousel-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .carousel-btn:hover { background: rgba(255,255,255,0.4); }
+
+        /* --- FEED DE NOTÍCIAS --- */
+        .section-title { padding: 15px; font-weight: bold; font-size: 22px; color: #1a237e; }
+        body.dark-mode .section-title { color: #fff; }
+        
+        .news-item { 
+            display: flex; gap: 15px; background: white; margin: 0 15px 15px; 
+            padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        }
+        body.dark-mode .news-item { background: #1e1e1e; }
     </style>
 </head>
 <body>
@@ -22,14 +102,20 @@
 <div id="menu-container"></div>
 
 <main>
-    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques</h2>
+    <h2 class="section-title">Destaques</h2>
+    
     <div class="carousel-wrapper">
-        <div class="carousel-container" id="carousel-area" style="aspect-ratio: 3/2; height: auto;">
-            <button class="carousel-btn btn-prev" id="prev-btn" style="z-index: 20;"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-btn btn-next" id="next-btn" style="z-index: 20;"><i class="fas fa-chevron-right"></i></button>
+        <div class="carousel-container" id="carousel-area">
+            <button class="carousel-btn btn-prev" id="prev-btn" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); z-index: 20;">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="carousel-btn btn-next" id="next-btn" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); z-index: 20;">
+                <i class="fas fa-chevron-right"></i>
+            </button>
             <div id="slides-holder" style="width: 100%; height: 100%;"></div>
         </div>
     </div>
+
     <h2 class="feed-header" style="margin: 20px 15px 10px; border-bottom:3px solid #2e7d32; display:inline-block; font-weight:bold; font-size:20px;">Últimas Notícias</h2>
     <div id="news-feed"></div>
 </main>
@@ -52,7 +138,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- LOGICA CABEÇALHO ---
+    // Funções de ativação dos componentes
     function ativarComandosCabecalho() {
         const openBtn = document.getElementById('open-menu');
         const sBox = document.getElementById('search-box-header');
@@ -75,33 +161,25 @@
         if(btnDark) {
             btnDark.onclick = () => {
                 document.body.classList.toggle('dark-mode');
-                const isDark = document.body.classList.contains('dark-mode');
-                localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
-                btnDark.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
             };
-            if(document.body.classList.contains('dark-mode')) btnDark.innerHTML = '<i class="fas fa-sun"></i>';
         }
     }
 
-    // --- LOGICA MENU (FECHAR E SANFONA) ---
     function ativarComandosMenu() {
         const closeBtn = document.getElementById('close-menu');
         const btnToggleCat = document.getElementById('btn-toggle-cat');
-        const listaCat = document.getElementById('lista-cat');
-        const setaCat = document.getElementById('seta-cat');
-
         if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
-
         if(btnToggleCat) {
             btnToggleCat.onclick = (e) => {
                 e.preventDefault();
-                listaCat.classList.toggle('active');
-                setaCat.classList.toggle('rotate');
+                document.getElementById('lista-cat').classList.toggle('active');
+                document.getElementById('seta-cat').classList.toggle('rotate');
             };
         }
     }
 
-    // --- CARREGAMENTO DE COMPONENTES ---
+    // Carregamento de componentes externos
     fetch('cabecalho.html').then(r => r.text()).then(h => {
         document.getElementById('header-container').innerHTML = h;
         ativarComandosCabecalho();
@@ -109,38 +187,43 @@
 
     fetch('menu.html').then(r => r.text()).then(h => {
         document.getElementById('menu-container').innerHTML = h;
-        ativarComandosMenu(); // Ativa a sanfona e o fechar logo após carregar o menu
+        ativarComandosMenu();
     });
 
     fetch('rodape.html').then(r => r.text()).then(h => {
         document.getElementById('footer-container').innerHTML = h;
-        let secretClicks = 0, secretTimer;
-        const adminGate = document.getElementById('admin-gate');
-        if(adminGate) adminGate.onclick = () => {
-            secretClicks++;
-            clearTimeout(secretTimer);
-            secretTimer = setTimeout(() => secretClicks = 0, 1500); 
-            if(secretClicks === 4) window.location.href = 'admin.html';
-        };
     });
 
-    // --- FIREBASE & CARROSSEL ---
+    // Firebase: Destaques (Carrossel com categoria)
     async function carregarDestaques() {
         const holder = document.getElementById('slides-holder');
         const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(5));
         const snap = await getDocs(q);
+        
         let html = "";
         let i = 0;
+        
         snap.forEach(docSnap => {
             const n = docSnap.data();
-            html += `<div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?p=${n.slug || docSnap.id}'">
-                <img src="${n.foto}"><div class="carousel-caption"><span class="badge-cat">${n.categoria}</span><h3>${n.titulo}</h3></div></div>`;
+            const categoria = n.cat || n.categoria || "Notícia";
+            const idNoticia = n.slug || docSnap.id;
+
+            html += `
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?p=${idNoticia}'">
+                    <img src="${n.foto}">
+                    <div class="carousel-caption">
+                        <span class="badge-cat">${categoria}</span>
+                        <h3>${n.titulo}</h3>
+                    </div>
+                </div>`;
             i++;
         });
+        
         holder.innerHTML = html;
         iniciarLogicaCarrossel();
     }
 
+    // Firebase: Últimas Notícias
     async function carregarFeed() {
         const feed = document.getElementById('news-feed');
         const q = query(collection(db, "noticias"), orderBy("data", "desc"));
@@ -149,9 +232,14 @@
         snap.forEach(docSnap => {
             const n = docSnap.data();
             const data = n.data ? n.data.toDate().toLocaleDateString('pt-BR') : "";
-            html += `<article class="news-item" onclick="location.href='noticia.html?p=${n.slug || docSnap.id}'" style="cursor:pointer;">
-                <div class="news-photo"><img src="${n.foto}" style="aspect-ratio:3/2; object-fit:cover;"></div>
-                <div class="news-info"><h3>${n.titulo}</h3><div class="news-meta"><span>${n.autor || 'Redação'}</span> • ${data}</div></div></article>`;
+            html += `
+                <article class="news-item" onclick="location.href='noticia.html?p=${n.slug || docSnap.id}'" style="cursor:pointer;">
+                    <div class="news-photo"><img src="${n.foto}" style="width:110px; height:75px; object-fit:cover; border-radius:10px;"></div>
+                    <div class="news-info">
+                        <h3 style="margin:0; font-size:15px;">${n.titulo}</h3>
+                        <div class="news-meta"><span>${n.autor || 'BrasilAviation'}</span> • ${data}</div>
+                    </div>
+                </article>`;
         });
         feed.innerHTML = html;
     }
@@ -160,13 +248,16 @@
     function iniciarLogicaCarrossel() {
         const slides = document.querySelectorAll('.carousel-slide');
         if(slides.length === 0) return;
+        
         const mostrarSlide = (n) => {
             slides.forEach(s => s.classList.remove('active'));
             slideIndex = (n + slides.length) % slides.length;
             slides[slideIndex].classList.add('active');
         };
+
         document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex + 1); };
         document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex - 1); };
+        
         setInterval(() => mostrarSlide(slideIndex + 1), 5000);
     }
 

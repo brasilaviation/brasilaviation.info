@@ -4,78 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrasilAviation | Notícia</title>
+    
+    <meta property="og:type" content="article">
+    <meta id="og-title" property="og:title" content="BrasilAviation.info">
+    <meta id="og-desc" property="og:description" content="Leia a matéria completa no portal BrasilAviation.info">
+    <meta id="og-image" property="og:image" content="https://brasilaviation.info/logo-padrao.png">
+    <meta id="og-url" property="og:url" content="">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --text: #333; --light-text: #666; --bg: #ffffff; }
-        body.dark-mode { --bg: #121212; --text: #eee; --light-text: #aaa; --primary: #ffffff; }
+        :root { --primary: #1a237e; --secondary: #2e7d32; --text: #222; --light-text: #555; --bg: #ffffff; }
+        body.dark-mode { --bg: #121212; --text: #ddd; --light-text: #aaa; --primary: #ffffff; }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; background: var(--bg); position: sticky; top: 0; z-index: 1000; }
-        
-        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box; }
-        .breadcrumb { font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; color: #888; }
-        .breadcrumb span { color: var(--secondary); }
-
-        h1 { font-size: 32px; color: var(--primary); margin-bottom: 15px; line-height: 1.2; font-weight: 800; }
-        .meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: var(--light-text); font-size: 13px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-
-        .main-photo-wrapper { width: 100%; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .main-photo { width: 100%; display: block; }
-        .foto-legenda { margin: 10px 0 25px; padding-left: 12px; border-left: 4px solid var(--secondary); font-size: 13px; font-style: italic; color: var(--light-text); line-height: 1.4; }
-
-        .corpo-texto { font-size: 18px; line-height: 1.8; color: var(--text); text-align: justify; }
-        .corpo-texto img { max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0; }
-        .corpo-texto a { color: var(--secondary); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--secondary); }
-
-        .tags-container { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; }
-        .tag-item { background: #eee; color: #555; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin-right: 5px; display: inline-block; text-transform: lowercase; }
-        body.dark-mode .tag-item { background: #333; color: #ccc; }
-
-        .search-container { display: flex; align-items: center; border: 1.5px solid var(--secondary); border-radius: 25px; width: 38px; height: 38px; overflow: hidden; transition: 0.4s; }
-        .search-container.active { width: 180px; }
-        .search-input { border: none; background: transparent; outline: none; width: 0; font-size: 14px; transition: 0.4s; padding: 0; color: var(--text); }
-        .search-container.active .search-input { width: 130px; padding: 0 10px; }
-        .btn-search { background: none; border: none; cursor: pointer; color: var(--secondary); width: 32px; display: flex; align-items: center; justify-content: center; }
-
-        .share-bar-fixed { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg); border-radius: 50px; display: none; gap: 20px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; border: 1px solid #eee; }
-        .share-bar-fixed a { color: var(--light-text); font-size: 22px; }
+        body { margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); line-height: 1.6; }
+        #header-container { position: sticky; top: 0; z-index: 1000; }
+        .noticia-container { padding: 15px; max-width: 750px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .breadcrumb { font-size: 11px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
+        .breadcrumb a { color: var(--secondary); text-decoration: none; }
+        h1 { font-size: 26px; color: var(--primary); margin: 0 0 15px 0; line-height: 1.2; font-weight: 800; }
+        .meta-info { display: flex; gap: 15px; margin-bottom: 20px; color: var(--light-text); font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px; }
+        .meta-info a { color: inherit; text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; }
+        .meta-info a:hover { border-bottom-color: var(--secondary); }
+        .main-photo-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .main-photo { width: 100%; display: block; object-fit: cover; }
+        .foto-legenda { margin-bottom: 25px; font-size: 12px; color: var(--light-text); line-height: 1.4; border-left: 3px solid var(--secondary); padding-left: 10px; font-style: italic; }
+        .corpo-texto { font-size: 16px; line-height: 1.75; color: var(--text); text-align: left; }
+        .corpo-texto p { margin-bottom: 20px; }
+        .corpo-texto img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+        .share-section { display: flex; align-items: center; gap: 15px; margin: 30px 0; padding: 15px 0; border-top: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .share-title { font-size: 12px; font-weight: bold; color: var(--light-text); text-transform: uppercase; }
+        .share-buttons { display: flex; gap: 10px; }
+        .share-btn { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white !important; text-decoration: none; font-size: 15px; transition: 0.3s; }
+        .bg-wa { background: #25d366; }
+        .bg-tw { background: #000000; }
+        .bg-fb { background: #1877f2; }
+        .bg-copy { background: #666; }
+        .tags-container { margin-top: 20px; }
+        .tag-item { background: rgba(0,0,0,0.05); color: var(--light-text); padding: 4px 10px; border-radius: 4px; font-size: 11px; margin-right: 5px; display: inline-block; text-decoration: none; }
+        body.dark-mode .tag-item { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-<header>
-    <button id="open-menu" style="background:none; border:none; font-size:22px; color:var(--secondary); cursor:pointer;"><i class="fas fa-bars"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height: 35px; cursor: pointer;" onclick="location.href='index.html'">
-    <div style="display: flex; gap: 10px;">
-        <div class="search-container" id="search-box">
-            <input type="text" id="input-busca" class="search-input" placeholder="Pesquisar...">
-            <button class="btn-search" id="btn-lupa"><i class="fas fa-search"></i></button>
-        </div>
-        <button id="dark-toggle" style="background:none; border:none; font-size:20px; color:var(--secondary);"><i class="far fa-moon"></i></button>
-    </div>
-</header>
-
+<div id="header-container"></div>
 <div id="menu-container"></div>
 
 <main class="noticia-container" id="noticia-render">
     <div style="text-align:center; padding:100px; color:#888;">
-        <i class="fas fa-circle-notch fa-spin" style="font-size: 30px;"></i>
-        <p>Aguarde, preparando decolagem...</p>
+        <i class="fas fa-plane fa-spin" style="font-size: 24px;"></i>
+        <p>Sincronizando frotas...</p>
     </div>
 </main>
-
-<div class="share-bar-fixed" id="share-bar">
-    <a href="#" id="share-fb" target="_blank"><i class="fab fa-facebook"></i></a>
-    <a href="#" id="share-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    <a href="javascript:void(0)" id="share-native"><i class="fas fa-share-alt"></i></a>
-</div>
 
 <div id="footer-container"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -89,148 +76,134 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // --- LÓGICA DE NAVEGAÇÃO ---
+    function ativarComandosCabecalho() {
+        const openBtn = document.getElementById('open-menu');
+        const sBox = document.getElementById('search-box-header');
+        const sInput = document.getElementById('input-busca-header');
+        const btnLupa = document.getElementById('btn-lupa-header');
+        const btnDark = document.getElementById('dark-toggle-header');
+
+        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
+
+        if(btnLupa) btnLupa.onclick = (e) => {
+            e.stopPropagation();
+            if (!sBox.classList.contains('active')) {
+                sBox.classList.add('active');
+                sInput.focus();
+            } else if (sInput.value.trim()) {
+                window.location.href = `pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
+            }
+        };
+
+        if(btnDark) btnDark.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+        };
+    }
+
+    function ativarComandosMenu() {
+        const closeBtn = document.getElementById('close-menu');
+        const btnToggleCat = document.getElementById('btn-toggle-cat');
+        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
+        if(btnToggleCat) {
+            btnToggleCat.onclick = (e) => {
+                e.preventDefault();
+                document.getElementById('lista-cat').classList.toggle('active');
+                document.getElementById('seta-cat').classList.toggle('rotate');
+            };
+        }
+    }
+
+    // --- CARREGAMENTO DE COMPONENTES ---
+    fetch('cabecalho.html').then(r => r.text()).then(html => {
+        document.getElementById('header-container').innerHTML = html;
+        ativarComandosCabecalho();
+    });
+
+    fetch('menu.html').then(r => r.text()).then(html => {
+        document.getElementById('menu-container').innerHTML = html;
+        ativarComandosMenu();
+    });
+
+    fetch('rodape.html').then(r => r.text()).then(html => {
+        document.getElementById('footer-container').innerHTML = html;
+    });
+
+    // --- LÓGICA DA NOTÍCIA E INTERLIGAÇÃO ---
     const params = new URLSearchParams(window.location.search);
     const idOuSlug = params.get('p') || params.get('id');
 
-    function formatarDataExtenso(timestamp) {
-        if (!timestamp) return "Data não informada";
-        const data = timestamp.toDate();
-        return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    function gerarLinkCat(cat) {
+        if(!cat) return 'index.html';
+        const c = cat.toLowerCase();
+        if(["azul", "gol", "latam"].includes(c)) return `companhia.html?cia=${c}`;
+        return `categoria.html?cat=${encodeURIComponent(cat)}`;
     }
 
-    async function carregar() {
-        if (!idOuSlug) {
-            document.getElementById('noticia-render').innerHTML = "Voo sem destino. Link inválido.";
-            return;
+    async function buscarNoticia() {
+        if (!idOuSlug) return;
+        let snap = await getDoc(doc(db, "noticias", idOuSlug));
+        let data = snap.exists() ? snap.data() : null;
+        let docId = snap.id;
+
+        if (!data) {
+            const q = await getDocs(collection(db, "noticias"));
+            q.forEach(d => { if(d.data().slug === idOuSlug) { data = d.data(); docId = d.id; } });
         }
 
-        try {
-            let docFinal = null;
-            const refDireta = doc(db, "noticias", idOuSlug);
-            const snapDireto = await getDoc(refDireta);
-            
-            if (snapDireto.exists()) {
-                docFinal = { id: snapDireto.id, data: snapDireto.data() };
-            } else {
-                const querySnapshot = await getDocs(collection(db, "noticias"));
-                querySnapshot.forEach((docSnap) => {
-                    if (docSnap.data().slug === idOuSlug) {
-                        docFinal = { id: docSnap.id, data: docSnap.data() };
-                    }
-                });
-            }
-
-            if (docFinal) {
-                exibirNoticia(docFinal);
-            } else {
-                document.getElementById('noticia-render').innerHTML = "<h2>Notícia não encontrada no hangar.</h2>";
-            }
-        } catch (e) {
-            console.error(e);
-            document.getElementById('noticia-render').innerHTML = "Pane no sistema.";
-        }
+        if (data) renderizar(data, docId);
     }
 
-    function exibirNoticia(docObj) {
-        const n = docObj.data;
-        updateDoc(doc(db, "noticias", docObj.id), { cliques: increment(1) }).catch(()=>{});
-
-        const legendaHtml = n.legenda ? `<div class="foto-legenda">${n.legenda}</div>` : "";
-        const dataExtenso = formatarDataExtenso(n.data);
-        const autorNome = n.autor || 'Miguel Barbosa';
+    function renderizar(n, id) {
+        updateDoc(doc(db, "noticias", id), { cliques: increment(1) }).catch(()=>{});
         
-        // Ícone minúsculo da categoria no final
-        const categoriaFinalHtml = `<div style="text-align: right; margin-top: 10px; font-size: 12px; color: var(--secondary); font-weight: bold;">
-            <i class="fas fa-tag"></i> ${n.cat || 'Notícia'}
-        </div>`;
+        // --- ATUALIZAÇÃO DINÂMICA DAS META TAGS ---
+        document.title = n.titulo + " | BrasilAviation.info";
+        document.getElementById('og-title').setAttribute('content', n.titulo);
+        document.getElementById('og-image').setAttribute('content', n.foto);
+        document.getElementById('og-url').setAttribute('content', window.location.href);
+        
+        // Cria um resumo removendo tags HTML e pegando os primeiros 160 caracteres
+        const resumo = (n.texto || n.conteudo || "").replace(/<[^>]*>?/gm, '').substring(0, 160) + "...";
+        document.getElementById('og-desc').setAttribute('content', resumo);
+        // ------------------------------------------
 
-        let tagsHtml = "";
-        if (n.tags) {
-            tagsHtml = `<div class="tags-container">` + 
-                       n.tags.split(',').map(tag => `<span class="tag-item">#${tag.trim()}</span>`).join('') + 
-                       `</div>`;
-        }
-
-        document.title = n.titulo + " | BrasilAviation";
+        const dataFmt = n.data ? n.data.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
+        const urlFull = window.location.href;
+        const shareMsg = encodeURIComponent(`${n.titulo} - BrasilAviation.info`);
+        const categoriaNome = n.cat || n.categoria || 'Geral';
 
         document.getElementById('noticia-render').innerHTML = `
-            <div class="breadcrumb">Início / <span>${n.cat || 'Geral'}</span></div>
+            <div class="breadcrumb"><a href="index.html">Início</a> / <a href="${gerarLinkCat(categoriaNome)}">${categoriaNome}</a></div>
             <h1>${n.titulo}</h1>
             
             <div class="meta-info">
-                <span><i class="fas fa-user-edit"></i> Por <a href="perfil.html?nome=${encodeURIComponent(autorNome)}" style="color: inherit; text-decoration: none;"><b>${autorNome}</b></a></span>
-                <span><i class="far fa-calendar-alt"></i> ${dataExtenso}</span>
+                <span>Por <a href="perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
+                <span><i class="far fa-calendar"></i> ${dataFmt}</span>
             </div>
 
-            <div class="main-photo-wrapper">
-                <img src="${n.foto}" class="main-photo" alt="${n.titulo}">
-            </div>
-            ${legendaHtml}
+            <div class="main-photo-wrapper"><img src="${n.foto}" class="main-photo"></div>
+            ${n.legenda ? `<div class="foto-legenda">${n.legenda}</div>` : ''}
 
-            <div class="corpo-texto">${n.texto || n.conteudo || "Sem conteúdo."}</div>
-            ${categoriaFinalHtml}
-            ${tagsHtml}
+            <div class="corpo-texto">${n.texto || n.conteudo}</div>
+
+            <div class="share-section">
+                <span class="share-title">Compartilhar:</span>
+                <div class="share-buttons">
+                    <a href="https://wa.me/?text=${shareMsg}%20${urlFull}" target="_blank" class="share-btn bg-wa"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://twitter.com/intent/tweet?text=${shareMsg}&url=${urlFull}" target="_blank" class="share-btn bg-tw"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${urlFull}" target="_blank" class="share-btn bg-fb"><i class="fab fa-facebook-f"></i></a>
+                    <a href="javascript:void(0)" onclick="navigator.clipboard.writeText('${urlFull}'); alert('Link copiado!')" class="share-btn bg-copy"><i class="fas fa-link"></i></a>
+                </div>
+            </div>
+
+            ${n.tags ? `<div class="tags-container">${n.tags.split(',').map(t => `<span class="tag-item">#${t.trim()}</span>`).join('')}</div>` : ''}
         `;
-        
-        const linkAtual = window.location.href;
-        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(n.titulo)}%20${encodeURIComponent(linkAtual)}`;
-        document.getElementById('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkAtual)}`;
-        document.getElementById('share-bar').style.display = 'flex';
     }
 
-    fetch('rodape.html').then(r => r.text()).then(h => {
-        document.getElementById('footer-container').innerHTML = h;
-        let secretClicks = 0;
-        let secretTimer;
-        const adminGate = document.getElementById('admin-gate');
-        if(adminGate) {
-            adminGate.onclick = () => {
-                secretClicks++;
-                clearTimeout(secretTimer);
-                secretTimer = setTimeout(() => secretClicks = 0, 1500); 
-                if(secretClicks === 4) window.location.href = 'admin.html';
-            };
-        }
-    });
-
-    carregar();
-
-    const searchBox = document.getElementById('search-box');
-    const inputBusca = document.getElementById('input-busca');
-    document.getElementById('btn-lupa').onclick = (e) => {
-        e.stopPropagation();
-        if (!searchBox.classList.contains('active')) {
-            searchBox.classList.add('active');
-            inputBusca.focus();
-        } else if (inputBusca.value.trim()) {
-            window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value)}`;
-        }
-    };
-
-    const btnDark = document.getElementById('dark-toggle');
     if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    btnDark.onclick = () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-    };
-    
-    fetch('menu.html').then(r => r.text()).then(html => {
-        document.getElementById('menu-container').innerHTML = html;
-        const menu = document.getElementById('side-menu');
-        const openBtn = document.getElementById('open-menu');
-        const closeBtn = document.getElementById('close-menu');
-        if(openBtn) openBtn.onclick = () => menu.classList.add('active');
-        if(closeBtn) closeBtn.onclick = () => menu.classList.remove('active');
-    }).catch(()=>{});
-
-    document.getElementById('share-native').onclick = () => {
-        if (navigator.share) {
-            navigator.share({ title: document.title, url: window.location.href });
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copiado!");
-        }
-    };
+    buscarNoticia();
 </script>
 </body>
 </html>

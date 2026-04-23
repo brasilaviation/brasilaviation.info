@@ -4,29 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa | BrasilAviation.info</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { display: flex; flex-direction: column; min-height: 100vh; }
+        body { display: flex; flex-direction: column; min-height: 100vh; font-family: sans-serif; }
         .pesquisa-container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; }
         .termo-busca { color: #2e7d32; font-style: italic; }
-        
-        .resultado-item { display: flex; gap: 15px; margin-bottom: 20px; cursor: pointer; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .resultado-item { display: flex; gap: 15px; margin-bottom: 20px; cursor: pointer; border-bottom: 1px solid #eee; padding-bottom: 15px; transition: 0.3s; }
+        .resultado-item:hover { opacity: 0.7; }
         .resultado-item img { width: 100px; height: 70px; border-radius: 8px; object-fit: cover; }
-        .resultado-info h3 { font-size: 16px; margin-bottom: 5px; }
-        
+        .resultado-info h3 { font-size: 16px; margin: 0 0 5px 0; color: var(--text); }
         body.dark-mode .resultado-item { border-color: #333; }
-        footer { text-align: center; padding: 20px; background: #f9f9f9; }
-        body.dark-mode footer { background: #1a1a1a; }
     </style>
 </head>
 <body>
-
-<header>
-    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height:30px;">
-    <button class="btn-dark-toggle" id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-</header>
 
 <main class="pesquisa-container">
     <h2>Resultados para: <span id="label-busca" class="termo-busca">...</span></h2>
@@ -35,10 +26,6 @@
         <p style="text-align:center; color:#888;">Buscando nas nuvens...</p>
     </div>
 </main>
-
-<footer>
-    <p style="font-size: 12px; color: #999;">BrasilAviation.info &copy; 2026</p>
-</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -56,18 +43,17 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Dark Mode
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-
     async function realizarBusca() {
         const params = new URLSearchParams(window.location.search);
-        const termo = params.get('q')?.toLowerCase();
+        const termo = params.get('q')?.toLowerCase() || "";
         document.getElementById('label-busca').innerText = termo;
 
-        if (!termo) return;
+        if (!termo) {
+            document.getElementById('lista-resultados').innerHTML = "<p>Digite algo para pesquisar.</p>";
+            return;
+        }
 
         try {
-            // Buscamos todas e filtramos no JS (Firestore não tem busca por texto parcial nativa fácil)
             const q = query(collection(db, "noticias"), orderBy("data", "desc"));
             const snap = await getDocs(q);
             let html = "";
@@ -79,26 +65,24 @@
                 
                 if (titulo.includes(termo)) {
                     encontrados++;
+                    // LINK LIMPO: /noticia?id=...
                     html += `
-                        <div class="resultado-item" onclick="location.href='noticia.html?id=${doc.id}'">
+                        <div class="resultado-item" onclick="location.href='/noticia?id=${doc.id}'">
                             <img src="${n.foto}">
                             <div class="resultado-info">
                                 <h3>${n.titulo}</h3>
-                                <p style="font-size:12px; color:#888;">${n.categoria} | ${n.data.toDate().toLocaleDateString()}</p>
+                                <p style="font-size:12px; color:#888;">${n.cat || 'Geral'} | ${n.data.toDate().toLocaleDateString()}</p>
                             </div>
                         </div>
                     `;
                 }
             });
 
-            document.getElementById('lista-resultados').innerHTML = encontrados > 0 ? html : "<p>Nenhuma notícia encontrada com esse termo.</p>";
-
+            document.getElementById('lista-resultados').innerHTML = encontrados > 0 ? html : "<p>Nenhuma notícia encontrada.</p>";
         } catch (e) {
-            console.error(e);
-            document.getElementById('lista-resultados').innerHTML = "Erro ao pesquisar.";
+            document.getElementById('lista-resultados').innerHTML = "Erro na busca.";
         }
     }
-
     realizarBusca();
 </script>
 </body>

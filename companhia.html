@@ -3,141 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Companhia | BrasilAviation.info</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Companhia | BrasilAviation</title>
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { display: flex; flex-direction: column; min-height: 100vh; }
-        .cia-header { width: 100%; padding: 40px 20px; text-align: center; color: white; transition: background 0.5s; }
-        .cia-logo-display { height: 60px; margin-bottom: 15px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
-        .bg-azul { background: linear-gradient(135deg, #00205b 0%, #0093d1 100%); }
-        .bg-gol { background: linear-gradient(135deg, #ff5a00 0%, #ff8a05 100%); }
-        .bg-latam { background: linear-gradient(135deg, #1b0088 0%, #e8114b 100%); }
-        .cia-title { font-size: 28px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        .feed-container { padding: 15px; flex: 1; }
-        .empty-msg { text-align: center; padding: 40px; color: #888; }
-        .breadcrumbs { padding: 15px; font-size: 13px; color: #888; background: #f9f9f9; }
-        body.dark-mode .breadcrumbs { background: #1a1a1a; color: #666; }
-        .breadcrumbs a { color: #2e7d32; text-decoration: none; font-weight: bold; }
-        .breadcrumbs span { margin: 0 5px; }
+        body { display: flex; flex-direction: column; min-height: 100vh; margin: 0; transition: background 0.3s; font-family: sans-serif; }
+        .cia-header { width: 100%; padding: 40px 20px; text-align: center; color: white; box-sizing: border-box; }
+        .bg-azul { background: linear-gradient(135deg, #00205b, #0093d1); }
+        .bg-gol { background: linear-gradient(135deg, #ff5a00, #ff8a05); }
+        .bg-latam { background: linear-gradient(135deg, #1b0088, #e8114b); }
+        .cia-title { font-size: 28px; font-weight: bold; text-transform: uppercase; }
+        .feed-container { padding: 15px; flex: 1; max-width: 1100px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        .news-item { display: flex; gap: 15px; margin-bottom: 15px; cursor: pointer; border-bottom: 1px solid #eee; padding-bottom: 10px; align-items: center; text-decoration: none; color: inherit; }
+        .news-photo img { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; }
+        .news-info h3 { font-size: 16px; margin: 0; line-height: 1.3; }
+        body.dark-mode { background: #121212; color: #eee; }
+        body.dark-mode .news-item { border-bottom-color: #333; }
     </style>
 </head>
 <body>
 
-<header>
-    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height:30px; cursor:pointer;" onclick="location.href='index.html'">
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <button class="btn-dark-toggle" id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-    </div>
-</header>
+<div id="menu-placeholder"></div>
+<div id="header-placeholder"></div>
 
-<div class="breadcrumbs">
-    <a href="index.html">Início</a> <span>/</span> <a href="#">Companhias</a> <span>/</span> <span id="bread-cia">...</span>
-</div>
-
-<div id="cia-banner" class="cia-header">
-    <img id="cia-logo-img" src="" class="cia-logo-display">
-    <div id="cia-nome" class="cia-title">Carregando...</div>
-</div>
-
-<main class="feed-container">
-    <h2 style="margin-bottom:15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Notícias Recentes</h2>
-    <div id="news-feed-cia">
-        <p style="text-align:center; color:#888;">Buscando notícias...</p>
-    </div>
-</main>
-
-<footer>
-    <img src="3_20250925_005418_0002.png" class="footer-logo" alt="BrasilAviation" style="height: 40px; margin-bottom: 20px; display:block; margin-left:auto; margin-right:auto;">
-    <ul style="display: flex; justify-content: center; gap: 20px; list-style: none; margin-bottom: 20px; padding: 0;">
-        <li><a href="pagina.html?ref=sobre" style="text-decoration: none; color: inherit; font-size: 14px;">Sobre Nós</a></li>
-        <li><a href="pagina.html?ref=contato" style="text-decoration: none; color: inherit; font-size: 14px;">Contato</a></li>
-        <li><a href="pagina.html?ref=privacidade" style="text-decoration: none; color: inherit; font-size: 14px;">Privacidade</a></li>
-        <li><a href="pagina.html?ref=termos" style="text-decoration: none; color: inherit; font-size: 14px;">Termos de Uso</a></li>
-    </ul>
-    <p style="font-size: 12px; color: #999; text-align: center;">&copy; 2026 BrasilAviation.info - Todos os direitos reservados.</p>
-</footer>
+<div id="cia-banner" class="cia-header"><div id="cia-nome" class="cia-title">Carregando...</div></div>
+<main class="feed-container"><div id="news-feed-cia"></div></main>
+<div id="footer-placeholder"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
     import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-        authDomain: "braviation3.firebaseapp.com",
-        projectId: "braviation3",
-        storageBucket: "braviation3.firebasestorage.app",
-        messagingSenderId: "979009087877",
-        appId: "1:979009087877:web:490bdc36da545d56b87cec"
-    };
-
+    const firebaseConfig = { apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g", authDomain: "braviation3.firebaseapp.app", projectId: "braviation3", storageBucket: "braviation3.firebasestorage.app", messagingSenderId: "979009087877", appId: "1:979009087877:web:490bdc36da545d56b87cec" };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // MODO ESCURO
-    const btnDark = document.getElementById('dark-mode-toggle');
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    btnDark.onclick = () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-    };
+    // Componentes e Cliques (Unificado)
+    async function carregarComponentes() {
+        const [h, f, m] = await Promise.all([
+            fetch('/cabecalho.html').then(r => r.text()),
+            fetch('/rodape.html').then(r => r.text()),
+            fetch('/menu.html').then(r => r.text())
+        ]);
+        document.getElementById('header-placeholder').innerHTML = h;
+        document.getElementById('footer-placeholder').innerHTML = f;
+        document.getElementById('menu-placeholder').innerHTML = m;
+        if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+    }
+
+    document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (t.closest('#open-menu')) document.getElementById('side-menu')?.classList.add('active');
+        if (t.closest('#close-menu')) document.getElementById('side-menu')?.classList.remove('active');
+        if (t.closest('#btn-toggle-cat')) {
+            document.getElementById('lista-cat')?.classList.toggle('active');
+            document.getElementById('seta-cat')?.classList.toggle('rotate');
+        }
+        if (t.closest('#dark-toggle-header')) {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+        }
+    });
 
     const params = new URLSearchParams(window.location.search);
-    const ciaSlug = params.get('cia');
-
-    const configCia = {
-        azul: { nome: "AZUL", display: "Azul", classe: "bg-azul" },
-        gol: { nome: "GOL", display: "GOL", classe: "bg-gol" },
-        latam: { nome: "LATAM", display: "LATAM", classe: "bg-latam" }
-    };
-
+    const ciaSlug = params.get('cia')?.toLowerCase();
+    const configCia = { azul: { nome: "AZUL", classe: "bg-azul" }, gol: { nome: "GOL", classe: "bg-gol" }, latam: { nome: "LATAM", classe: "bg-latam" } };
+    
     if (configCia[ciaSlug]) {
         const c = configCia[ciaSlug];
         document.getElementById('cia-banner').classList.add(c.classe);
-        document.getElementById('cia-nome').innerText = c.display;
-        document.getElementById('bread-cia').innerText = c.display;
-        document.title = c.display + " | BrasilAviation.info";
+        document.getElementById('cia-nome').innerText = c.nome;
         carregarNoticiasCia(c.nome);
     }
 
     async function carregarNoticiasCia(nomeFiltro) {
-        const feed = document.getElementById('news-feed-cia');
-        try {
-            // Removi temporariamente o orderBy para testar se é erro de índice
-            const q = query(
-                collection(db, "noticias"), 
-                where("categoria", "==", nomeFiltro)
-            );
-            
-            const snap = await getDocs(q);
-            let html = "";
-
-            if (snap.empty) {
-                feed.innerHTML = `<div class="empty-msg">Nenhuma notícia da ${nomeFiltro} encontrada. Verifique se a categoria no banco está escrita exatamente como "${nomeFiltro}".</div>`;
-                return;
-            }
-
-            // Ordenando manualmente no JS para evitar erro de índice por enquanto
-            const docsSorted = snap.docs.sort((a, b) => b.data().data - a.data().data);
-
-            docsSorted.forEach(doc => {
-                const n = doc.data();
+        // Busca todas para garantir que o filtro manual pegue variações de texto
+        const q = query(collection(db, "noticias"), orderBy("data", "desc"));
+        const snap = await getDocs(q);
+        let html = "";
+        
+        snap.forEach(d => {
+            const n = d.data();
+            const catDoc = (n.cat || n.categoria || "").toUpperCase();
+            // Verifica se a categoria da notícia bate com o filtro (ex: AZUL == AZUL)
+            if (catDoc === nomeFiltro) {
                 html += `
-                    <article class="news-item" onclick="window.location.href='noticia.html?id=${doc.id}'">
-                        <div class="news-photo"><img src="${n.foto}"></div>
-                        <div class="news-info">
-                            <h3>${n.titulo}</h3>
-                            <p style="font-size:12px; color:#888;">${n.data ? n.data.toDate().toLocaleDateString('pt-BR') : ''}</p>
-                        </div>
-                    </article>`;
-            });
-            feed.innerHTML = html;
-        } catch (e) {
-            console.error("ERRO DETALHADO:", e);
-            feed.innerHTML = "Erro ao carregar notícias. Verifique o console do navegador.";
-        }
+                <article class="news-item" onclick="window.location.href='/noticia?id=${d.id}'">
+                    <div class="news-photo"><img src="${n.foto}"></div>
+                    <div class="news-info"><h3>${n.titulo}</h3></div>
+                </article>`;
+            }
+        });
+        document.getElementById('news-feed-cia').innerHTML = html || "<p style='text-align:center; padding:20px;'>Nenhuma notícia da " + nomeFiltro + " encontrada.</p>";
     }
+
+    carregarComponentes();
 </script>
 </body>
 </html>

@@ -130,7 +130,6 @@
         document.getElementById('footer-container').innerHTML = html;
     });
 
-    // --- LÓGICA DA NOTÍCIA E INTERLIGAÇÃO ---
     const params = new URLSearchParams(window.location.search);
     const idOuSlug = params.get('p') || params.get('id');
 
@@ -158,16 +157,19 @@
     function renderizar(n, id) {
         updateDoc(doc(db, "noticias", id), { cliques: increment(1) }).catch(()=>{});
         
-        // --- ATUALIZAÇÃO DINÂMICA DAS META TAGS ---
+        // --- ATUALIZAÇÃO DAS META TAGS PARA PRÉVIA NO WHATSAPP ---
         document.title = n.titulo + " | BrasilAviation.info";
         document.getElementById('og-title').setAttribute('content', n.titulo);
         document.getElementById('og-image').setAttribute('content', n.foto);
         document.getElementById('og-url').setAttribute('content', window.location.href);
         
-        // Cria um resumo removendo tags HTML e pegando os primeiros 160 caracteres
-        const resumo = (n.texto || n.conteudo || "").replace(/<[^>]*>?/gm, '').substring(0, 160) + "...";
+        // Limpa o HTML do texto para criar uma descrição limpa para a prévia
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = n.texto || n.conteudo || "";
+        const textoLimpo = tempDiv.textContent || tempDiv.innerText || "";
+        const resumo = textoLimpo.substring(0, 160) + "...";
         document.getElementById('og-desc').setAttribute('content', resumo);
-        // ------------------------------------------
+        // -------------------------------------------------------
 
         const dataFmt = n.data ? n.data.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
         const urlFull = window.location.href;

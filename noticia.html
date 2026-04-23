@@ -12,7 +12,7 @@
     <meta id="og-url" property="og:url" content="">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #1a237e; --secondary: #2e7d32; --text: #222; --light-text: #555; --bg: #ffffff; }
@@ -76,7 +76,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- LÓGICA DE NAVEGAÇÃO ---
     function ativarComandosCabecalho() {
         const openBtn = document.getElementById('open-menu');
         const sBox = document.getElementById('search-box-header');
@@ -92,7 +91,7 @@
                 sBox.classList.add('active');
                 sInput.focus();
             } else if (sInput.value.trim()) {
-                window.location.href = `pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
+                window.location.href = `/pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
             }
         };
 
@@ -115,7 +114,7 @@
         }
     }
 
-    // --- CARREGAMENTO DE COMPONENTES ---
+    // Carregamento de componentes com barra inicial
     fetch('/cabecalho.html').then(r => r.text()).then(html => {
         document.getElementById('header-container').innerHTML = html;
         ativarComandosCabecalho();
@@ -130,7 +129,7 @@
         document.getElementById('footer-container').innerHTML = html;
     });
 
-    // --- NOVA LÓGICA PARA IDENTIFICAR O SLUG NO LINK PROFISSIONAL ---
+    // Lógica de Slug para link profissional
     const path = window.location.pathname;
     const idOuSlug = path.split('/').filter(Boolean).pop(); 
 
@@ -158,7 +157,6 @@
     function renderizar(n, id) {
         updateDoc(doc(db, "noticias", id), { cliques: increment(1) }).catch(()=>{});
         
-        // --- ATUALIZAÇÃO REFORÇADA DAS META TAGS ---
         document.title = n.titulo + " | BrasilAviation.info";
         
         const metaTitle = document.getElementById('og-title');
@@ -217,3 +215,4 @@
 </script>
 </body>
 </html>
+

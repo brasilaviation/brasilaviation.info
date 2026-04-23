@@ -7,83 +7,85 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- ESTILOS PADRONIZADOS --- */
-        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* --- ESTILOS GERAIS E DARK MODE --- */
+        :root { --primary: #1a237e; --secondary: #2e7d32; --text: #333; --light-text: #666; --bg: #ffffff; }
+        body.dark-mode { --bg: #121212; --text: #eee; --light-text: #aaa; --primary: #ffffff; }
+
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; background: var(--bg); position: sticky; top: 0; z-index: 1000; }
         
-        .logo-cia { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; vertical-align: middle; }
-        .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 80vh; }
         
         /* Breadcrumb */
-        .breadcrumb { font-size: 13px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
-        .breadcrumb span { color: #2e7d32; }
-        .breadcrumb b { color: #ccc; margin: 0 8px; }
+        .breadcrumb { font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; color: #888; }
+        .breadcrumb span { color: var(--secondary); }
 
         /* Título e Meta */
-        .noticia-container h1 { font-size: 30px; color: #1a237e; margin-bottom: 15px; font-weight: 800; line-height: 1.2; }
-        .meta-info { display: flex; align-items: center; gap: 15px; color: #777; font-size: 13px; margin-bottom: 25px; font-weight: 500; }
-        .meta-info i { margin-right: 4px; color: #999; }
-        .meta-info a { color: #2e7d32; text-decoration: none; font-weight: 700; }
+        h1 { font-size: 32px; color: var(--primary); margin-bottom: 15px; line-height: 1.2; font-weight: 800; }
+        .meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: var(--light-text); font-size: 13px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
 
-        /* Imagem de Capa */
-        .main-photo { width: 100%; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; max-height: 450px; }
+        /* Imagem e Legenda */
+        .main-photo-wrapper { width: 100%; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .main-photo { width: 100%; display: block; }
+        .foto-legenda { margin: 10px 0 25px; padding-left: 12px; border-left: 4px solid var(--secondary); font-size: 13px; font-style: italic; color: var(--light-text); line-height: 1.4; }
 
-        /* Barra Lateral Verde e Texto */
-        .quote-box { border-left: 5px solid #2e7d32; padding-left: 15px; font-style: italic; color: #666; margin-bottom: 25px; font-size: 18px; line-height: 1.4; }
-        .corpo-texto { font-size: 17.5px; color: #333; line-height: 1.8; text-align: justify; }
-        .corpo-texto p { margin-bottom: 20px; }
+        /* Corpo do Texto */
+        .corpo-texto { font-size: 18px; line-height: 1.8; color: var(--text); text-align: justify; }
+        .corpo-texto img { max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0; }
+        .corpo-texto a { color: var(--secondary); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--secondary); }
 
         /* Tags */
-        .tag-area { margin-top: 40px; border-top: 1px solid #eee; padding-top: 25px; }
-        .tag-label { font-size: 11px; font-weight: 900; color: #999; margin-bottom: 12px; display: block; }
-        .btn-tag { background: #f0f3ff; color: #1a237e; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid #e0e6ff; }
+        .tags-container { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; }
+        .tag-item { background: #eee; color: #555; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin-right: 5px; display: inline-block; text-transform: lowercase; }
+        body.dark-mode .tag-item { background: #333; color: #ccc; }
 
-        /* Header e Footer */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
-        .btn-icon-top { background: none; border: none; font-size: 20px; color: #2e7d32; cursor: pointer; }
-        
-        footer { text-align: center; padding: 60px 20px; background: #fafafa; border-top: 1px solid #eee; margin-top: 50px; }
-        footer img { height: 45px; margin-bottom: 25px; opacity: 0.8; }
-        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; font-size: 13px; }
-        .footer-links a { color: #555; text-decoration: none; font-weight: 600; }
+        /* Busca e Botões */
+        .search-container { display: flex; align-items: center; border: 1.5px solid var(--secondary); border-radius: 25px; width: 38px; height: 38px; overflow: hidden; transition: 0.4s; }
+        .search-container.active { width: 180px; }
+        .search-input { border: none; background: transparent; outline: none; width: 0; font-size: 14px; transition: 0.4s; padding: 0; color: var(--text); }
+        .search-container.active .search-input { width: 130px; padding: 0 10px; }
+        .btn-search { background: none; border: none; cursor: pointer; color: var(--secondary); width: 32px; display: flex; align-items: center; justify-content: center; }
 
-        /* Submenu das Categorias */
-        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.03); border-radius: 0 0 8px 8px; }
-        .submenu.active { max-height: 1500px; padding-bottom: 10px; }
-        .submenu a { padding: 10px 20px 10px 50px !important; font-size: 13px !important; color: #555 !important; border: none !important; }
-        .menu-arrow { transition: transform 0.3s; font-size: 12px; color: #bbb; }
-        .menu-arrow.rotate { transform: rotate(180deg); }
+        /* Barra de Compartilhamento */
+        .share-bar-fixed { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg); border-radius: 50px; display: none; gap: 20px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; border: 1px solid #eee; }
+        .share-bar-fixed a { color: var(--light-text); font-size: 22px; }
 
-        /* Dark Mode */
-        body.dark-mode { background: #121212; color: #eee; }
-        body.dark-mode header { background: #121212; border-bottom-color: #333; }
-        body.dark-mode .noticia-container h1 { color: #fff; }
-        body.dark-mode .corpo-texto { color: #ccc; }
-        body.dark-mode .quote-box { color: #bbb; }
-        body.dark-mode footer { background: #1a1a1a; border-top-color: #333; }
-        body.dark-mode .btn-tag { background: #222; color: #8bb1ff; border-color: #333; }
-        body.dark-mode .submenu { background: rgba(255,255,255,0.05); }
+        /* --- CORREÇÃO DAS LOGOS NO MENU (Caso o CSS não esteja no menu.html) --- */
+        .logo-cia { height: 18px; width: auto; margin-right: 10px; vertical-align: middle; object-fit: contain; }
     </style>
 </head>
-<body id="body">
+<body>
 
 <header>
-    <button class="btn-icon-top" id="open-menu"><i class="fas fa-bars"></i></button>
+    <button id="open-menu" style="background:none; border:none; font-size:22px; color:var(--secondary); cursor:pointer;"><i class="fas fa-bars"></i></button>
     <img src="3_20250925_005418_0002.png" style="height: 35px; cursor: pointer;" onclick="location.href='index.html'">
-    <div style="display: flex; gap: 18px;">
-        <button class="btn-icon-top" id="dark-toggle"><i class="far fa-moon"></i></button>
-        <button class="btn-icon-top" id="share-btn"><i class="fas fa-share-alt"></i></button>
+    <div style="display: flex; gap: 10px;">
+        <div class="search-container" id="search-box">
+            <input type="text" id="input-busca" class="search-input" placeholder="Pesquisar...">
+            <button class="btn-search" id="btn-lupa"><i class="fas fa-search"></i></button>
+        </div>
+        <button id="dark-toggle" style="background:none; border:none; font-size:20px; color:var(--secondary);"><i class="far fa-moon"></i></button>
     </div>
 </header>
 
 <div id="menu-container"></div>
 
 <main class="noticia-container" id="noticia-render">
-    <p style="text-align:center; padding:100px; color:#888;">Preparando motores...</p>
+    <div style="text-align:center; padding:100px; color:#888;">
+        <i class="fas fa-circle-notch fa-spin" style="font-size: 30px;"></i>
+        <p>Aguarde, preparando decolagem...</p>
+    </div>
 </main>
+
+<div class="share-bar-fixed" id="share-bar">
+    <a href="#" id="share-fb" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="#" id="share-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <a href="javascript:void(0)" id="share-native"><i class="fas fa-share-alt"></i></a>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -97,104 +99,134 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // --- CARREGAR MENU EXTERNO ---
-    async function carregarMenu() {
+    const params = new URLSearchParams(window.location.search);
+    const idOuSlug = params.get('p') || params.get('id');
+
+    function formatarDataExtenso(timestamp) {
+        if (!timestamp) return "Data não informada";
+        const data = timestamp.toDate();
+        return data.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    async function carregar() {
+        if (!idOuSlug) {
+            document.getElementById('noticia-render').innerHTML = "Voo sem destino. Link inválido.";
+            return;
+        }
+
         try {
-            const resp = await fetch('menu.html');
-            const html = await resp.text();
-            document.getElementById('menu-container').innerHTML = html;
+            let docFinal = null;
+            const refDireta = doc(db, "noticias", idOuSlug);
+            const snapDireto = await getDoc(refDireta);
             
-            const menu = document.getElementById('side-menu');
-            document.getElementById('open-menu').onclick = () => menu.classList.add('active');
-            document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
-        } catch (e) { console.error("Erro ao carregar menu:", e); }
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const noticiaId = urlParams.get('id');
-
-    async function carregarNoticia() {
-        if (!noticiaId) return;
-
-        try {
-            const docRef = doc(db, "noticias", noticiaId);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const n = docSnap.data();
-                const dataFormatada = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {
-                    day: 'numeric', month: 'long', year: 'numeric'
-                }) : "Data não disponível";
-
-                document.title = `BrasilAviation | ${n.titulo}`;
-
-                document.getElementById('noticia-render').innerHTML = `
-                    <div class="breadcrumb">
-                        <span>Início</span> <b>/</b> <span>${n.categoria || 'AVIAÇÃO'}</span>
-                    </div>
-
-                    <h1>${n.titulo}</h1>
-
-                    <div class="meta-info">
-                        <span><i class="far fa-calendar-alt"></i> ${dataFormatada}</span>
-                        <span>| <i class="far fa-user"></i> Por: <a href="perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
-                    </div>
-
-                    <img src="${n.foto}" class="main-photo">
-
-                    <div class="quote-box">${n.resumo || n.titulo}</div>
-
-                    <div class="corpo-texto">
-                        ${n.conteudo}
-                    </div>
-
-                    <div class="tag-area">
-                        <span class="tag-label">ASSUNTO RELACIONADO:</span>
-                        <a href="categoria.html?cat=${n.categoria}" class="btn-tag">
-                            <i class="fas fa-plane"></i> ${n.categoria || 'Notícias'}
-                        </a>
-                    </div>
-
-                    <footer>
-                        <img src="3_20250925_005418_0002.png">
-                        <div class="footer-links">
-                            <a href="pagina.html?ref=sobre">Quem Somos</a>
-                            <a href="pagina.html?ref=contato">Redação</a>
-                            <a href="pagina.html?ref=privacidade">Privacidade</a>
-                            <a href="pagina.html?ref=termos">Termos</a>
-                        </div>
-                    </footer>
-                `;
-
-                document.getElementById('share-btn').onclick = () => {
-                    if (navigator.share) {
-                        navigator.share({ title: n.titulo, url: window.location.href });
+            if (snapDireto.exists()) {
+                docFinal = { id: snapDireto.id, data: snapDireto.data() };
+            } else {
+                const querySnapshot = await getDocs(collection(db, "noticias"));
+                querySnapshot.forEach((docSnap) => {
+                    if (docSnap.data().slug === idOuSlug) {
+                        docFinal = { id: docSnap.id, data: docSnap.data() };
                     }
-                };
+                });
             }
-        } catch (e) { console.error(e); }
+
+            if (docFinal) {
+                exibirNoticia(docFinal);
+            } else {
+                document.getElementById('noticia-render').innerHTML = "<h2>Notícia não encontrada no hangar.</h2>";
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('noticia-render').innerHTML = "Pane no sistema.";
+        }
     }
 
-    carregarMenu();
-    carregarNoticia();
-</script>
+    function exibirNoticia(docObj) {
+        const n = docObj.data;
+        updateDoc(doc(db, "noticias", docObj.id), { cliques: increment(1) }).catch(()=>{});
 
-<script>
-    // Lógica global para o Dark Mode e Toggle de Categorias
-    window.toggleCategorias = function() {
-        const lista = document.getElementById('lista-cat');
-        const seta = document.getElementById('seta-cat');
-        if(lista) lista.classList.toggle('active');
-        if(seta) seta.classList.toggle('rotate');
+        const legendaHtml = n.legenda ? `<div class="foto-legenda">${n.legenda}</div>` : "";
+        const dataExtenso = formatarDataExtenso(n.data);
+        const autorNome = n.autor || 'Miguel Barbosa';
+        
+        let tagsHtml = "";
+        if (n.tags) {
+            tagsHtml = `<div class="tags-container">` + 
+                       n.tags.split(',').map(tag => `<span class="tag-item">#${tag.trim()}</span>`).join('') + 
+                       `</div>`;
+        }
+
+        document.title = n.titulo + " | BrasilAviation";
+
+        document.getElementById('noticia-render').innerHTML = `
+            <div class="breadcrumb">Início / <span>${n.categoria || 'Geral'}</span></div>
+            <h1>${n.titulo}</h1>
+            
+            <div class="meta-info">
+                <span><i class="fas fa-user-edit"></i> Por <a href="perfil.html?nome=${encodeURIComponent(autorNome)}" style="color: inherit; text-decoration: none;"><b>${autorNome}</b></a></span>
+                <span><i class="far fa-calendar-alt"></i> ${dataExtenso}</span>
+            </div>
+
+            <div class="main-photo-wrapper">
+                <img src="${n.foto}" class="main-photo" alt="${n.titulo}">
+            </div>
+            ${legendaHtml}
+
+            <div class="corpo-texto">${n.conteudo}</div>
+            ${tagsHtml}
+        `;
+        
+        const linkAtual = window.location.href;
+        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(n.titulo)}%20${encodeURIComponent(linkAtual)}`;
+        document.getElementById('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkAtual)}`;
+        document.getElementById('share-bar').style.display = 'flex';
     }
+
+    carregar();
+
+    // Comportamento da Busca e Dark Mode
+    const searchBox = document.getElementById('search-box');
+    const inputBusca = document.getElementById('input-busca');
+    document.getElementById('btn-lupa').onclick = (e) => {
+        e.stopPropagation();
+        if (!searchBox.classList.contains('active')) {
+            searchBox.classList.add('active');
+            inputBusca.focus();
+        } else if (inputBusca.value.trim()) {
+            window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value)}`;
+        }
+    };
 
     const btnDark = document.getElementById('dark-toggle');
     if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-
     btnDark.onclick = () => {
         document.body.classList.toggle('dark-mode');
-        const mode = document.body.classList.contains('dark-mode') ? 'active' : 'inactive';
-        localStorage.setItem('dark-mode', mode);
+        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+    };
+    
+    // CARREGAR MENU E CONFIGURAR O BOTÃO "X"
+    fetch('menu.html').then(r => r.text()).then(html => {
+        document.getElementById('menu-container').innerHTML = html;
+        const menu = document.getElementById('side-menu');
+        const openBtn = document.getElementById('open-menu');
+        const closeBtn = document.getElementById('close-menu'); // O 'X' do menu
+
+        if(openBtn) openBtn.onclick = () => menu.classList.add('active');
+        if(closeBtn) closeBtn.onclick = () => menu.classList.remove('active');
+
+        // Fecha se clicar fora (na área escura)
+        const closeArea = document.querySelector('.menu-close-area');
+        if(closeArea) closeArea.onclick = () => menu.classList.remove('active');
+
+    }).catch(()=>{});
+
+    document.getElementById('share-native').onclick = () => {
+        if (navigator.share) {
+            navigator.share({ title: document.title, url: window.location.href });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Copiado!");
+        }
     };
 </script>
 </body>

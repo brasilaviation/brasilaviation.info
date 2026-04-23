@@ -3,97 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Brasil Aviation | Pro Edition</title>
+    <title>Admin Pro | Brasil Aviation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; --card: #ffffff; --text: #333; }
-        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
-        
-        /* TELA DE LOGIN */
-        #login-screen { max-width: 350px; margin: 100px auto; background: var(--card); padding: 30px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        #login-screen img { height: 50px; margin-bottom: 20px; }
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; background: var(--bg); color: var(--text); }
-        
-        /* PAINEL (Oculto até logar) */
-        #main-content { display: none; }
-        
-        .container { max-width: 650px; margin: 0 auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-top { background: var(--card); border: 1px solid #ddd; padding: 10px; border-radius: 10px; cursor: pointer; color: var(--text); }
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--secondary); color: white; padding: 15px; border-radius: 15px; text-align: center; }
-        .search-bar { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box; }
-        .btn-main { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-        .card-news { background: var(--card); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card-news img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
-        
-        #editor-noticia { display: none; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 50px; }
-        label { display: block; font-weight: bold; font-size: 11px; text-transform: uppercase; margin: 15px 0 5px; color: var(--primary); }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: var(--bg); color: var(--text); box-sizing: border-box; }
-        
-        .toolbar { display: flex; flex-wrap: wrap; gap: 5px; background: #eee; padding: 8px; border-radius: 10px 10px 0 0; border: 1px solid #ddd; border-bottom: none; margin-top: 10px; }
-        #p-texto { min-height: 300px; border: 1px solid #ddd; border-radius: 0 0 10px 10px; background: var(--bg); color: var(--text); padding: 15px; overflow-y: auto; outline: none; }
-        #status-txt { font-size: 12px; color: var(--secondary); font-weight: bold; display: none; margin: 10px 0; }
+        :root { --primary: #001242; --accent: #0056b3; --bg: #f8f9fa; --white: #ffffff; }
+        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; color: #333; }
+        .mobile-header { display: none; background: var(--primary); color: white; padding: 15px; align-items: center; justify-content: space-between; }
+        .wrapper { display: flex; flex: 1; overflow: hidden; }
+        nav { width: 260px; background: var(--primary); color: white; display: flex; flex-direction: column; transition: 0.3s; }
+        nav a { padding: 15px 20px; color: #adb5bd; text-decoration: none; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #ffffff10; }
+        nav a:hover, nav a.active { background: #ffffff10; color: white; border-left: 4px solid var(--accent); }
+        main { flex: 1; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .editor-container { background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0; overflow: hidden; }
+        .toolbar { background: #eeeeee; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 10; }
+        .toolbar button, .toolbar label { background: white; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+        #p-texto { min-height: 500px; padding: 30px; outline: none; line-height: 1.6; font-size: 17px; background: white; }
+        #p-texto img { max-width: 100%; height: auto; border-radius: 8px; margin: 15px 0; display: block; }
+        .settings-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .input-box { display: flex; flex-direction: column; gap: 5px; }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white; }
+        #status-bar { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 50px; display: none; font-size: 13px; z-index: 100; }
+        .btn-pub { background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; font-size: 16px; }
+        #login-screen { position: fixed; inset: 0; background: var(--primary); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-card { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 350px; text-align: center; }
+        .btn-migrar { background: #ff9800; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 20px; width: 100%; }
+        @media (max-width: 768px) {
+            .wrapper { flex-direction: column; }
+            nav { width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
+            nav a span { display: none; }
+            .settings-panel { grid-template-columns: 1fr; }
+            .mobile-header { display: flex; }
+        }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <img src="3_20250925_005418_0002.png">
-    <h3>Acesso Restrito</h3>
-    <input type="email" id="email-login" class="login-input" placeholder="E-mail">
-    <input type="password" id="pass-login" class="login-input" placeholder="Senha">
-    <button class="btn-main" id="btn-do-login">ENTRAR NO SISTEMA</button>
-    <p id="error-msg" style="color:red; font-size:12px; margin-top:10px;"></p>
-</div>
-
-<div id="main-content">
-    <div class="container">
-        <div class="header">
-            <button class="btn-top" onclick="location.href='index.html'"><i class="fas fa-home"></i></button>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-top" id="dark-btn"><i class="fas fa-moon"></i></button>
-                <button class="btn-top" id="logout-btn" style="color:red;">Sair</button>
-            </div>
-        </div>
-
-        <div id="lista-posts">
-            <div class="stats">
-                <div class="stat-card"><h1 id="total-m">0</h1><p style="margin:0;font-size:12px;">Matérias</p></div>
-                <div class="stat-card"><h1 id="total-c">0</h1><p style="margin:0;font-size:12px;">Cliques</p></div>
-            </div>
-            <input type="text" id="busca" class="search-bar" placeholder="Pesquisar título...">
-            <button class="btn-main" onclick="abrirEditor()"><i class="fas fa-plus"></i> Nova Matéria</button>
-            <div id="feed"></div>
-        </div>
-
-        <div id="editor-noticia">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2 id="edit-title" style="margin:0; font-size:18px;">Publicar Notícia</h2>
-                <i class="fas fa-times" onclick="fecharEditor()" style="cursor:pointer; color:#999;"></i>
-            </div>
-            <input type="hidden" id="p-id"><input type="hidden" id="p-foto-velha">
-            <label>Título da Matéria:</label>
-            <input type="text" id="p-titulo" oninput="gerarSlugAuto(this.value)">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div><label>Categoria:</label><select id="p-cat"><option value="AZUL">Azul</option><option value="GOL">GOL</option><option value="LATAM">LATAM</option><option value="FROTA">Frota</option><option value="ROTAS">Rotas</option><option value="PINTURA">Pintura</option></select></div>
-                <div><label>Autor:</label><select id="p-autor"><option value="Miguel Barbosa">Miguel Barbosa</option><option value="BrasilAviation Team">BrasilAviation Team</option></select></div>
-            </div>
-            <label>Capa:</label><input type="file" id="p-file" accept="image/*">
-            <div class="toolbar"><button onclick="execCmd('bold')">B</button></div>
-            <div id="p-texto" contenteditable="true"></div>
-            <input type="text" id="p-slug" placeholder="Slug">
-            <div id="status-txt">Processando...</div>
-            <button class="btn-main" id="btn-save" style="margin-top:20px;">PUBLICAR</button>
-        </div>
+    <div class="login-card">
+        <h2 style="margin-top:0">Painel Brasil Aviation</h2>
+        <input type="email" id="email-login" placeholder="E-mail" style="margin-bottom:10px; width:100%">
+        <input type="password" id="pass-login" placeholder="Senha" style="margin-bottom:20px; width:100%">
+        <button onclick="fazerLogin()" class="btn-pub">Acessar Painel</button>
+        <p id="error-msg" style="color:red; font-size:12px"></p>
     </div>
 </div>
 
+<div class="mobile-header"><strong>BRASIL AVIATION</strong><i class="fas fa-bars"></i></div>
+
+<div class="wrapper">
+    <nav>
+        <a href="#" class="active" onclick="fecharEditor()"><i class="fas fa-edit"></i> <span>Matérias</span></a>
+        <a href="#"><i class="fas fa-chart-bar"></i> <span>Estatísticas</span></a>
+        <a href="#"><i class="fas fa-users"></i> <span>Equipe</span></a>
+        <a href="#" onclick="fazerLogout()" style="margin-top:auto; color:#ff6b6b"><i class="fas fa-power-off"></i> <span>Sair</span></a>
+    </nav>
+
+    <main id="main-content">
+        <div id="view-lista" class="container">
+            <button class="btn-migrar" onclick="iniciarMigracaoWix()"><i class="fas fa-file-import"></i> MIGRAR MATÉRIAS DO WIX</button>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2>Gerenciar Posts</h2>
+                <button class="btn-pub" style="width:auto; margin:0" onclick="abrirEditor()">+ Nova Matéria</button>
+            </div>
+            <div id="feed">Carregando matérias...</div>
+        </div>
+
+        <div id="editor-noticia" class="container" style="display:none">
+            <div class="editor-container">
+                <div class="toolbar">
+                    <button onclick="execCmd('bold')"><b>B</b></button>
+                    <button onclick="execCmd('italic')"><i>I</i></button>
+                    <label for="img-body" style="margin:0"><i class="fas fa-image"></i> Inserir Foto</label>
+                    <input type="file" id="img-body" hidden accept="image/*" onchange="uploadNoTexto(this)">
+                </div>
+                <input type="hidden" id="p-id-edit">
+                <input type="text" id="p-titulo" placeholder="Título da Matéria" style="width:100%; padding:20px; border:none; font-size:30px; font-weight:bold; outline:none;" oninput="gerarSlug(this.value)">
+                <div id="p-texto" contenteditable="true"></div>
+            </div>
+
+            <div class="settings-panel">
+                <div class="input-box">
+                    <label>Data da Matéria (Para Migração)</label>
+                    <input type="datetime-local" id="p-data-retroativa">
+                </div>
+                <div class="input-box">
+                    <label>Imagem de Capa</label>
+                    <input type="file" id="p-capa-file" onchange="uploadCapa(this)">
+                    <input type="hidden" id="p-foto-capa">
+                </div>
+                <div class="input-box" style="grid-column: span 2;">
+                    <label>Legenda da Foto Principal</label>
+                    <input type="text" id="p-legenda" placeholder="Ex: Boeing 737 em Confins. Foto: Ricardo Morgan">
+                </div>
+                <div class="input-box">
+                    <label>Redator</label>
+                    <select id="p-autor">
+                        <option value="Miguel Barbosa">Miguel Barbosa</option>
+                        <option value="Henrique Saito">Henrique Saito</option>
+                        <option value="Murilo Marinho">Murilo Marinho</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>Categoria</label>
+                    <select id="p-cat">
+                        <optgroup label="Companhias"><option value="Azul">Azul</option><option value="GOL">GOL</option><option value="LATAM">LATAM</option></optgroup>
+                        <optgroup label="Temas">
+                            <option value="Pinturas e Adesivos">Pinturas e Adesivos</option>
+                            <option value="Importação">Importação</option>
+                            <option value="Curiosidades">Curiosidades</option>
+                            <option value="Novas Rotas">Novas Rotas</option>
+                            <option value="Incidentes">Incidentes</option>
+                            <option value="Movimentação de Frota">Movimentação de Frota</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="input-box" style="grid-column: span 2;">
+                    <label>Tags (Separe por vírgula)</label>
+                    <input type="text" id="p-tags" placeholder="ex: aviação, boeing, gol, cnf">
+                </div>
+                <div class="input-box" style="grid-column: span 2;">
+                    <label>Slug (Link)</label>
+                    <input type="text" id="p-slug" readonly style="background:#eee">
+                </div>
+            </div>
+
+            <button class="btn-pub" id="btn-save" onclick="salvarPost()">SALVAR MATÉRIA</button>
+            <button onclick="fecharEditor()" style="background:none; border:none; color:grey; width:100%; margin-top:10px; cursor:pointer">Cancelar</button>
+        </div>
+    </main>
+</div>
+
+<div id="status-bar">Processando...</div>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, query, orderBy, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -104,75 +151,135 @@
         appId: "1:979009087877:web:490bdc36da545d56b87cec"
     };
 
-    const IMGBB_API_KEY = "2ee4c2239a809ffb30ec9c04689ee3ee"; 
+    const IMGBB_KEY = "2ee4c2239a809ffb30ec9c04689ee3ee";
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // LÓGICA DE LOGIN
-    document.getElementById('btn-do-login').onclick = async () => {
-        const e = document.getElementById('email-login').value;
-        const p = document.getElementById('pass-login').value;
-        try {
-            await signInWithEmailAndPassword(auth, e, p);
-        } catch(err) {
-            document.getElementById('error-msg').innerText = "Usuário ou senha inválidos.";
-        }
+    window.fazerLogin = async () => {
+        try { await signInWithEmailAndPassword(auth, document.getElementById('email-login').value, document.getElementById('pass-login').value); } 
+        catch { document.getElementById('error-msg').innerText = "Erro ao entrar."; }
+    };
+    window.fazerLogout = () => signOut(auth);
+    onAuthStateChanged(auth, u => { document.getElementById('login-screen').style.display = u ? 'none' : 'flex'; if(u) carregar(); });
+
+    window.execCmd = (c) => document.execCommand(c, false, null);
+    window.gerarSlug = t => document.getElementById('p-slug').value = t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+
+    async function subirImg(file) {
+        const fd = new FormData(); fd.append("image", file);
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: fd });
+        const j = await res.json(); return j.data.url;
+    }
+
+    window.uploadNoTexto = async input => {
+        if(!input.files[0]) return;
+        mostrarStatus("Subindo imagem...");
+        const url = await subirImg(input.files[0]);
+        document.getElementById('p-texto').focus();
+        document.execCommand('insertHTML', false, `<br><img src="${url}"><br>`);
+        esconderStatus();
     };
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            carregar();
-        } else {
-            document.getElementById('login-screen').style.display = 'block';
-            document.getElementById('main-content').style.display = 'none';
-        }
-    });
-
-    document.getElementById('logout-btn').onclick = () => signOut(auth);
-
-    // RESTO DO SEU SCRIPT ORIGINAL (Carregar, Salvar, Editar, etc.)
-    let noticias = [];
-    window.gerarSlugAuto = (texto) => {
-        const slug = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-        document.getElementById('p-slug').value = slug;
+    window.uploadCapa = async input => {
+        if(!input.files[0]) return;
+        mostrarStatus("Subindo capa...");
+        document.getElementById('p-foto-capa').value = await subirImg(input.files[0]);
+        esconderStatus();
     };
 
     async function carregar() {
-        const q = query(collection(db, "noticias"), orderBy("data", "desc"));
-        const snap = await getDocs(q);
-        noticias = []; let clks = 0;
-        snap.forEach(d => {
-            const data = d.data(); data.id = d.id;
-            noticias.push(data); clks += (data.cliques || 0);
-        });
-        render(noticias);
-        document.getElementById('total-m').innerText = noticias.length;
-        document.getElementById('total-c').innerText = clks;
-    }
-
-    function render(lista) {
+        const snap = await getDocs(query(collection(db, "noticias"), orderBy("data", "desc")));
         let h = "";
-        lista.forEach(n => {
-            h += `<div class="card-news"><img src="${n.foto}"><div style="flex:1;"><h3>${n.titulo}</h3></div><i class="fas fa-edit" onclick="abrirEditor('${n.id}')"></i></div>`;
+        snap.forEach(d => {
+            const n = d.data();
+            h += `<div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05)">
+                <div><b>${n.titulo}</b><br><small>${n.autor} | ${n.cat}</small></div>
+                <div style="display:flex; gap:15px">
+                    <i class="fas fa-edit" onclick="editarMatéria('${d.id}')" style="color:blue; cursor:pointer"></i>
+                    <i class="fas fa-trash" onclick="deletar('${d.id}')" style="color:red; cursor:pointer"></i>
+                </div>
+            </div>`;
         });
-        document.getElementById('feed').innerHTML = h;
+        document.getElementById('feed').innerHTML = h || "Sem matérias.";
     }
 
-    window.abrirEditor = async (id = null) => {
-        document.getElementById('lista-posts').style.display = 'none';
-        document.getElementById('editor-noticia').style.display = 'block';
-        if(id) { /* lógica de carregar para editar */ }
+    window.iniciarMigracaoWix = async () => {
+        const urlFeed = "https://mbscmgbr.wixsite.com/website-1/blog-feed.xml";
+        mostrarStatus("Conectando ao Wix...");
+        try {
+            const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlFeed)}`);
+            const data = await response.json();
+            const xml = new DOMParser().parseFromString(data.contents, "text/xml");
+            const items = xml.querySelectorAll("item");
+            if(items.length === 0) return alert("Nenhum post encontrado no feed.");
+
+            mostrarStatus(`Migrando ${items.length} posts...`);
+            for (let i of items) {
+                const titulo = i.querySelector("title").textContent;
+                const txt = i.getElementsByTagName("content:encoded")[0]?.textContent || i.querySelector("description").textContent;
+                const link = i.querySelector("link").textContent;
+                const dt = i.querySelector("pubDate").textContent;
+                const novoId = doc(collection(db, "noticias")).id;
+
+                await setDoc(doc(db, "noticias", novoId), {
+                    titulo, texto: txt, autor: "Miguel Barbosa", cat: "Movimentação de Frota", 
+                    slug: link.split('/').pop(), data: new Date(dt), foto: "https://via.placeholder.com/800", cliques: 0
+                });
+            }
+            alert("Migração concluída!"); location.reload();
+        } catch(e) { alert("Erro: Verifique se o blog-feed.xml está ativo."); esconderStatus(); }
     };
 
-    window.fecharEditor = () => {
-        document.getElementById('lista-posts').style.display = 'block';
-        document.getElementById('editor-noticia').style.display = 'none';
+    window.editarMatéria = async (id) => {
+        const docSnap = await getDoc(doc(db, "noticias", id));
+        if (docSnap.exists()) {
+            const n = docSnap.data();
+            document.getElementById('p-id-edit').value = id;
+            document.getElementById('p-titulo').value = n.titulo;
+            document.getElementById('p-texto').innerHTML = n.texto || n.conteudo || "";
+            document.getElementById('p-foto-capa').value = n.foto;
+            document.getElementById('p-legenda').value = n.legenda || "";
+            document.getElementById('p-autor').value = n.autor;
+            document.getElementById('p-cat').value = n.cat;
+            document.getElementById('p-tags').value = n.tags || "";
+            document.getElementById('p-slug').value = n.slug;
+            abrirEditor();
+        }
     };
-    
-    // ... continue com o restante das suas funções de salvar e deletar conforme o original
+
+    window.salvarPost = async () => {
+        const btn = document.getElementById('btn-save');
+        const idExistente = document.getElementById('p-id-edit').value;
+        const dataRetro = document.getElementById('p-data-retroativa').value;
+        
+        btn.innerText = "Salvando..."; btn.disabled = true;
+        const id = idExistente || doc(collection(db, "noticias")).id;
+        
+        let dataFinal = serverTimestamp();
+        if(dataRetro) dataFinal = new Date(dataRetro);
+
+        await setDoc(doc(db, "noticias", id), {
+            titulo: document.getElementById('p-titulo').value,
+            texto: document.getElementById('p-texto').innerHTML,
+            foto: document.getElementById('p-foto-capa').value,
+            legenda: document.getElementById('p-legenda').value,
+            autor: document.getElementById('p-autor').value,
+            cat: document.getElementById('p-cat').value,
+            tags: document.getElementById('p-tags').value,
+            slug: document.getElementById('p-slug').value,
+            data: dataFinal,
+            cliques: 0
+        }, { merge: true });
+
+        alert("Sucesso!"); location.reload();
+    };
+
+    window.deletar = async id => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "noticias", id)); carregar(); } };
+    window.abrirEditor = () => { document.getElementById('view-lista').style.display='none'; document.getElementById('editor-noticia').style.display='block'; };
+    window.fecharEditor = () => { document.getElementById('p-id-edit').value = ""; location.reload(); };
+    function mostrarStatus(m){ const s = document.getElementById('status-bar'); s.innerText=m; s.style.display='block'; }
+    function esconderStatus(){ document.getElementById('status-bar').style.display='none'; }
 </script>
 </body>
 </html>

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- ESTILOS GERAIS E DARK MODE --- */
         :root { --primary: #1a237e; --secondary: #2e7d32; --text: #333; --light-text: #666; --bg: #ffffff; }
         body.dark-mode { --bg: #121212; --text: #eee; --light-text: #aaa; --primary: #ffffff; }
 
@@ -15,42 +14,32 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; background: var(--bg); position: sticky; top: 0; z-index: 1000; }
         
         .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box; }
-        
-        /* Breadcrumb */
         .breadcrumb { font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; color: #888; }
         .breadcrumb span { color: var(--secondary); }
 
-        /* Título e Meta */
         h1 { font-size: 32px; color: var(--primary); margin-bottom: 15px; line-height: 1.2; font-weight: 800; }
         .meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: var(--light-text); font-size: 13px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
 
-        /* Imagem e Legenda */
         .main-photo-wrapper { width: 100%; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .main-photo { width: 100%; display: block; }
         .foto-legenda { margin: 10px 0 25px; padding-left: 12px; border-left: 4px solid var(--secondary); font-size: 13px; font-style: italic; color: var(--light-text); line-height: 1.4; }
 
-        /* Corpo do Texto */
         .corpo-texto { font-size: 18px; line-height: 1.8; color: var(--text); text-align: justify; }
         .corpo-texto img { max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0; }
         .corpo-texto a { color: var(--secondary); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--secondary); }
 
-        /* Tags */
         .tags-container { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; }
         .tag-item { background: #eee; color: #555; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin-right: 5px; display: inline-block; text-transform: lowercase; }
         body.dark-mode .tag-item { background: #333; color: #ccc; }
 
-        /* Busca e Botões */
         .search-container { display: flex; align-items: center; border: 1.5px solid var(--secondary); border-radius: 25px; width: 38px; height: 38px; overflow: hidden; transition: 0.4s; }
         .search-container.active { width: 180px; }
         .search-input { border: none; background: transparent; outline: none; width: 0; font-size: 14px; transition: 0.4s; padding: 0; color: var(--text); }
         .search-container.active .search-input { width: 130px; padding: 0 10px; }
         .btn-search { background: none; border: none; cursor: pointer; color: var(--secondary); width: 32px; display: flex; align-items: center; justify-content: center; }
 
-        /* Barra de Compartilhamento */
         .share-bar-fixed { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg); border-radius: 50px; display: none; gap: 20px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; border: 1px solid #eee; }
         .share-bar-fixed a { color: var(--light-text); font-size: 22px; }
-
-        .logo-cia { height: 18px; width: auto; margin-right: 10px; vertical-align: middle; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -150,6 +139,11 @@
         const dataExtenso = formatarDataExtenso(n.data);
         const autorNome = n.autor || 'Miguel Barbosa';
         
+        // Ícone minúsculo da categoria no final
+        const categoriaFinalHtml = `<div style="text-align: right; margin-top: 10px; font-size: 12px; color: var(--secondary); font-weight: bold;">
+            <i class="fas fa-tag"></i> ${n.cat || 'Notícia'}
+        </div>`;
+
         let tagsHtml = "";
         if (n.tags) {
             tagsHtml = `<div class="tags-container">` + 
@@ -160,7 +154,7 @@
         document.title = n.titulo + " | BrasilAviation";
 
         document.getElementById('noticia-render').innerHTML = `
-            <div class="breadcrumb">Início / <span>${n.categoria || 'Geral'}</span></div>
+            <div class="breadcrumb">Início / <span>${n.cat || 'Geral'}</span></div>
             <h1>${n.titulo}</h1>
             
             <div class="meta-info">
@@ -173,7 +167,8 @@
             </div>
             ${legendaHtml}
 
-            <div class="corpo-texto">${n.conteudo}</div>
+            <div class="corpo-texto">${n.texto || n.conteudo || "Sem conteúdo."}</div>
+            ${categoriaFinalHtml}
             ${tagsHtml}
         `;
         
@@ -183,10 +178,8 @@
         document.getElementById('share-bar').style.display = 'flex';
     }
 
-    // CARREGAR RODAPÉ E ATIVAR SEGREDO
     fetch('rodape.html').then(r => r.text()).then(h => {
         document.getElementById('footer-container').innerHTML = h;
-        
         let secretClicks = 0;
         let secretTimer;
         const adminGate = document.getElementById('admin-gate');
@@ -202,7 +195,6 @@
 
     carregar();
 
-    // Comportamento da Busca e Dark Mode
     const searchBox = document.getElementById('search-box');
     const inputBusca = document.getElementById('input-busca');
     document.getElementById('btn-lupa').onclick = (e) => {
@@ -222,18 +214,13 @@
         localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
     };
     
-    // CARREGAR MENU
     fetch('menu.html').then(r => r.text()).then(html => {
         document.getElementById('menu-container').innerHTML = html;
         const menu = document.getElementById('side-menu');
         const openBtn = document.getElementById('open-menu');
         const closeBtn = document.getElementById('close-menu');
-
         if(openBtn) openBtn.onclick = () => menu.classList.add('active');
         if(closeBtn) closeBtn.onclick = () => menu.classList.remove('active');
-
-        const closeArea = document.querySelector('.menu-close-area');
-        if(closeArea) closeArea.onclick = () => menu.classList.remove('active');
     }).catch(()=>{});
 
     document.getElementById('share-native').onclick = () => {

@@ -5,7 +5,7 @@
     <ul>
         <li class="menu-section-title">PÁGINAS</li>
         <li><a href="index.html"><i class="fas fa-home menu-main-icon"></i> Início</a></li>
-        <li><a href="pagina.html?ref=sobre"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
+        <li><a href="sobre.html"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
         
         <hr class="menu-divider">
         
@@ -17,7 +17,7 @@
         <hr class="menu-divider">
 
         <li>
-            <a href="javascript:void(0)" onclick="toggleCategorias()" style="display:flex; justify-content:space-between; align-items:center;">
+            <a href="javascript:void(0)" id="btn-toggle-cat" style="display:flex; justify-content:space-between; align-items:center;">
                 <span><i class="fas fa-list-ul menu-main-icon"></i> Categorias</span>
                 <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
             </a>
@@ -37,56 +37,38 @@
         <hr class="menu-divider">
 
         <li class="menu-section-title">LEGAL</li>
-        <li><a href="pagina.html?ref=termos"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
-        <li><a href="pagina.html?ref=privacidade"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
-        <li><a href="pagina.html?ref=contato"><i class="fas fa-envelope menu-main-icon"></i> Contato</a></li>
+        <li><a href="termos.html"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
+        <li><a href="privacidade.html"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
+        <li><a href="contato.html"><i class="fas fa-envelope menu-main-icon"></i> Contato</a></li>
     </ul>
 </nav>
 
 <style>
-    /* --- CORREÇÃO DAS LOGOS GIGANTES --- */
-    .logo-cia {
-        height: 18px;
-        width: auto;
-        margin-right: 10px;
-        vertical-align: middle;
-        object-fit: contain;
+    /* --- EFEITO SANFONA --- */
+    .submenu { 
+        max-height: 0; 
+        overflow: hidden; 
+        transition: max-height 0.4s ease-out; 
+        background: rgba(0,0,0,0.03); 
+        display: flex;
+        flex-direction: column;
+    }
+    .submenu.active { 
+        max-height: 600px; /* Aumentado para caber todas as categorias */
+    }
+    .menu-arrow { transition: transform 0.3s; }
+    .menu-arrow.rotate { transform: rotate(180deg); }
+
+    .submenu a {
+        padding: 12px 20px 12px 50px !important;
+        font-size: 14px;
+        opacity: 0.8;
     }
 
-    .menu-section-title {
-        padding: 15px 20px 5px !important;
-        font-size: 10px !important;
-        font-weight: 700 !important;
-        color: #999 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 1.5px !important;
-    }
-
-    .menu-main-icon {
-        margin-right: 12px;
-        color: #2e7d32;
-        width: 18px;
-        text-align: center;
-    }
-
-    .menu-divider {
-        opacity: 0.05;
-        margin: 10px 20px;
-        border: 0;
-        border-top: 1px solid #000;
-    }
-
-    body.dark-mode .menu-divider {
-        border-top-color: #fff;
-    }
-
-    .side-menu ul { list-style: none; padding: 0; }
-    .side-menu li a { 
-        font-weight: 500; 
-        display: flex; 
-        align-items: center; 
-        padding: 10px 20px;
-        text-decoration: none;
-        color: inherit;
-    }
+    /* Estilos das logos e ícones */
+    .logo-cia { height: 18px; width: auto; margin-right: 10px; vertical-align: middle; object-fit: contain; }
+    .menu-section-title { padding: 15px 20px 5px !important; font-size: 10px !important; font-weight: 700 !important; color: #999 !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; }
+    .menu-main-icon { margin-right: 12px; color: #2e7d32; width: 18px; text-align: center; }
+    .menu-divider { opacity: 0.05; margin: 10px 20px; border: 0; border-top: 1px solid #000; }
+    body.dark-mode .menu-divider { border-top-color: #fff; }
 </style>

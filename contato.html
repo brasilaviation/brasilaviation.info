@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato | BrasilAviation.info</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; --text: #333; --card: #ffffff; }
+        body.dark-mode { --bg: #121212; --text: #eee; --primary: #fff; --card: #1e1e1e; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.8; }
+        .legal-card { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: var(--primary); border-bottom: 3px solid var(--secondary); display: inline-block; margin-bottom: 20px; font-size: 26px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        label { font-weight: bold; font-size: 14px; color: var(--secondary); }
+        input, select, textarea { padding: 12px; border-radius: 10px; border: 1px solid #ddd; background: var(--bg); color: var(--text); font-family: inherit; }
+        .hidden-field { display: none; margin-top: 10px; }
+        .btn-send { background: var(--secondary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; width: 100%; }
+        .btn-send:hover { filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+
+<div id="header-container"></div>
+<div id="menu-container"></div>
+
+<main class="container">
+    <article class="legal-card">
+        <h1>Fale Conosco</h1>
+        <form action="https://formspree.io/f/meevpvqq" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Nome e Sobrenome:</label>
+                <input type="text" name="Nome" required>
+            </div>
+            <div class="form-group">
+                <label>E-mail:</label>
+                <input type="email" name="Email" required>
+            </div>
+            <div class="form-group">
+                <label>Confirmar E-mail:</label>
+                <input type="email" name="Confirmacao_Email" required>
+            </div>
+            <div class="form-group">
+                <label>Motivo do Contato:</label>
+                <select name="Motivo" id="motivo-select" required onchange="if(this.value=='Outro'){document.getElementById('outro-motivo').style.display='block'}else{document.getElementById('outro-motivo').style.display='none'}">
+                    <option value="" disabled selected>Selecione uma opção</option>
+                    <option value="Pauta">Sugestão de Pauta / Flagrante</option>
+                    <option value="Critica">Crítica</option>
+                    <option value="Sugestao">Sugestão</option>
+                    <option value="Outro">Outro</option>
+                </select>
+                <input type="text" id="outro-motivo" name="Qual_Motivo" class="hidden-field" placeholder="Especifique o motivo">
+            </div>
+            <div class="form-group">
+                <label>Anexar Arquivo (Max 10MB):</label>
+                <input type="file" name="Anexo">
+            </div>
+            <div class="form-group">
+                <label>Mensagem:</label>
+                <textarea name="Mensagem" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn-send"><i class="fas fa-paper-plane"></i> Enviar</button>
+        </form>
+    </article>
+</main>
+
+<div id="footer-container"></div>
+
+<script>
+    // --- SCRIPTS DE INTERAÇÃO (COPIADOS DA HOME PARA FUNCIONAR TUDO) ---
+    function ativarComandosCabecalho() {
+        const openBtn = document.getElementById('open-menu');
+        const btnDark = document.getElementById('dark-toggle-header');
+        const sBox = document.getElementById('search-box-header');
+        const sInput = document.getElementById('input-busca-header');
+        const btnLupa = document.getElementById('btn-lupa-header');
+
+        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
+        if(btnDark) {
+            btnDark.onclick = () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+            };
+        }
+        if(btnLupa) {
+            btnLupa.onclick = (e) => {
+                e.stopPropagation();
+                sBox.classList.toggle('active');
+                if(sBox.classList.contains('active')) sInput.focus();
+            };
+        }
+    }
+
+    function ativarComandosMenu() {
+        const closeBtn = document.getElementById('close-menu');
+        const btnToggleCat = document.getElementById('btn-toggle-cat');
+        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
+        if(btnToggleCat) {
+            btnToggleCat.onclick = () => {
+                document.getElementById('lista-cat').classList.toggle('active');
+                document.getElementById('seta-cat').classList.toggle('rotate');
+            };
+        }
+    }
+
+    async function carregarComponentes() {
+        await fetch('cabecalho.html').then(r => r.text()).then(h => { document.getElementById('header-container').innerHTML = h; ativarComandosCabecalho(); });
+        await fetch('menu.html').then(r => r.text()).then(h => { document.getElementById('menu-container').innerHTML = h; ativarComandosMenu(); });
+        fetch('rodape.html').then(r => r.text()).then(h => { document.getElementById('footer-container').innerHTML = h; });
+    }
+
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+    carregarComponentes();
+</script>
+</body>
+</html>

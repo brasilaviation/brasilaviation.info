@@ -1,0 +1,126 @@
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-column branding">
+            <img src="3_20250925_005418_0002.png" alt="BrasilAviation.info" class="footer-logo">
+            <p>Sua fonte principal de notícias sobre a aviação comercial e spotting no Brasil.</p>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <h3>Navegação</h3>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="pagina.html?ref=sobre">Sobre Nós</a></li>
+                <li><a href="pagina.html?ref=contato">Contato</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Destaques</h3>
+            <ul>
+                <li><a href="categoria.html?cat=FROTA">Movimentação de Frota</a></li>
+                <li><a href="categoria.html?cat=PINTURA">Pinturas Especiais</a></li>
+                <li><a href="categoria.html?cat=PEDIDOS">Entregas de Aeronaves</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Legal</h3>
+            <ul>
+                <li><a href="pagina.html?ref=termos">Termos de Uso</a></li>
+                <li><a href="pagina.html?ref=privacidade">Privacidade</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p style="user-select: none;">
+            <span id="admin-gate" style="cursor: default;">&copy; 2026 BrasilAviation.info</span> - Todos os direitos reservados.
+        </p>
+    </div>
+</footer>
+
+<style>
+    .main-footer {
+        background-color: #f9f9f9;
+        padding: 40px 20px 20px;
+        border-top: 3px solid #2e7d32;
+        margin-top: 50px;
+        color: #333;
+    }
+
+    .footer-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+    }
+
+    .footer-logo {
+        height: 40px;
+        margin-bottom: 15px;
+    }
+
+    .footer-column h3 {
+        font-size: 16px;
+        color: #2e7d32;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 8px;
+    }
+
+    .footer-column ul li a {
+        text-decoration: none;
+        color: #666;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .footer-column ul li a:hover {
+        color: #2e7d32;
+        padding-left: 5px;
+    }
+
+    .footer-social {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .footer-social a {
+        color: #2e7d32;
+        font-size: 20px;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-size: 12px;
+        color: #999;
+    }
+
+    /* Ajuste para o Modo Escuro */
+    body.dark-mode .main-footer {
+        background-color: #1a1a1a;
+        color: #eee;
+        border-top-color: #2e7d32;
+    }
+    body.dark-mode .footer-column ul li a { color: #bbb; }
+    body.dark-mode .footer-bottom { border-top-color: #333; }
+</style>

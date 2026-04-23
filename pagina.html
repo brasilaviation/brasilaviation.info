@@ -3,228 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation | Notícia</title>
+    <title>BrasilAviation.info | Institucional</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- ESTILOS GERAIS E DARK MODE --- */
-        :root { --primary: #1a237e; --secondary: #2e7d32; --text: #333; --light-text: #666; --bg: #ffffff; }
-        body.dark-mode { --bg: #121212; --text: #eee; --light-text: #aaa; --primary: #ffffff; }
+        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; --text: #333; --card: #ffffff; }
+        body.dark-mode { --bg: #121212; --text: #eee; --primary: #fff; --card: #1e1e1e; }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; background: var(--bg); position: sticky; top: 0; z-index: 1000; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         
-        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 80vh; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; flex: 1; line-height: 1.8; }
         
-        /* Breadcrumb */
-        .breadcrumb { font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; color: #888; }
-        .breadcrumb span { color: var(--secondary); }
+        h1 { color: var(--primary); border-left: 5px solid var(--secondary); padding-left: 15px; margin-bottom: 30px; font-size: 28px; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { color: var(--primary); margin-top: 35px; font-size: 22px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
+        body.dark-mode h2 { border-color: #333; }
 
-        /* Título e Meta */
-        h1 { font-size: 32px; color: var(--primary); margin-bottom: 15px; line-height: 1.2; font-weight: 800; }
-        .meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: var(--light-text); font-size: 13px; border-bottom: 1px solid #eee; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        p, li { font-size: 16px; color: var(--text); opacity: 0.9; margin-bottom: 15px; }
+        
+        .legal-card { 
+            background: var(--card); padding: 45px; border-radius: 24px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: none; /* Escondido por padrão */
+            animation: fadeIn 0.5s ease;
+        }
 
-        /* Imagem e Legenda */
-        .main-photo-wrapper { width: 100%; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .main-photo { width: 100%; display: block; }
-        .foto-legenda { margin: 10px 0 25px; padding-left: 12px; border-left: 4px solid var(--secondary); font-size: 13px; font-style: italic; color: var(--light-text); line-height: 1.4; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Corpo do Texto */
-        .corpo-texto { font-size: 18px; line-height: 1.8; color: var(--text); text-align: justify; }
-        .corpo-texto img { max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0; }
-        .corpo-texto a { color: var(--secondary); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--secondary); }
+        /* Formulário Profissional */
+        .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .full-width { grid-column: span 2; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 700; font-size: 13px; color: var(--secondary); text-transform: uppercase; }
+        .form-group input, .form-group select, .form-group textarea { 
+            padding: 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); 
+            background: var(--bg); color: var(--text); font-family: inherit; font-size: 15px; transition: 0.3s;
+        }
+        .form-group input:focus { border-color: var(--secondary); outline: none; }
+        
+        .btn-submit { 
+            grid-column: span 2; background: var(--secondary); color: white; border: none; padding: 18px; 
+            border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; margin-top: 10px;
+        }
+        .btn-submit:hover { filter: brightness(1.2); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3); }
 
-        /* Tags */
-        .tags-container { margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ccc; }
-        .tag-item { background: #eee; color: #555; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin-right: 5px; display: inline-block; text-transform: lowercase; }
-        body.dark-mode .tag-item { background: #333; color: #ccc; }
-
-        /* Busca e Botões */
-        .search-container { display: flex; align-items: center; border: 1.5px solid var(--secondary); border-radius: 25px; width: 38px; height: 38px; overflow: hidden; transition: 0.4s; }
-        .search-container.active { width: 180px; }
-        .search-input { border: none; background: transparent; outline: none; width: 0; font-size: 14px; transition: 0.4s; padding: 0; color: var(--text); }
-        .search-container.active .search-input { width: 130px; padding: 0 10px; }
-        .btn-search { background: none; border: none; cursor: pointer; color: var(--secondary); width: 32px; display: flex; align-items: center; justify-content: center; }
-
-        /* Barra de Compartilhamento */
-        .share-bar-fixed { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg); border-radius: 50px; display: none; gap: 20px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; border: 1px solid #eee; }
-        .share-bar-fixed a { color: var(--light-text); font-size: 22px; }
+        @media (max-width: 600px) { .contact-form > * { grid-column: span 2; } }
     </style>
 </head>
 <body>
 
-<header>
-    <button id="open-menu" style="background:none; border:none; font-size:22px; color:var(--secondary); cursor:pointer;"><i class="fas fa-bars"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height: 35px; cursor: pointer;" onclick="location.href='index.html'">
-    <div style="display: flex; gap: 10px;">
-        <div class="search-container" id="search-box">
-            <input type="text" id="input-busca" class="search-input" placeholder="Pesquisar...">
-            <button class="btn-search" id="btn-lupa"><i class="fas fa-search"></i></button>
-        </div>
-        <button id="dark-toggle" style="background:none; border:none; font-size:20px; color:var(--secondary);"><i class="far fa-moon"></i></button>
-    </div>
-</header>
-
+<div id="header-container"></div>
 <div id="menu-container"></div>
 
-<main class="noticia-container" id="noticia-render">
-    <div style="text-align:center; padding:100px; color:#888;">
-        <i class="fas fa-circle-notch fa-spin" style="font-size: 30px;"></i>
-        <p>Aguarde, preparando decolagem...</p>
-    </div>
+<main class="container">
+    
+    <article class="legal-card" id="sobre">
+        <h1>Sobre o BrasilAviation.info</h1>
+        <p>O <strong>BrasilAviation.info</strong> consolidou-se como um ecossistema de inteligência e informação especializado no cenário aeronáutico brasileiro e sul-americano. Operando na intersecção estratégica entre o jornalismo técnico e o registro documental (spotting), nossa missão transcende a simples divulgação de notícias.</p>
+        <p>Buscamos documentar com precisão cirúrgica a evolução logística das malhas aéreas, as movimentações de frotas e o impacto das decisões corporativas das operadoras no cotidiano do transporte aéreo. Com um olhar voltado tanto para a aviação comercial quanto para os segmentos cargueiro e militar, o portal atua como um repositório histórico e informativo para profissionais e entusiastas.</p>
+        <h2>Nossa Visão</h2>
+        <p>Ser a principal referência em dados de frota e notícias de bastidores do setor aeroespacial no Brasil, promovendo a transparência e o conhecimento técnico através de uma cobertura ágil e visualmente rica.</p>
+    </article>
+
+    <article class="legal-card" id="contato">
+        <h1>Canal de Comunicação</h1>
+        <p>Utilize o formulário oficial para protocolos de comunicação com nossa redação. Todas as mensagens são triadas e encaminhadas ao setor responsável.</p>
+        
+        <form action="https://formspree.io/f/meevpvqq" method="POST" enctype="multipart/form-data" class="contact-form">
+            <div class="form-group">
+                <label>Nome e Sobrenome</label>
+                <input type="text" name="nome" placeholder="Ex: Miguel Santos" required>
+            </div>
+
+            <div class="form-group">
+                <label>E-mail Corporativo/Pessoal</label>
+                <input type="email" name="email" placeholder="email@exemplo.com" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Natureza do Contato</label>
+                <select name="motivo" required>
+                    <option value="" disabled selected>Selecione uma categoria</option>
+                    <option value="Sugestão de Pauta">Sugestão de Pauta / Flagrante de Aeronave</option>
+                    <option value="Comunicação Institucional">Comunicação Institucional (Airlines/Press)</option>
+                    <option value="Erro Técnico">Reportar Inconsistência ou Erro no Site</option>
+                    <option value="Critica/Elogio">Crítica ou Feedback de Conteúdo</option>
+                    <option value="Comercial">Propostas Comerciais e Parcerias</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Anexar Documento ou Imagem (JPG, PNG, PDF)</label>
+                <input type="file" name="anexo" accept="image/*,.pdf">
+            </div>
+
+            <div class="form-group full-width">
+                <label>Mensagem Detalhada</label>
+                <textarea name="mensagem" rows="6" placeholder="Descreva sua solicitação com o máximo de detalhes possível..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Protocolar Envio
+            </button>
+        </form>
+    </article>
+
+    <article class="legal-card" id="privacidade">
+        <h1>Política de Privacidade e Dados</h1>
+        <p>Em estrito cumprimento à <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018)</strong>, o BrasilAviation.info estabelece protocolos rigorosos para o tratamento de informações digitais.</p>
+        <h2>1. Coleta de Metadados</h2>
+        <p>Esta plataforma utiliza identificadores alfanuméricos (cookies) exclusivamente para a otimização da experiência do usuário, como a manutenção do Modo Escuro e análise de volumetria de tráfego via ferramentas de telemetria estatística.</p>
+        <h2>2. Tratamento de Dados Pessoais</h2>
+        <p>Informações submetidas via formulário de contato são tratadas com confidencialidade absoluta, sendo utilizadas apenas para a finalidade expressa do contato. É vedada a comercialização, cessão ou compartilhamento de bancos de dados com entidades terceiras.</p>
+        <h2>3. Direitos do Titular</h2>
+        <p>O usuário retém o direito pleno de solicitar a exclusão de qualquer registro de comunicação ou dado pessoal de nossos servidores a qualquer momento, mediante requisição formal.</p>
+        <p><small>Documento atualizado em: 23 de abril de 2026.</small></p>
+    </article>
+
+    <article class="legal-card" id="termos">
+        <h1>Termos de Uso e Propriedade</h1>
+        <p>A navegação e interação com este portal implicam na aceitação irrevogável dos seguintes termos:</p>
+        <h2>1. Direitos Autorais e Propriedade Intelectual</h2>
+        <p>Todo o conteúdo textual, bases de dados de frotas e ativos visuais assinados são de propriedade intelectual do BrasilAviation.info. Fica terminantemente proibida a reprodução total ou parcial para fins comerciais ou editoriais sem prévia autorização por escrito.</p>
+        <h2>2. Responsabilidade sobre Conteúdo</h2>
+        <p>Dada a natureza dinâmica do setor aeronáutico, as informações sobre frotas e rotas são providas com base em fontes de mercado e observação técnica, não constituindo garantia de operação futura por parte das companhias aéreas mencionadas.</p>
+        <h2>3. Uso de Imagens</h2>
+        <p>Imagens de colaboradores e parceiros (spotters) são utilizadas sob licença específica. O uso indevido dessas fotos sujeita o infrator às penalidades previstas na Lei de Direitos Autorais (Lei nº 9.610/98).</p>
+    </article>
+
 </main>
 
-<div class="share-bar-fixed" id="share-bar">
-    <a href="#" id="share-fb" target="_blank"><i class="fab fa-facebook"></i></a>
-    <a href="#" id="share-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    <a href="javascript:void(0)" id="share-native"><i class="fas fa-share-alt"></i></a>
-</div>
+<div id="footer-container"></div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+<script>
+    // --- LÓGICA DE EXIBIÇÃO DINÂMICA ---
+    function alternarSecao() {
+        const params = new URLSearchParams(window.location.search);
+        const secao = params.get('secao') || 'sobre'; // Padrão é 'sobre'
+        
+        // Esconde tudo
+        document.querySelectorAll('.legal-card').forEach(card => card.style.display = 'none');
+        
+        // Mostra a selecionada
+        const ativa = document.getElementById(secao);
+        if(ativa) {
+            ativa.style.display = 'block';
+            document.title = `BrasilAviation | ${secao.charAt(0).toUpperCase() + secao.slice(1)}`;
+        }
+    }
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-        authDomain: "braviation3.firebaseapp.com",
-        projectId: "braviation3",
-        storageBucket: "braviation3.firebasestorage.app",
-        messagingSenderId: "979009087877",
-        appId: "1:979009087877:web:490bdc36da545d56b87cec"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const params = new URLSearchParams(window.location.search);
-    const idOuSlug = params.get('p') || params.get('id');
-
-    function formatarDataExtenso(timestamp) {
-        if (!timestamp) return "Data não informada";
-        const data = timestamp.toDate();
-        return data.toLocaleDateString('pt-BR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
+    // --- CARREGAMENTO DE COMPONENTES ---
+    async function init() {
+        await fetch('cabecalho.html').then(r => r.text()).then(h => {
+            document.getElementById('header-container').innerHTML = h;
+            if(typeof ativarComandosCabecalho === 'function') ativarComandosCabecalho();
         });
-    }
-
-    async function carregar() {
-        if (!idOuSlug) {
-            document.getElementById('noticia-render').innerHTML = "Voo sem destino. Link inválido.";
-            return;
-        }
-
-        try {
-            let docFinal = null;
-            const refDireta = doc(db, "noticias", idOuSlug);
-            const snapDireto = await getDoc(refDireta);
-            
-            if (snapDireto.exists()) {
-                docFinal = { id: snapDireto.id, data: snapDireto.data() };
-            } else {
-                const querySnapshot = await getDocs(collection(db, "noticias"));
-                querySnapshot.forEach((docSnap) => {
-                    if (docSnap.data().slug === idOuSlug) {
-                        docFinal = { id: docSnap.id, data: docSnap.data() };
-                    }
-                });
-            }
-
-            if (docFinal) {
-                exibirNoticia(docFinal);
-            } else {
-                document.getElementById('noticia-render').innerHTML = "<h2>Notícia não encontrada no hangar.</h2>";
-            }
-        } catch (e) {
-            console.error(e);
-            document.getElementById('noticia-render').innerHTML = "Pane no sistema. Tente novamente.";
-        }
-    }
-
-    function exibirNoticia(docObj) {
-        const n = docObj.data;
-        updateDoc(doc(db, "noticias", docObj.id), { cliques: increment(1) }).catch(()=>{});
-
-        const legendaHtml = n.legenda ? `<div class="foto-legenda">${n.legenda}</div>` : "";
-        const dataExtenso = formatarDataExtenso(n.data);
-        const autorNome = n.autor || 'Miguel Barbosa';
+        await fetch('menu.html').then(r => r.text()).then(h => {
+            document.getElementById('menu-container').innerHTML = h;
+            if(typeof ativarComandosMenu === 'function') ativarComandosMenu();
+        });
+        fetch('rodape.html').then(r => r.text()).then(h => {
+            document.getElementById('footer-container').innerHTML = h;
+        });
         
-        let tagsHtml = "";
-        if (n.tags) {
-            tagsHtml = `<div class="tags-container">` + 
-                       n.tags.split(',').map(tag => `<span class="tag-item">#${tag.trim()}</span>`).join('') + 
-                       `</div>`;
-        }
-
-        document.title = n.titulo + " | BrasilAviation";
-
-        document.getElementById('noticia-render').innerHTML = `
-            <div class="breadcrumb">Início / <span>${n.categoria || 'Geral'}</span></div>
-            <h1>${n.titulo}</h1>
-            
-            <div class="meta-info">
-                <span><i class="fas fa-user-edit"></i> Por <a href="perfil.html?nome=${encodeURIComponent(autorNome)}" style="color: inherit; text-decoration: none;"><b>${autorNome}</b></a></span>
-                <span><i class="far fa-calendar-alt"></i> ${dataExtenso}</span>
-            </div>
-
-            <div class="main-photo-wrapper">
-                <img src="${n.foto}" class="main-photo" alt="${n.titulo}">
-            </div>
-            ${legendaHtml}
-
-            <div class="corpo-texto">
-                ${n.conteudo}
-            </div>
-
-            ${tagsHtml}
-        `;
-        
-        const linkAtual = window.location.href;
-        document.getElementById('share-wa').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(n.titulo)}%20${encodeURIComponent(linkAtual)}`;
-        document.getElementById('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkAtual)}`;
-        document.getElementById('share-bar').style.display = 'flex';
+        alternarSecao();
     }
 
-    carregar();
-
-    const searchBox = document.getElementById('search-box');
-    const inputBusca = document.getElementById('input-busca');
-    document.getElementById('btn-lupa').onclick = (e) => {
-        e.stopPropagation();
-        if (!searchBox.classList.contains('active')) {
-            searchBox.classList.add('active');
-            inputBusca.focus();
-        } else if (inputBusca.value.trim()) {
-            window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value)}`;
-        }
-    };
-
-    const btnDark = document.getElementById('dark-toggle');
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    btnDark.onclick = () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-    };
-    
-    fetch('menu.html').then(r => r.text()).then(html => {
-        document.getElementById('menu-container').innerHTML = html;
-        const menu = document.getElementById('side-menu');
+    // Funções de ativação (repetidas aqui para segurança)
+    function ativarComandosCabecalho() {
         const openBtn = document.getElementById('open-menu');
-        if(openBtn) openBtn.onclick = () => menu.classList.add('active');
-    }).catch(()=>{});
+        const btnDark = document.getElementById('dark-toggle-header');
+        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
+        if(btnDark) btnDark.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+        };
+    }
 
-    document.getElementById('share-native').onclick = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: document.title,
-                url: window.location.href
-            });
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copiado!");
-        }
-    };
+    function ativarComandosMenu() {
+        const closeBtn = document.getElementById('close-menu');
+        const btnToggleCat = document.getElementById('btn-toggle-cat');
+        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
+        if(btnToggleCat) btnToggleCat.onclick = (e) => {
+            e.preventDefault();
+            document.getElementById('lista-cat').classList.toggle('active');
+            document.getElementById('seta-cat').classList.toggle('rotate');
+        };
+    }
+
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+    window.addEventListener('load', init);
 </script>
+
 </body>
 </html>

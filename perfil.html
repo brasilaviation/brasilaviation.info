@@ -10,7 +10,7 @@
         :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; }
         body.dark-mode { --bg: #121212; --text: #eee; }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); transition: 0.3s; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
         
         header { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -19,7 +19,7 @@
         }
         body.dark-mode header { background: #181818; border-color: #333; }
 
-        .perfil-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .perfil-container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
         
         .autor-header { 
             background: white; padding: 30px; border-radius: 20px; 
@@ -70,9 +70,10 @@
     </div>
 
     <h3 class="lista-titulo">Publicações do Autor</h3>
-    <div id="lista-publicacoes">
-        </div>
+    <div id="lista-publicacoes"></div>
 </main>
+
+<div id="footer-container"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -93,7 +94,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const nomeAutor = urlParams.get('nome');
 
-    // DADOS FIXOS DOS AUTORES (BIO E FOTO)
     const dadosAutores = {
         'Miguel Barbosa': {
             cargo: 'Fundador & Editor-Chefe',
@@ -124,7 +124,6 @@
             foto: 'placeholder.jpg' 
         };
         
-        // Renderiza o topo do perfil
         document.getElementById('header-autor').innerHTML = `
             <img src="${info.foto}" alt="${nomeAutor}">
             <h2>${nomeAutor}</h2>
@@ -134,7 +133,6 @@
         `;
 
         try {
-            // Busca as notícias no Firestore filtrando pelo nome do autor
             const q = query(collection(db, "noticias"), where("autor", "==", nomeAutor));
             const snap = await getDocs(q);
             
@@ -143,7 +141,6 @@
                 posts.push({ id: d.id, ...d.data() });
             });
 
-            // Ordena por data (mais recente primeiro)
             posts.sort((a, b) => {
                 const dataA = a.data?.seconds || 0;
                 const dataB = b.data?.seconds || 0;
@@ -177,9 +174,25 @@
         }
     }
 
+    // CARREGAR RODAPÉ E ATIVAR SEGREDO
+    fetch('rodape.html').then(r => r.text()).then(h => {
+        document.getElementById('footer-container').innerHTML = h;
+        
+        let secretClicks = 0;
+        let secretTimer;
+        const adminGate = document.getElementById('admin-gate');
+        if(adminGate) {
+            adminGate.onclick = () => {
+                secretClicks++;
+                clearTimeout(secretTimer);
+                secretTimer = setTimeout(() => secretClicks = 0, 1500); 
+                if(secretClicks === 4) window.location.href = 'admin.html';
+            };
+        }
+    });
+
     carregarPerfil();
 
-    // Dark Mode Sync
     if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
 </script>
 </body>

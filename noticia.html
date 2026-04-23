@@ -11,10 +11,10 @@
         :root { --primary: #1a237e; --secondary: #2e7d32; --text: #333; --light-text: #666; --bg: #ffffff; }
         body.dark-mode { --bg: #121212; --text: #eee; --light-text: #aaa; --primary: #ffffff; }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; background: var(--bg); position: sticky; top: 0; z-index: 1000; }
         
-        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; min-height: 80vh; }
+        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box; }
         
         /* Breadcrumb */
         .breadcrumb { font-size: 12px; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; color: #888; }
@@ -50,7 +50,6 @@
         .share-bar-fixed { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--bg); border-radius: 50px; display: none; gap: 20px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 2000; border: 1px solid #eee; }
         .share-bar-fixed a { color: var(--light-text); font-size: 22px; }
 
-        /* --- CORREÇÃO DAS LOGOS NO MENU (Caso o CSS não esteja no menu.html) --- */
         .logo-cia { height: 18px; width: auto; margin-right: 10px; vertical-align: middle; object-fit: contain; }
     </style>
 </head>
@@ -82,6 +81,8 @@
     <a href="#" id="share-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
     <a href="javascript:void(0)" id="share-native"><i class="fas fa-share-alt"></i></a>
 </div>
+
+<div id="footer-container"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -182,6 +183,23 @@
         document.getElementById('share-bar').style.display = 'flex';
     }
 
+    // CARREGAR RODAPÉ E ATIVAR SEGREDO
+    fetch('rodape.html').then(r => r.text()).then(h => {
+        document.getElementById('footer-container').innerHTML = h;
+        
+        let secretClicks = 0;
+        let secretTimer;
+        const adminGate = document.getElementById('admin-gate');
+        if(adminGate) {
+            adminGate.onclick = () => {
+                secretClicks++;
+                clearTimeout(secretTimer);
+                secretTimer = setTimeout(() => secretClicks = 0, 1500); 
+                if(secretClicks === 4) window.location.href = 'admin.html';
+            };
+        }
+    });
+
     carregar();
 
     // Comportamento da Busca e Dark Mode
@@ -204,20 +222,18 @@
         localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
     };
     
-    // CARREGAR MENU E CONFIGURAR O BOTÃO "X"
+    // CARREGAR MENU
     fetch('menu.html').then(r => r.text()).then(html => {
         document.getElementById('menu-container').innerHTML = html;
         const menu = document.getElementById('side-menu');
         const openBtn = document.getElementById('open-menu');
-        const closeBtn = document.getElementById('close-menu'); // O 'X' do menu
+        const closeBtn = document.getElementById('close-menu');
 
         if(openBtn) openBtn.onclick = () => menu.classList.add('active');
         if(closeBtn) closeBtn.onclick = () => menu.classList.remove('active');
 
-        // Fecha se clicar fora (na área escura)
         const closeArea = document.querySelector('.menu-close-area');
         if(closeArea) closeArea.onclick = () => menu.classList.remove('active');
-
     }).catch(()=>{});
 
     document.getElementById('share-native').onclick = () => {
@@ -225,7 +241,7 @@
             navigator.share({ title: document.title, url: window.location.href });
         } else {
             navigator.clipboard.writeText(window.location.href);
-            alert("Copiado!");
+            alert("Link copiado!");
         }
     };
 </script>

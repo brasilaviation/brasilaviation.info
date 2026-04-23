@@ -10,24 +10,9 @@
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f9; transition: 0.3s; }
         body.dark-mode { background: #121212; color: #eee; }
 
-        /* --- ESTILO DA CORTINA DE MANUTENÇÃO --- */
-        #maintenance-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 99999; /* Fica acima de tudo */
-            background: #001242;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-        }
-
         /* --- CONFIGURAÇÃO DO CARROSSEL --- */
         .carousel-wrapper { 
-            padding: 0 15px; 
+            padding: 0 15px; /* Espaço nas laterais para a sombra não cortar */
             margin-bottom: 20px;
         }
 
@@ -36,9 +21,9 @@
             aspect-ratio: 3/2; 
             width: 100%; 
             background: #000; 
-            border-radius: 18px; 
+            border-radius: 18px; /* Bordas arredondadas no container */
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra elegante */
         }
 
         .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; }
@@ -49,9 +34,10 @@
             height: 100%; 
             object-fit: cover; 
             display: block;
-            border-radius: 18px; 
+            border-radius: 18px; /* Garante que a imagem siga o arredondado */
         }
 
+        /* Legenda sobre a imagem */
         .carousel-caption {
             position: absolute;
             bottom: 0;
@@ -83,6 +69,7 @@
             font-weight: 700;
         }
 
+        /* Botões de navegação */
         .carousel-btn {
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(5px);
@@ -98,6 +85,7 @@
         }
         .carousel-btn:hover { background: rgba(255,255,255,0.4); }
 
+        /* --- FEED DE NOTÍCIAS --- */
         .section-title { padding: 15px; font-weight: bold; font-size: 22px; color: #1a237e; }
         body.dark-mode .section-title { color: #fff; }
         
@@ -109,19 +97,6 @@
     </style>
 </head>
 <body>
-
-<div id="maintenance-overlay">
-    <i class="fas fa-plane-departure" style="font-size: 50px; margin-bottom: 20px; color: #0056b3;"></i>
-    <h1 style="font-size: 2rem; margin-bottom: 10px;">Estamos preparando um novo plano de voo!</h1>
-    <p style="font-size: 1.1rem; max-width: 600px; line-height: 1.6; color: #adb5bd; margin-bottom: 20px;">
-        O <strong>BrasilAviation.info</strong> está passando por uma manutenção técnica para trazer conteúdos com mais velocidade e uma experiência de alto nível para você. 
-        <br><br>
-        <em>"Para voar mais longe, às vezes é preciso fazer uma escala técnica para manutenção."</em>
-    </p>
-    <div style="padding: 12px 20px; border: 1px solid #ffffff30; border-radius: 50px;">
-        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Decolagem prevista para amanhã</span>
-    </div>
-</div>
 
 <div id="header-container"></div>
 <div id="menu-container"></div>
@@ -148,12 +123,6 @@
 <div id="footer-container"></div>
 
 <script type="module">
-    // LÓGICA DA CORTINA (REMOVER QUANDO O SITE ESTIVER PRONTO)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('preview')) {
-        document.getElementById('maintenance-overlay').style.display = 'none';
-    }
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
     import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
@@ -239,8 +208,9 @@
             const categoria = n.cat || n.categoria || "Notícia";
             const idNoticia = n.slug || docSnap.id;
 
+            // AJUSTE DE LINK: Removido noticia.html?p= e colocado /noticia/
             html += `
-                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?p=${idNoticia}'">
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='/noticia/${idNoticia}'">
                     <img src="${n.foto}">
                     <div class="carousel-caption">
                         <span class="badge-cat">${categoria}</span>
@@ -263,8 +233,11 @@
         snap.forEach(docSnap => {
             const n = docSnap.data();
             const data = n.data ? n.data.toDate().toLocaleDateString('pt-BR') : "";
+            const idNoticia = n.slug || docSnap.id;
+
+            // AJUSTE DE LINK: Removido noticia.html?p= e colocado /noticia/
             html += `
-                <article class="news-item" onclick="location.href='noticia.html?p=${n.slug || docSnap.id}'" style="cursor:pointer;">
+                <article class="news-item" onclick="location.href='/noticia/${idNoticia}'" style="cursor:pointer;">
                     <div class="news-photo"><img src="${n.foto}" style="width:110px; height:75px; object-fit:cover; border-radius:10px;"></div>
                     <div class="news-info">
                         <h3 style="margin:0; font-size:15px;">${n.titulo}</h3>

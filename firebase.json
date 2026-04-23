@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "public": ".",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/noticia/**",
+        "destination": "/noticia.html"
+      }
+    ]
+  }
+}

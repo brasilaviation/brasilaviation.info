@@ -116,32 +116,33 @@
     }
 
     // --- CARREGAMENTO DE COMPONENTES ---
-    fetch('cabecalho.html').then(r => r.text()).then(html => {
+    fetch('/cabecalho.html').then(r => r.text()).then(html => {
         document.getElementById('header-container').innerHTML = html;
         ativarComandosCabecalho();
     });
 
-    fetch('menu.html').then(r => r.text()).then(html => {
+    fetch('/menu.html').then(r => r.text()).then(html => {
         document.getElementById('menu-container').innerHTML = html;
         ativarComandosMenu();
     });
 
-    fetch('rodape.html').then(r => r.text()).then(html => {
+    fetch('/rodape.html').then(r => r.text()).then(html => {
         document.getElementById('footer-container').innerHTML = html;
     });
 
-    const params = new URLSearchParams(window.location.search);
-    const idOuSlug = params.get('p') || params.get('id');
+    // --- NOVA LÓGICA PARA IDENTIFICAR O SLUG NO LINK PROFISSIONAL ---
+    const path = window.location.pathname;
+    const idOuSlug = path.split('/').filter(Boolean).pop(); 
 
     function gerarLinkCat(cat) {
-        if(!cat) return 'index.html';
+        if(!cat) return '/index.html';
         const c = cat.toLowerCase();
-        if(["azul", "gol", "latam"].includes(c)) return `companhia.html?cia=${c}`;
-        return `categoria.html?cat=${encodeURIComponent(cat)}`;
+        if(["azul", "gol", "latam"].includes(c)) return `/companhia.html?cia=${c}`;
+        return `/categoria.html?cat=${encodeURIComponent(cat)}`;
     }
 
     async function buscarNoticia() {
-        if (!idOuSlug) return;
+        if (!idOuSlug || idOuSlug === 'noticia.html') return;
         let snap = await getDoc(doc(db, "noticias", idOuSlug));
         let data = snap.exists() ? snap.data() : null;
         let docId = snap.id;
@@ -157,19 +158,26 @@
     function renderizar(n, id) {
         updateDoc(doc(db, "noticias", id), { cliques: increment(1) }).catch(()=>{});
         
-        // --- ATUALIZAÇÃO DAS META TAGS PARA PRÉVIA NO WHATSAPP ---
+        // --- ATUALIZAÇÃO REFORÇADA DAS META TAGS ---
         document.title = n.titulo + " | BrasilAviation.info";
-        document.getElementById('og-title').setAttribute('content', n.titulo);
-        document.getElementById('og-image').setAttribute('content', n.foto);
-        document.getElementById('og-url').setAttribute('content', window.location.href);
         
-        // Limpa o HTML do texto para criar uma descrição limpa para a prévia
+        const metaTitle = document.getElementById('og-title');
+        const metaImg = document.getElementById('og-image');
+        const metaUrl = document.getElementById('og-url');
+        const metaDesc = document.getElementById('og-desc');
+
+        if(metaTitle) metaTitle.setAttribute('content', n.titulo);
+        if(metaImg) metaImg.setAttribute('content', n.foto);
+        if(metaUrl) metaUrl.setAttribute('content', window.location.href);
+        
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = n.texto || n.conteudo || "";
         const textoLimpo = tempDiv.textContent || tempDiv.innerText || "";
         const resumo = textoLimpo.substring(0, 160) + "...";
-        document.getElementById('og-desc').setAttribute('content', resumo);
-        // -------------------------------------------------------
+        if(metaDesc) metaDesc.setAttribute('content', resumo);
+        
+        document.querySelector('meta[property="og:title"]')?.setAttribute('content', n.titulo);
+        document.querySelector('meta[property="og:image"]')?.setAttribute('content', n.foto);
 
         const dataFmt = n.data ? n.data.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
         const urlFull = window.location.href;
@@ -177,11 +185,11 @@
         const categoriaNome = n.cat || n.categoria || 'Geral';
 
         document.getElementById('noticia-render').innerHTML = `
-            <div class="breadcrumb"><a href="index.html">Início</a> / <a href="${gerarLinkCat(categoriaNome)}">${categoriaNome}</a></div>
+            <div class="breadcrumb"><a href="/index.html">Início</a> / <a href="${gerarLinkCat(categoriaNome)}">${categoriaNome}</a></div>
             <h1>${n.titulo}</h1>
             
             <div class="meta-info">
-                <span>Por <a href="perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
+                <span>Por <a href="/perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
                 <span><i class="far fa-calendar"></i> ${dataFmt}</span>
             </div>
 

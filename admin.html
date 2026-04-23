@@ -17,13 +17,11 @@
         main { flex: 1; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         .container { max-width: 1000px; margin: 0 auto; }
         
-        /* Stats Styles */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
         .stat-card i { font-size: 24px; color: var(--accent); margin-bottom: 10px; }
         .chart-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
 
-        /* Editor Styles */
         .editor-container { background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; }
         .toolbar { background: #eeeeee; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 10; }
         .toolbar button, .toolbar label { background: white; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; }
@@ -33,7 +31,11 @@
         .input-box { display: flex; flex-direction: column; gap: 5px; }
         input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
         #status-bar { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 10px 20px; border-radius: 50px; display: none; z-index: 100; }
-        .btn-pub { background: #28a745; color: white; border: none; padding: 15px 30px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
+        
+        /* Botões do Editor */
+        .area-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .btn-pub { background: #28a745; color: white; border: none; padding: 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-rascunho { background: #6c757d; color: white; border: none; padding: 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
         .btn-migrar { background: #ff9800; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 20px; width: 100%; }
 
         #login-screen { position: fixed; inset: 0; background: var(--primary); z-index: 2000; display: flex; align-items: center; justify-content: center; }
@@ -43,6 +45,7 @@
             .wrapper { flex-direction: column; }
             nav { width: 100%; height: auto; flex-direction: row; overflow-x: auto; }
             .settings-panel { grid-template-columns: 1fr; }
+            .area-botoes { grid-template-columns: 1fr; }
             .mobile-header { display: flex; }
         }
     </style>
@@ -54,7 +57,7 @@
         <h2>Painel Brasil Aviation</h2>
         <input type="email" id="email-login" placeholder="E-mail" style="margin-bottom:10px; width:100%">
         <input type="password" id="pass-login" placeholder="Senha" style="margin-bottom:20px; width:100%">
-        <button onclick="fazerLogin()" class="btn-pub">Acessar Painel</button>
+        <button onclick="fazerLogin()" class="btn-pub" style="width:100%">Acessar Painel</button>
         <p id="error-msg" style="color:red; font-size:12px"></p>
     </div>
 </div>
@@ -105,7 +108,7 @@
 
             <div class="settings-panel">
                 <div class="input-box">
-                    <label>Data da Matéria (Para Migração)</label>
+                    <label>Data da Matéria (Passado ou Futuro)</label>
                     <input type="datetime-local" id="p-data-retroativa">
                 </div>
                 <div class="input-box">
@@ -128,19 +131,8 @@
                 <div class="input-box">
                     <label>Categoria</label>
                     <select id="p-cat">
-                        <optgroup label="Companhias">
-                            <option value="Azul">Azul</option>
-                            <option value="GOL">GOL</option>
-                            <option value="LATAM">LATAM</option>
-                        </optgroup>
-                        <optgroup label="Temas">
-                            <option value="Pinturas e Adesivos">Pinturas e Adesivos</option>
-                            <option value="Importação">Importação</option>
-                            <option value="Curiosidades">Curiosidades</option>
-                            <option value="Novas Rotas">Novas Rotas</option>
-                            <option value="Incidentes">Incidentes</option>
-                            <option value="Movimentação de Frota">Movimentação de Frota</option>
-                        </optgroup>
+                        <optgroup label="Companhias"><option value="Azul">Azul</option><option value="GOL">GOL</option><option value="LATAM">LATAM</option></optgroup>
+                        <optgroup label="Temas"><option value="Pinturas e Adesivos">Pinturas e Adesivos</option><option value="Importação">Importação</option><option value="Curiosidades">Curiosidades</option><option value="Novas Rotas">Novas Rotas</option><option value="Incidentes">Incidentes</option><option value="Movimentação de Frota">Movimentação de Frota</option></optgroup>
                     </select>
                 </div>
                 <div class="input-box" style="grid-column: span 2;">
@@ -153,7 +145,10 @@
                 </div>
             </div>
 
-            <button class="btn-pub" id="btn-save" onclick="salvarPost()">SALVAR MATÉRIA</button>
+            <div class="area-botoes">
+                <button class="btn-rascunho" id="btn-save-draft" onclick="salvarPost('rascunho')">SALVAR COMO RASCUNHO</button>
+                <button class="btn-pub" id="btn-save-pub" onclick="salvarPost('publicado')">PUBLICAR MATÉRIA</button>
+            </div>
             <button onclick="fecharEditor()" style="background:none; border:none; color:grey; width:100%; margin-top:10px; cursor:pointer">Cancelar</button>
         </div>
     </main>
@@ -181,7 +176,6 @@
     const auth = getAuth(app);
     let myChart = null;
 
-    // LOGIN & NAV
     window.fazerLogin = async () => {
         try { await signInWithEmailAndPassword(auth, document.getElementById('email-login').value, document.getElementById('pass-login').value); } 
         catch { document.getElementById('error-msg').innerText = "Erro ao entrar."; }
@@ -198,7 +192,6 @@
         if(section === 'stats') carregarEstatisticas();
     };
 
-    // EDITOR FUNCTIONS
     window.execCmd = (c) => document.execCommand(c, false, null);
     window.gerarSlug = t => document.getElementById('p-slug').value = t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 
@@ -227,10 +220,21 @@
     async function carregar() {
         const snap = await getDocs(query(collection(db, "noticias"), orderBy("data", "desc")));
         let h = "";
+        const agora = new Date();
+
         snap.forEach(d => {
             const n = d.data();
+            const dataMateria = n.data?.toDate() || agora;
+            let label = "";
+            
+            if (n.status === 'rascunho') {
+                label = '<span style="color:red; font-weight:bold">[RASCUNHO]</span> ';
+            } else if (dataMateria > agora) {
+                label = '<span style="color:blue; font-weight:bold">[PROGRAMADA]</span> ';
+            }
+
             h += `<div style="background:white; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05)">
-                <div><b>${n.titulo}</b><br><small>${n.autor} | ${n.cat || n.categoria} | <i class="fas fa-eye"></i> ${n.cliques || 0}</small></div>
+                <div><b>${label}${n.titulo}</b><br><small>${n.autor} | ${n.cat || n.categoria} | <i class="fas fa-eye"></i> ${n.cliques || 0}</small></div>
                 <div style="display:flex; gap:15px">
                     <i class="fas fa-edit" onclick="editarMatéria('${d.id}')" style="color:blue; cursor:pointer"></i>
                     <i class="fas fa-trash" onclick="deletar('${d.id}')" style="color:red; cursor:pointer"></i>
@@ -240,11 +244,10 @@
         document.getElementById('feed').innerHTML = h || "Sem matérias.";
     }
 
-    window.salvarPost = async () => {
-        const btn = document.getElementById('btn-save');
+    window.salvarPost = async (status) => {
+        mostrarStatus("Salvando...");
         const idExistente = document.getElementById('p-id-edit').value;
         const dataRetro = document.getElementById('p-data-retroativa').value;
-        btn.innerText = "Salvando..."; btn.disabled = true;
         const id = idExistente || doc(collection(db, "noticias")).id;
         
         let dataFinal = serverTimestamp();
@@ -259,7 +262,8 @@
             cat: document.getElementById('p-cat').value,
             tags: document.getElementById('p-tags').value,
             slug: document.getElementById('p-slug').value,
-            data: dataFinal
+            data: dataFinal,
+            status: status
         };
         if(!idExistente) dados.cliques = 0;
 
@@ -280,11 +284,16 @@
             document.getElementById('p-cat').value = n.cat || n.categoria;
             document.getElementById('p-tags').value = n.tags || "";
             document.getElementById('p-slug').value = n.slug;
+            
+            if(n.data) {
+                const d = n.data.toDate();
+                d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+                document.getElementById('p-data-retroativa').value = d.toISOString().slice(0,16);
+            }
             abrirEditor();
         }
     };
 
-    // STATS LOGIC
     async function carregarEstatisticas() {
         const snap = await getDocs(collection(db, "noticias"));
         let totalViews = 0, totalPosts = 0, categorias = {}, listaPosts = [];
@@ -300,18 +309,10 @@
         document.getElementById('total-posts').innerText = totalPosts;
         const topCat = Object.keys(categorias).reduce((a, b) => categorias[a] > categorias[b] ? a : b, "-");
         document.getElementById('top-cat').innerText = topCat;
-
         listaPosts.sort((a,b) => b.views - a.views);
-        document.getElementById('top-posts-list').innerHTML = listaPosts.slice(0,5).map((p,i) => `
-            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee">
-                <span>${i+1}. ${p.titulo}</span><b>${p.views}</b>
-            </div>`).join('');
-
+        document.getElementById('top-posts-list').innerHTML = listaPosts.slice(0,5).map((p,i) => `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #eee"><span>${i+1}. ${p.titulo}</span><b>${p.views}</b></div>`).join('');
         if(myChart) myChart.destroy();
-        myChart = new Chart(document.getElementById('chartCategorias'), {
-            type: 'pie',
-            data: { labels: Object.keys(categorias), datasets: [{ data: Object.values(categorias), backgroundColor: ['#001242', '#0056b3', '#28a745', '#ff9800', '#e8114b'] }] }
-        });
+        myChart = new Chart(document.getElementById('chartCategorias'), { type: 'pie', data: { labels: Object.keys(categorias), datasets: [{ data: Object.values(categorias), backgroundColor: ['#001242', '#0056b3', '#28a745', '#ff9800', '#e8114b'] }] } });
     }
 
     window.deletar = async id => { if(confirm("Apagar?")) { await deleteDoc(doc(db, "noticias", id)); carregar(); } };

@@ -10,9 +10,24 @@
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f9; transition: 0.3s; }
         body.dark-mode { background: #121212; color: #eee; }
 
+        /* --- ESTILO DA CORTINA DE MANUTENÇÃO --- */
+        #maintenance-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999; /* Fica acima de tudo */
+            background: #001242;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
         /* --- CONFIGURAÇÃO DO CARROSSEL --- */
         .carousel-wrapper { 
-            padding: 0 15px; /* Espaço nas laterais para a sombra não cortar */
+            padding: 0 15px; 
             margin-bottom: 20px;
         }
 
@@ -21,9 +36,9 @@
             aspect-ratio: 3/2; 
             width: 100%; 
             background: #000; 
-            border-radius: 18px; /* Bordas arredondadas no container */
+            border-radius: 18px; 
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Sombra elegante */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
         }
 
         .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; }
@@ -34,10 +49,9 @@
             height: 100%; 
             object-fit: cover; 
             display: block;
-            border-radius: 18px; /* Garante que a imagem siga o arredondado */
+            border-radius: 18px; 
         }
 
-        /* Legenda sobre a imagem */
         .carousel-caption {
             position: absolute;
             bottom: 0;
@@ -69,7 +83,6 @@
             font-weight: 700;
         }
 
-        /* Botões de navegação */
         .carousel-btn {
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(5px);
@@ -85,7 +98,6 @@
         }
         .carousel-btn:hover { background: rgba(255,255,255,0.4); }
 
-        /* --- FEED DE NOTÍCIAS --- */
         .section-title { padding: 15px; font-weight: bold; font-size: 22px; color: #1a237e; }
         body.dark-mode .section-title { color: #fff; }
         
@@ -97,6 +109,19 @@
     </style>
 </head>
 <body>
+
+<div id="maintenance-overlay">
+    <i class="fas fa-plane-departure" style="font-size: 50px; margin-bottom: 20px; color: #0056b3;"></i>
+    <h1 style="font-size: 2rem; margin-bottom: 10px;">Estamos preparando um novo plano de voo!</h1>
+    <p style="font-size: 1.1rem; max-width: 600px; line-height: 1.6; color: #adb5bd; margin-bottom: 20px;">
+        O <strong>BrasilAviation.info</strong> está passando por uma manutenção técnica para trazer conteúdos com mais velocidade e uma experiência de alto nível para você. 
+        <br><br>
+        <em>"Para voar mais longe, às vezes é preciso fazer uma escala técnica para manutenção."</em>
+    </p>
+    <div style="padding: 12px 20px; border: 1px solid #ffffff30; border-radius: 50px;">
+        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Decolagem prevista para amanhã</span>
+    </div>
+</div>
 
 <div id="header-container"></div>
 <div id="menu-container"></div>
@@ -123,6 +148,12 @@
 <div id="footer-container"></div>
 
 <script type="module">
+    // LÓGICA DA CORTINA (REMOVER QUANDO O SITE ESTIVER PRONTO)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('preview')) {
+        document.getElementById('maintenance-overlay').style.display = 'none';
+    }
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
     import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 

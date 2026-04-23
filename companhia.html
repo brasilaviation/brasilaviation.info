@@ -7,49 +7,57 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Banner com Degradê das Companhias */
-        .cia-header {
-            width: 100%;
-            padding: 40px 20px;
-            text-align: center;
-            color: white;
-            transition: background 0.5s;
-        }
-
-        .cia-logo-display {
-            height: 60px;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
-        }
-
-        /* Degradês Oficiais */
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        .cia-header { width: 100%; padding: 40px 20px; text-align: center; color: white; transition: background 0.5s; }
+        .cia-logo-display { height: 60px; margin-bottom: 15px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
         .bg-azul { background: linear-gradient(135deg, #00205b 0%, #0093d1 100%); }
         .bg-gol { background: linear-gradient(135deg, #ff5a00 0%, #ff8a05 100%); }
         .bg-latam { background: linear-gradient(135deg, #1b0088 0%, #e8114b 100%); }
-
         .cia-title { font-size: 28px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
-        .feed-container { padding: 15px; }
+        .feed-container { padding: 15px; flex: 1; }
         .empty-msg { text-align: center; padding: 40px; color: #888; }
+        .breadcrumbs { padding: 15px; font-size: 13px; color: #888; background: #f9f9f9; }
+        body.dark-mode .breadcrumbs { background: #1a1a1a; color: #666; }
+        .breadcrumbs a { color: #2e7d32; text-decoration: none; font-weight: bold; }
+        .breadcrumbs span { margin: 0 5px; }
     </style>
 </head>
 <body>
 
 <header>
     <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height:30px;">
-    <div></div>
+    <img src="3_20250925_005418_0002.png" style="height:30px; cursor:pointer;" onclick="location.href='index.html'">
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <button class="btn-dark-toggle" id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+    </div>
 </header>
 
+<div class="breadcrumbs">
+    <a href="index.html">Início</a> <span>/</span> <a href="#">Companhias</a> <span>/</span> <span id="bread-cia">...</span>
+</div>
+
 <div id="cia-banner" class="cia-header">
-    <img id="cia-logo-img" src="" class="cia-logo-display" alt="">
+    <img id="cia-logo-img" src="" class="cia-logo-display">
     <div id="cia-nome" class="cia-title">Carregando...</div>
 </div>
 
 <main class="feed-container">
     <h2 style="margin-bottom:15px; border-bottom: 2px solid #eee; padding-bottom: 10px;">Notícias Recentes</h2>
     <div id="news-feed-cia">
-        </div>
+        <p style="text-align:center; color:#888;">Buscando notícias...</p>
+    </div>
 </main>
+
+<footer>
+    <img src="3_20250925_005418_0002.png" class="footer-logo" alt="BrasilAviation" style="height: 40px; margin-bottom: 20px; display:block; margin-left:auto; margin-right:auto;">
+    <ul style="display: flex; justify-content: center; gap: 20px; list-style: none; margin-bottom: 20px; padding: 0;">
+        <li><a href="pagina.html?ref=sobre" style="text-decoration: none; color: inherit; font-size: 14px;">Sobre Nós</a></li>
+        <li><a href="pagina.html?ref=contato" style="text-decoration: none; color: inherit; font-size: 14px;">Contato</a></li>
+        <li><a href="pagina.html?ref=privacidade" style="text-decoration: none; color: inherit; font-size: 14px;">Privacidade</a></li>
+        <li><a href="pagina.html?ref=termos" style="text-decoration: none; color: inherit; font-size: 14px;">Termos de Uso</a></li>
+    </ul>
+    <p style="font-size: 12px; color: #999; text-align: center;">&copy; 2026 BrasilAviation.info - Todos os direitos reservados.</p>
+</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
@@ -67,59 +75,67 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. Identificar qual companhia foi clicada
-    const params = new URLSearchParams(window.location.search);
-    const cia = params.get('cia'); // 'azul', 'gol' ou 'latam'
-
-    // 2. Configurar a identidade visual
-    const configCia = {
-        azul: { nome: "Azul", classe: "bg-azul", logo: "COLE_URL_AZUL_GRANDE" },
-        gol: { nome: "GOL", classe: "bg-gol", logo: "COLE_URL_GOL_GRANDE" },
-        latam: { nome: "LATAM", classe: "bg-latam", logo: "COLE_URL_LATAM_GRANDE" }
+    // MODO ESCURO
+    const btnDark = document.getElementById('dark-mode-toggle');
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+    btnDark.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
     };
 
-    if (configCia[cia]) {
-        document.getElementById('cia-banner').classList.add(configCia[cia].classe);
-        document.getElementById('cia-nome').innerText = configCia[cia].nome;
-        document.getElementById('cia-logo-img').src = configCia[cia].logo;
-        document.title = configCia[cia].nome + " | BrasilAviation.info";
-        carregarNoticiasCia(configCia[cia].nome);
+    const params = new URLSearchParams(window.location.search);
+    const ciaSlug = params.get('cia');
+
+    const configCia = {
+        azul: { nome: "AZUL", display: "Azul", classe: "bg-azul" },
+        gol: { nome: "GOL", display: "GOL", classe: "bg-gol" },
+        latam: { nome: "LATAM", display: "LATAM", classe: "bg-latam" }
+    };
+
+    if (configCia[ciaSlug]) {
+        const c = configCia[ciaSlug];
+        document.getElementById('cia-banner').classList.add(c.classe);
+        document.getElementById('cia-nome').innerText = c.display;
+        document.getElementById('bread-cia').innerText = c.display;
+        document.title = c.display + " | BrasilAviation.info";
+        carregarNoticiasCia(c.nome);
     }
 
-    // 3. Buscar notícias no Firebase filtradas pela companhia (categoria)
-    async function carregarNoticiasCia(nomeCia) {
+    async function carregarNoticiasCia(nomeFiltro) {
         const feed = document.getElementById('news-feed-cia');
         try {
-            // Buscamos matérias onde o campo 'categoria' seja igual ao nome da companhia
+            // Removi temporariamente o orderBy para testar se é erro de índice
             const q = query(
                 collection(db, "noticias"), 
-                where("categoria", "==", nomeCia.toUpperCase()), 
-                orderBy("data", "desc")
+                where("categoria", "==", nomeFiltro)
             );
             
             const snap = await getDocs(q);
             let html = "";
 
             if (snap.empty) {
-                feed.innerHTML = `<div class="empty-msg">Nenhuma notícia da ${nomeCia} encontrada.</div>`;
+                feed.innerHTML = `<div class="empty-msg">Nenhuma notícia da ${nomeFiltro} encontrada. Verifique se a categoria no banco está escrita exatamente como "${nomeFiltro}".</div>`;
                 return;
             }
 
-            snap.forEach(doc => {
+            // Ordenando manualmente no JS para evitar erro de índice por enquanto
+            const docsSorted = snap.docs.sort((a, b) => b.data().data - a.data().data);
+
+            docsSorted.forEach(doc => {
                 const n = doc.data();
                 html += `
                     <article class="news-item" onclick="window.location.href='noticia.html?id=${doc.id}'">
                         <div class="news-photo"><img src="${n.foto}"></div>
                         <div class="news-info">
                             <h3>${n.titulo}</h3>
-                            <p style="font-size:12px; color:#888;">${n.data.toDate().toLocaleDateString('pt-BR')}</p>
+                            <p style="font-size:12px; color:#888;">${n.data ? n.data.toDate().toLocaleDateString('pt-BR') : ''}</p>
                         </div>
                     </article>`;
             });
             feed.innerHTML = html;
         } catch (e) {
-            console.error(e);
-            feed.innerHTML = "Erro ao carregar notícias.";
+            console.error("ERRO DETALHADO:", e);
+            feed.innerHTML = "Erro ao carregar notícias. Verifique o console do navegador.";
         }
     }
 </script>

@@ -7,24 +7,65 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Restaurando Estilos de Identidade Visual */
         .logo-cia { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; vertical-align: middle; }
         .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Efeito Cortina para Categorias */
         .submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.03); border-radius: 0 0 8px 8px; }
         .submenu.active { max-height: 1500px; padding-bottom: 10px; }
         .submenu a { padding: 10px 20px 10px 50px !important; font-size: 13px !important; color: #555 !important; border: none !important; }
         .menu-arrow { transition: transform 0.3s; font-size: 12px; color: #bbb; }
         .menu-arrow.rotate { transform: rotate(180deg); }
+
+        /* --- BARRA DE PESQUISA ANIMADA --- */
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: rgba(0,0,0,0.05);
+            padding: 5px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 35px;
+            height: 35px;
+            overflow: hidden;
+        }
+        .search-container.active {
+            width: 180px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 10px;
+            width: 0;
+            font-size: 14px;
+            transition: width 0.4s;
+        }
+        .search-container.active .search-input { width: 130px; }
+        .btn-search { background: none; border: none; cursor: pointer; color: #2e7d32; font-size: 16px; padding: 5px; display: flex; align-items: center; justify-content: center; }
+        
+        body.dark-mode .search-container { background: rgba(255,255,255,0.1); }
+        body.dark-mode .search-container.active { background: #222; }
+        body.dark-mode .search-input { color: white; }
+
+        footer { background: #f9f9f9; padding: 30px 20px; border-top: 1px solid #eee; margin-top: 40px; text-align: center; }
+        body.dark-mode footer { background: #1a1a1a; border-color: #333; }
     </style>
 </head>
 <body>
 
 <header>
     <button class="btn-icon" id="open-menu"><i class="fas fa-bars"></i></button>
-    <img src="3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation">
-    <button class="btn-icon"><i class="fas fa-search"></i></button>
+    <img src="3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation" onclick="location.href='index.html'" style="cursor:pointer;">
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <div class="search-container" id="search-box">
+            <input type="text" id="input-busca" class="search-input" placeholder="Pesquisar...">
+            <button class="btn-search" id="btn-lupa"><i class="fas fa-search"></i></button>
+        </div>
+        <button class="btn-dark-toggle" id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+    </div>
 </header>
 
 <nav class="side-menu" id="side-menu">
@@ -39,9 +80,9 @@
         <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
         
         <li class="menu-section-title">COMPANHIAS</li>
-        <li><a href="companhia.html?cia=azul" class="link-azul"><img src="URL_DA_LOGO_AZUL" class="logo-cia"> Azul</a></li>
-        <li><a href="companhia.html?cia=gol" class="link-gol"><img src="URL_DA_LOGO_GOL" class="logo-cia"> GOL</a></li>
-        <li><a href="companhia.html?cia=latam" class="link-latam"><img src="URL_DA_LOGO_LATAM" class="logo-cia"> LATAM</a></li>
+        <li><a href="companhia.html?cia=azul" class="link-azul"><img src="COLE_URL_AZUL" class="logo-cia"> Azul</a></li>
+        <li><a href="companhia.html?cia=gol" class="link-gol"><img src="COLE_URL_GOL" class="logo-cia"> GOL</a></li>
+        <li><a href="companhia.html?cia=latam" class="link-latam"><img src="COLE_URL_LATAM" class="logo-cia"> LATAM</a></li>
 
         <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
 
@@ -57,79 +98,155 @@
                 <a href="categoria.html?cat=ROTAS">Novas Rotas</a>
                 <a href="categoria.html?cat=PEDIDOS">Pedidos e Entregas</a>
                 <a href="categoria.html?cat=INCIDENTES">Incidentes e Acidentes</a>
-                <a href="categoria.html?cat=COLUNAS">Colunas</a>
                 <a href="categoria.html?cat=CARGUEIRA">Aviação Cargueira</a>
                 <a href="categoria.html?cat=MILITAR">Militar</a>
-                <a href="categoria.html?cat=INFRA">Infraestrutura</a>
-                <a href="categoria.html?cat=TECNOLOGIA">Tecnologia e Inovação</a>
-                <a href="categoria.html?cat=HISTORIA">História e Cultura</a>
-                <a href="categoria.html?cat=OPINIAO">Editorial e Opinião</a>
-                <a href="categoria.html?cat=RADAR">Radar e Monitoramento</a>
                 <a href="categoria.html?cat=FROTA">Movimentação de Frota</a>
-                <a href="categoria.html?cat=ESPECIAIS">Movimentações Especiais</a>
-                <a href="categoria.html?cat=EXECUTIVA">Aviação Executiva</a>
-                <a href="categoria.html?cat=RELATOS">Voos e Relatos</a>
             </div>
         </li>
-
         <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
-        
         <li class="menu-section-title">ADMINISTRAÇÃO</li>
         <li><a href="admin.html"><i class="fas fa-lock" style="margin-right:12px; color:#888;"></i> Área Admin</a></li>
     </ul>
 </nav>
 
 <main>
-    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques</h2>
+    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques (Mais Vistas)</h2>
     <div class="carousel-wrapper">
         <div class="carousel-container" id="carousel-area">
             <button class="carousel-btn btn-prev" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
             <button class="carousel-btn btn-next" id="next-btn"><i class="fas fa-chevron-right"></i></button>
-            </div>
+        </div>
     </div>
 
     <h2 class="feed-header" style="margin: 20px 15px 10px; border-bottom:3px solid #2e7d32; display:inline-block; font-weight:bold; font-size:20px;">Últimas Notícias</h2>
     <div id="news-feed">
-        <p style="padding: 20px; color: #888;">Carregando notícias...</p>
+        <p style="padding: 20px; color: #888;">Buscando as últimas atualizações...</p>
     </div>
 </main>
 
-<script type="module" src="script.js"></script>
+<footer>
+    <img src="3_20250925_005418_0002.png" style="height: 35px; margin-bottom: 20px;">
+    <p style="font-size: 11px; color: #999;">&copy; 2026 BrasilAviation.info</p>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 1. CARREGAR DESTAQUES (Mais Lidas)
+    async function carregarDestaques() {
+        const container = document.getElementById('carousel-area');
+        const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(5));
+        const snap = await getDocs(q);
+        let html = "";
+        let i = 0;
+        snap.forEach(doc => {
+            const n = doc.data();
+            html += `
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?id=${doc.id}'" style="background-image: url('${n.foto}')">
+                    <div class="carousel-caption">
+                        <span class="badge-cat">${n.categoria}</span>
+                        <h3>${n.titulo}</h3>
+                    </div>
+                </div>`;
+            i++;
+        });
+        container.insertAdjacentHTML('afterbegin', html);
+    }
+
+    // 2. CARREGAR FEED (Mais Novas)
+    async function carregarFeed() {
+        const feed = document.getElementById('news-feed');
+        const q = query(collection(db, "noticias"), orderBy("data", "desc"));
+        const snap = await getDocs(q);
+        let html = "";
+        snap.forEach(doc => {
+            const n = doc.data();
+            html += `
+                <article class="news-item" onclick="location.href='noticia.html?id=${doc.id}'">
+                    <div class="news-photo"><img src="${n.foto}"></div>
+                    <div class="news-info">
+                        <h3>${n.titulo}</h3>
+                        <p>${n.data.toDate().toLocaleDateString('pt-BR')}</p>
+                    </div>
+                </article>`;
+        });
+        feed.innerHTML = html;
+    }
+
+    carregarDestaques();
+    carregarFeed();
+</script>
+
 <script>
-    // Lógica do Menu Lateral
+    // Lógica do Menu e Barra de Pesquisa
     const menu = document.getElementById('side-menu');
+    const searchBox = document.getElementById('search-box');
+    const inputBusca = document.getElementById('input-busca');
+    const btnLupa = document.getElementById('btn-lupa');
+
     document.getElementById('open-menu').onclick = () => menu.classList.add('active');
     document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
 
-    // Função Cortina (Submenu)
     function toggleCategorias() {
         document.getElementById('lista-cat').classList.toggle('active');
         document.getElementById('seta-cat').classList.toggle('rotate');
     }
 
-    // Navegação Carrossel (Setas e Swipe)
-    let currentIdx = 0;
-    const carousel = document.getElementById('carousel-area');
+    // Lógica da Pesquisa Animada
+    btnLupa.onclick = (e) => {
+        if (!searchBox.classList.contains('active')) {
+            searchBox.classList.add('active');
+            inputBusca.focus();
+        } else {
+            const termo = inputBusca.value.trim();
+            if (termo) {
+                window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+            } else {
+                searchBox.classList.remove('active');
+            }
+        }
+    };
 
-    function changeSlide(n) {
-        const slides = document.querySelectorAll('.carousel-slide');
-        if (slides.length === 0) return;
-        slides[currentIdx].classList.remove('active');
-        currentIdx = (currentIdx + n + slides.length) % slides.length;
-        slides[currentIdx].classList.add('active');
+    inputBusca.onkeypress = (e) => {
+        if (e.key === 'Enter') {
+            const termo = inputBusca.value.trim();
+            if(termo) window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+        }
+    };
+
+    // Fechar pesquisa se clicar fora
+    document.addEventListener('click', (e) => {
+        if (!searchBox.contains(e.target) && searchBox.classList.contains('active')) {
+            searchBox.classList.remove('active');
+        }
+    });
+
+    // Dark Mode
+    const btnDark = document.getElementById('dark-mode-toggle');
+    const iconDark = btnDark.querySelector('i');
+    if (localStorage.getItem('dark-mode') === 'active') {
+        document.body.classList.add('dark-mode');
+        iconDark.classList.replace('fa-moon', 'fa-sun');
     }
-
-    document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); changeSlide(-1); };
-    document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); changeSlide(1); };
-
-    // Gestos (Swipe) Celular
-    let touchStartX = 0;
-    carousel.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-    carousel.addEventListener('touchend', e => {
-        let touchEndX = e.changedTouches[0].screenX;
-        if (touchEndX < touchStartX - 50) changeSlide(1);
-        if (touchEndX > touchStartX + 50) changeSlide(-1);
-    }, {passive: true});
+    btnDark.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
+        iconDark.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+    };
 </script>
 </body>
 </html>

@@ -2,26 +2,10 @@
   "hosting": {
     "public": ".",
     "cleanUrls": true,
-    "trailingSlash": false,
-    "ignore": [
-      "firebase.json",
-      "**/.*"
-    ],
     "rewrites": [
       {
         "source": "/noticia/**",
         "destination": "/noticia.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/noticia/**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, must-revalidate"
-          }
-        ]
       }
     ]
   }

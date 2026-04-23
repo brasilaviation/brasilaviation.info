@@ -1,29 +1,52 @@
-/* Geral e Reset */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-body { background: white; color: #333; line-height: 1.6; overflow-x: hidden; -webkit-tap-highlight-color: transparent; transition: background 0.3s, color 0.3s; }
+/* =========================================
+   RESET E CONFIGURAÇÕES GERAIS
+   ========================================= */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
 
-/* --- VARIÁVEIS DO MODO ESCURO --- */
-body.dark-mode { background-color: #121212; color: #e0e0e0; }
+body { 
+    background: white; 
+    color: #333; 
+    line-height: 1.6; 
+    overflow-x: hidden; 
+    -webkit-tap-highlight-color: transparent; 
+    transition: background 0.3s, color 0.3s; 
+}
+
+/* =========================================
+   MODO ESCURO (DARK MODE)
+   ========================================= */
+body.dark-mode { 
+    background-color: #121212; 
+    color: #e0e0e0; 
+}
+
 body.dark-mode header, 
 body.dark-mode .side-menu, 
 body.dark-mode .news-item, 
-body.dark-mode .noticia-container,
-body.dark-mode .inst-container,
-body.dark-mode .categoria-header,
-body.dark-mode .post-admin-card { background-color: #1e1e1e; color: #e0e0e0; border-color: #333; }
+body.dark-mode .carousel-container { 
+    background-color: #1e1e1e; 
+    border-color: #333; 
+}
 
-body.dark-mode .news-info h3, 
-body.dark-mode .noticia-titulo, 
-body.dark-mode .inst-container h1,
-body.dark-mode .side-menu li a,
-body.dark-mode h2, body.dark-mode h3 { color: #ffffff; }
+body.dark-mode h2, 
+body.dark-mode h3, 
+body.dark-mode .side-menu li a { 
+    color: #ffffff; 
+}
 
-body.dark-mode .news-meta span, 
-body.dark-mode .legenda-foto,
-body.dark-mode .empty-msg,
-body.dark-mode p { color: #bbb; }
+body.dark-mode .news-meta, 
+body.dark-mode p { 
+    color: #bbb; 
+}
 
-/* Header Fixo */
+/* =========================================
+   HEADER E NAVEGAÇÃO
+   ========================================= */
 header { 
     display: flex; 
     justify-content: space-between; 
@@ -35,82 +58,146 @@ header {
     background: white; 
     z-index: 1000; 
 }
-.site-logo { height: 35px; cursor: pointer; }
-.btn-icon { background: none; border: none; font-size: 24px; color: #2e7d32; cursor: pointer; padding: 5px; }
 
-/* Botão Dark Mode */
-.btn-dark-toggle { font-size: 20px; color: #2e7d32; background: none; border: none; cursor: pointer; padding: 5px; transition: 0.3s; }
-body.dark-mode .btn-dark-toggle { color: #ffca28; }
+.site-logo { 
+    height: 35px; 
+    cursor: pointer; 
+}
 
-/* MENU LATERAL */
+.btn-icon, .btn-dark-toggle { 
+    background: none; 
+    border: none; 
+    font-size: 22px; 
+    color: #2e7d32; 
+    cursor: pointer; 
+    padding: 5px; 
+    display: flex;
+    align-items: center;
+}
+
+/* =========================================
+   MENU LATERAL (SIDE MENU)
+   ========================================= */
 .side-menu { 
     position: fixed; 
     top: 0; 
     left: -100%; 
-    width: 80%; 
+    width: 85%; 
     max-width: 300px; 
     height: 100%; 
     background: white; 
-    z-index: 9999 !important; 
+    z-index: 9999; 
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     box-shadow: 5px 0 25px rgba(0,0,0,0.2); 
     overflow-y: auto; 
 }
+
 .side-menu.active { left: 0; }
 .menu-close-area { padding: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; }
 .side-menu ul { list-style: none; padding: 10px 0; }
-.menu-section-title { padding: 20px 20px 5px; font-size: 11px; font-weight: bold; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px; }
+.side-menu li a { display: flex; align-items: center; padding: 14px 20px; text-decoration: none; color: #333; font-size: 16px; }
 
-.logo-cia {
-    height: 20px;
-    width: auto;
-    max-width: 40px;
-    margin-right: 10px;
-    display: inline-block;
-    vertical-align: middle;
-    object-fit: contain;
+/* Cores das Cias no Menu */
+.link-azul { background: #eef2ff !important; margin: 5px 15px; border-radius: 8px; color: #1a237e !important; font-weight: bold; }
+.link-gol { background: #fff7ed !important; margin: 5px 15px; border-radius: 8px; color: #c2410c !important; font-weight: bold; }
+.link-latam { background: #fef2f2 !important; margin: 5px 15px; border-radius: 8px; color: #991b1b !important; font-weight: bold; }
+
+/* =========================================
+   CARROSSEL (PROPORÇÃO 3:2)
+   ========================================= */
+.carousel-wrapper { 
+    padding: 0 15px; 
+    margin-bottom: 25px; 
+    position: relative; 
 }
 
-.side-menu li a { 
-    display: flex; 
-    align-items: center; 
-    padding: 14px 20px; 
-    text-decoration: none; 
-    color: #333; 
-    font-size: 16px; 
-}
-
-/* CORES DAS COMPANHIAS */
-.link-azul { background: #eef2ff !important; margin: 5px 15px !important; border-radius: 8px; color: #1a237e !important; font-weight: bold !important; }
-.link-gol { background: #fff7ed !important; margin: 5px 15px !important; border-radius: 8px; color: #c2410c !important; font-weight: bold !important; }
-.link-latam { background: #fef2f2 !important; margin: 5px 15px !important; border-radius: 8px; color: #991b1b !important; font-weight: bold !important; }
-
-/* CARROSSEL */
-.carousel-wrapper { padding: 0 15px; margin-bottom: 20px; position: relative; }
 .carousel-container { 
-    width: 100%; height: 250px; position: relative; overflow: hidden; 
-    border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-    background: #000; touch-action: pan-y;
+    width: 100%; 
+    aspect-ratio: 3 / 2; /* FORÇA O FORMATO 3:2 */
+    position: relative; 
+    overflow: hidden; 
+    border-radius: 18px; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+    background: #000;
 }
-.carousel-slide { display: none; width: 100%; height: 100%; animation: fade 0.6s; cursor: pointer; }
+
+.carousel-slide { 
+    display: none; 
+    width: 100%; 
+    height: 100%; 
+    animation: fade 0.8s ease-in-out; 
+}
+
 .carousel-slide.active { display: block; }
-.carousel-slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+
+.carousel-slide img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    opacity: 0.85; 
+}
+
 .carousel-caption { 
-    position: absolute; bottom: 0; width: 100%; 
-    background: linear-gradient(transparent, rgba(0,0,0,0.9)); 
-    color: white; padding: 25px 15px 15px; font-weight: bold; font-size: 18px; 
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
+    color: white; 
+    padding: 45px 15px 15px; 
+}
+
+.carousel-caption h3 { font-size: 18px; font-weight: bold; line-height: 1.3; color: #fff; }
+
+.badge-cat {
+    background: #2e7d32;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 .carousel-btn {
     position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.7); color: white; border: none;
-    padding: 12px 15px; cursor: pointer; border-radius: 50%; z-index: 10;
+    background: rgba(0, 0, 0, 0.4); color: white; border: none;
+    width: 40px; height: 40px; cursor: pointer; border-radius: 50%; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
 }
 .btn-prev { left: 10px; }
 .btn-next { right: 10px; }
 
-/* FEED DE NOTÍCIAS */
-.news-item { display: flex; padding: 15px; border-bottom: 1px solid #f0f0f0; gap: 15px; align-items: center; cursor: pointer; }
-.news-photo img { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; }
+/* =========================================
+   FEED DE NOTÍCIAS (PROPORÇÃO 3:2)
+   ========================================= */
+.news-item { 
+    display: flex; 
+    padding: 15px; 
+    border-bottom: 1px solid #f0f0f0; 
+    gap: 15px; 
+    align-items: center; 
+    cursor: pointer; 
+}
 
-@keyframes fade { from { opacity: 0.5; } to { opacity: 1; } }
+.news-photo img { 
+    width: 110px; 
+    aspect-ratio: 3 / 2; /* MINIATURA TAMBÉM EM 3:2 */
+    object-fit: cover; 
+    border-radius: 10px; 
+    background: #eee;
+}
+
+.news-info { flex: 1; }
+.news-info h3 { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
+.news-meta { font-size: 11px; color: #888; }
+
+/* =========================================
+   ANIMAÇÕES E FOOTER
+   ========================================= */
+@keyframes fade { 
+    from { opacity: 0.4; transform: scale(1.02); } 
+    to { opacity: 1; transform: scale(1); } 
+}
+
+footer { background: #f9f9f9; padding: 40px 20px; text-align: center; margin-top: 30px; border-top: 1px solid #eee; }
+body.dark-mode footer { background: #1a1a1a; border-color: #333; }

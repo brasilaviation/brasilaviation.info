@@ -3,139 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo | BrasilAviation</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Painel Brasil Aviation | ImgBB Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
-        .admin-container { max-width: 600px; margin: 0 auto; }
-        
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-sair { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-size: 13px; }
-
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: #2e7d32; color: white; padding: 15px; border-radius: 18px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .stat-card h1 { margin: 0; font-size: 28px; }
-        .stat-card p { margin: 2px 0 0; font-size: 12px; opacity: 0.9; }
-
-        .btn-principal { background: #1a237e; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; cursor: pointer; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
-        .card-noticia { background: white; border-radius: 15px; padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-        .card-noticia img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
-        .info-txt { flex: 1; }
-        .info-txt h3 { margin: 0; font-size: 14px; color: #222; }
-        .info-txt p { margin: 2px 0 0; font-size: 11px; color: #666; }
-        .acoes { display: flex; gap: 12px; }
-        .fa-edit { color: #1a237e; cursor: pointer; }
-        .fa-trash { color: #c62828; cursor: pointer; }
-
-        /* --- EDITOR SOBREPOSTO --- */
-        #container-editor { display: none; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); margin-top: -10px; }
-        label { display: block; font-weight: bold; color: #1a237e; font-size: 11px; text-transform: uppercase; margin: 12px 0 5px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; }
-        .toolbar { display: flex; gap: 5px; padding: 8px; background: #f5f5f5; border: 1px solid #ddd; border-bottom: none; border-radius: 8px 8px 0 0; margin-top: 10px; }
-        .btn-t { background: white; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        textarea { height: 180px; border-radius: 0 0 8px 8px; resize: none; font-family: inherit; }
-
-        body.dark-mode { background: #121212; color: white; }
-        body.dark-mode .card-noticia, body.dark-mode #container-editor { background: #1e1e1e; }
-        body.dark-mode .info-txt h3 { color: white; }
-        body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #2c2c2c; color: white; border-color: #444; }
+        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; --card: #ffffff; --text: #333; }
+        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text: #ffffff; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-top { background: var(--card); border: 1px solid #ddd; padding: 10px; border-radius: 10px; cursor: pointer; color: var(--text); }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: var(--secondary); color: white; padding: 15px; border-radius: 15px; text-align: center; }
+        .search-bar { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box; }
+        .btn-main { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .card-news { background: var(--card); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card-news img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+        #editor-noticia { display: none; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        label { display: block; font-weight: bold; font-size: 11px; text-transform: uppercase; margin: 15px 0 5px; color: var(--primary); }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: var(--bg); color: var(--text); box-sizing: border-box; }
+        .toolbar { display: flex; gap: 5px; background: #eee; padding: 8px; border-radius: 10px 10px 0 0; border: 1px solid #ddd; border-bottom: none; margin-top: 10px; }
+        .toolbar button { background: white; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        textarea { height: 250px; border-radius: 0 0 10px 10px; resize: vertical; }
+        #status-txt { font-size: 12px; color: var(--secondary); font-weight: bold; display: none; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <div class="admin-header">
-        <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-        <h2 style="color: #1a237e; font-size: 18px;">Painel BrasilAviation</h2>
-        <button class="btn-sair" id="btn-logout">Sair</button>
-    </div>
-
-    <div id="secao-lista">
-        <div class="stats-row">
-            <div class="stat-card">
-                <h1 id="count-posts">0</h1>
-                <p>Matérias</p>
-            </div>
-            <div class="stat-card">
-                <h1 id="count-cliques">0</h1>
-                <p>Total Cliques</p>
-            </div>
-        </div>
-
-        <button class="btn-principal" onclick="abrirEditor()">
-            <i class="fas fa-plus-circle"></i> Escrever Nova Matéria
-        </button>
-
-        <div id="feed-admin">
-            <p style="text-align:center; color:#999; font-size:12px;">Preparando decolagem...</p>
+<div class="container">
+    <div class="header">
+        <button class="btn-top" onclick="location.href='index.html'"><i class="fas fa-home"></i></button>
+        <div style="display:flex; gap:8px;">
+            <button class="btn-top" id="dark-btn"><i class="fas fa-moon"></i></button>
+            <button class="btn-top" id="logout-btn" style="color:red;">Sair</button>
         </div>
     </div>
 
-    <div id="container-editor">
+    <div id="lista-posts">
+        <div class="stats">
+            <div class="stat-card"><h1 id="total-m">0</h1><p style="margin:0;font-size:12px;">Matérias</p></div>
+            <div class="stat-card"><h1 id="total-c">0</h1><p style="margin:0;font-size:12px;">Cliques</p></div>
+        </div>
+        <input type="text" id="busca" class="search-bar" placeholder="Pesquisar título...">
+        <button class="btn-main" onclick="abrirEditor()"><i class="fas fa-plus"></i> Nova Matéria</button>
+        <div id="feed"></div>
+    </div>
+
+    <div id="editor-noticia">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="tit-edit" style="color:#1a237e; margin:0; font-size:18px;">Nova Matéria</h2>
+            <h2 id="edit-title" style="margin:0; font-size:18px;">Publicar Notícia</h2>
             <i class="fas fa-times" onclick="fecharEditor()" style="cursor:pointer; color:#999;"></i>
         </div>
 
-        <input type="hidden" id="post-id">
-        
-        <label>Título da Matéria:</label>
-        <input type="text" id="post-titulo" placeholder="Ex: GOL anuncia novas rotas...">
+        <input type="hidden" id="p-id">
+        <input type="hidden" id="p-foto-velha">
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <label>Título:</label>
+        <input type="text" id="p-titulo">
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
             <div>
                 <label>Categoria:</label>
-                <select id="post-categoria">
+                <select id="p-cat">
                     <option value="AZUL">Azul</option>
                     <option value="GOL">GOL</option>
                     <option value="LATAM">LATAM</option>
-                    <option value="PINTURA">Pintura/Adesivos</option>
-                    <option value="DEPORTACAO">Deportação</option>
-                    <option value="CURIOSIDADES">Curiosidades</option>
-                    <option value="ROTAS">Novas Rotas</option>
-                    <option value="PEDIDOS">Pedidos e Entregas</option>
-                    <option value="INCIDENTES">Incidentes e Acidentes</option>
-                    <option value="COLUNAS">Colunas</option>
-                    <option value="CARGUEIRA">Aviação Cargueira</option>
-                    <option value="MILITAR">Militar</option>
-                    <option value="INFRA">Infraestrutura</option>
-                    <option value="TECNOLOGIA">Tecnologia e Inovação</option>
-                    <option value="HISTORIA">História e Cultura</option>
-                    <option value="OPINIAO">Editorial e Opinião</option>
-                    <option value="RADAR">Radar e Monitoramento</option>
-                    <option value="FROTA">Movimentação de Frota</option>
-                    <option value="ESPECIAIS">Movimentações Especiais</option>
-                    <option value="EXECUTIVA">Aviação Executiva</option>
-                    <option value="RELATOS">Voos e Relatos</option>
+                    <option value="FROTA">Frota</option>
+                    <option value="ROTAS">Rotas</option>
+                    <option value="PINTURA">Pintura</option>
                 </select>
             </div>
             <div>
-                <label>Escritor (Autor):</label>
-                <select id="post-autor">
+                <label>Autor:</label>
+                <select id="p-autor">
                     <option value="Miguel Barbosa">Miguel Barbosa</option>
-                    <option value="Henrique Saito">Henrique Saito</option>
-                    <option value="Murilo Marinho">Murilo Marinho</option>
                     <option value="BrasilAviation Team">BrasilAviation Team</option>
                 </select>
             </div>
         </div>
 
-        <label>Link da Capa:</label>
-        <input type="text" id="post-foto" placeholder="https://...">
+        <label>Capa da Notícia:</label>
+        <input type="file" id="p-file" accept="image/*">
+        <input type="text" id="p-legenda" placeholder="Legenda da capa" style="margin-top:5px;">
 
-        <label>Legenda da Foto:</label>
-        <input type="text" id="post-legenda" placeholder="Créditos da imagem">
-
+        <label>Texto da Matéria (Use as tags para formatar):</label>
         <div class="toolbar">
-            <button class="btn-t" onclick="formatar('bold')">B</button>
-            <button class="btn-t" onclick="formatar('italic')">I</button>
-            <button class="btn-t" onclick="addLink()"><i class="fas fa-link"></i></button>
+            <button onclick="format('bold')"><b>B</b></button>
+            <button onclick="format('italic')"><i>I</i></button>
+            <button onclick="addLink()">Link</button>
+            <button onclick="document.getElementById('p-file-extra').click()" style="background:#e8f5e9;">+ Foto Interna</button>
+            <input type="file" id="p-file-extra" accept="image/*" style="display:none" onchange="uploadExtra(this)">
         </div>
-        <textarea id="post-texto" placeholder="Conteúdo da notícia..."></textarea>
-
-        <button class="btn-principal" id="btn-salvar" style="margin-top:20px;">PUBLICAR AGORA</button>
+        <textarea id="p-texto"></textarea>
+        
+        <div id="status-txt"><i class="fas fa-plane fa-spin"></i> Processando voo, aguarde...</div>
+        <button class="btn-main" id="btn-save" style="margin-top:20px;">PUBLICAR AGORA</button>
     </div>
 </div>
 
@@ -153,109 +114,167 @@
         appId: "1:979009087877:web:490bdc36da545d56b87cec"
     };
 
+    // CHAVE IMGBB ATIVADA
+    const IMGBB_API_KEY = "2ee4c2239a809ffb30ec9c04689ee3ee"; 
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    let noticias = [];
+
+    // Função que faz o upload para o ImgBB
+    async function subirImg(arquivo) {
+        const formData = new FormData();
+        formData.append("image", arquivo);
+        const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+            method: "POST",
+            body: formData
+        });
+        const data = await res.json();
+        if(!data.success) throw new Error("Erro no ImgBB: " + data.status);
+        return data.data.url;
+    }
+
     onAuthStateChanged(auth, (user) => {
         if (!user) window.location.href = "login.html";
-        else carregarPosts();
+        else carregar();
     });
 
-    document.getElementById('btn-logout').onclick = () => signOut(auth);
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    async function carregarPosts() {
+    async function carregar() {
         const q = query(collection(db, "noticias"), orderBy("data", "desc"));
         const snap = await getDocs(q);
-        let html = "";
-        let cliques = 0;
-        let qtd = 0;
-
+        noticias = [];
+        let clks = 0;
         snap.forEach(d => {
-            const n = d.data();
-            qtd++;
-            cliques += (n.cliques || 0);
-            html += `
-                <div class="card-noticia">
-                    <img src="${n.foto}">
-                    <div class="info-txt">
-                        <h3>${n.titulo}</h3>
-                        <p>Por: ${n.autor} | ${n.categoria} | <i class="fas fa-eye"></i> ${n.cliques || 0}</p>
-                    </div>
-                    <div class="acoes">
-                        <i class="fas fa-edit" onclick="abrirEditor('${d.id}')"></i>
-                        <i class="fas fa-trash" onclick="deletar('${d.id}')"></i>
-                    </div>
-                </div>`;
+            const data = d.data();
+            data.id = d.id;
+            noticias.push(data);
+            clks += (data.cliques || 0);
         });
-        document.getElementById('feed-admin').innerHTML = html || "<p style='text-align:center;'>Nenhuma notícia ainda.</p>";
-        document.getElementById('count-posts').innerText = qtd;
-        document.getElementById('count-cliques').innerText = cliques;
+        render(noticias);
+        document.getElementById('total-m').innerText = noticias.length;
+        document.getElementById('total-c').innerText = clks;
+    }
+
+    function render(lista) {
+        let h = "";
+        lista.forEach(n => {
+            h += `<div class="card-news">
+                <img src="${n.foto}">
+                <div style="flex:1;"><h3>${n.titulo}</h3><p style="font-size:10px;margin:0;">${n.categoria}</p></div>
+                <i class="fas fa-edit" onclick="abrirEditor('${n.id}')" style="cursor:pointer;color:var(--primary);"></i>
+                <i class="fas fa-trash" onclick="deletar('${n.id}')" style="cursor:pointer;color:red;margin-left:10px;"></i>
+            </div>`;
+        });
+        document.getElementById('feed').innerHTML = h || "<p>Nenhuma matéria encontrada.</p>";
     }
 
     window.abrirEditor = async (id = null) => {
-        document.getElementById('secao-lista').style.display = 'none';
-        document.getElementById('container-editor').style.display = 'block';
-        if (id) {
+        document.getElementById('lista-posts').style.display = 'none';
+        document.getElementById('editor-noticia').style.display = 'block';
+        if(id) {
             const s = await getDoc(doc(db, "noticias", id));
             const n = s.data();
-            document.getElementById('post-id').value = id;
-            document.getElementById('post-titulo').value = n.titulo;
-            document.getElementById('post-categoria').value = n.categoria;
-            document.getElementById('post-autor').value = n.autor;
-            document.getElementById('post-foto').value = n.foto;
-            document.getElementById('post-texto').value = n.texto;
-            document.getElementById('post-legenda').value = n.legenda || "";
-            document.getElementById('tit-edit').innerText = "Editar Matéria";
+            document.getElementById('p-id').value = id;
+            document.getElementById('p-titulo').value = n.titulo;
+            document.getElementById('p-texto').value = n.conteudo || n.texto || "";
+            document.getElementById('p-foto-velha').value = n.foto;
+            document.getElementById('p-legenda').value = n.legenda || "";
+            document.getElementById('edit-title').innerText = "Editar Matéria";
         } else {
-            document.getElementById('post-id').value = "";
-            document.getElementById('post-titulo').value = "";
-            document.getElementById('post-texto').value = "";
-            document.getElementById('tit-edit').innerText = "Nova Matéria";
+            document.getElementById('p-id').value = "";
+            document.getElementById('p-titulo').value = "";
+            document.getElementById('p-texto').value = "";
+            document.getElementById('p-foto-velha').value = "";
+            document.getElementById('p-legenda').value = "";
+            document.getElementById('edit-title').innerText = "Nova Matéria";
         }
     };
 
     window.fecharEditor = () => {
-        document.getElementById('secao-lista').style.display = 'block';
-        document.getElementById('container-editor').style.display = 'none';
-    };
-
-    document.getElementById('btn-salvar').onclick = async () => {
-        const id = document.getElementById('post-id').value;
-        const dados = {
-            titulo: document.getElementById('post-titulo').value,
-            categoria: document.getElementById('post-categoria').value,
-            autor: document.getElementById('post-autor').value,
-            foto: document.getElementById('post-foto').value,
-            texto: document.getElementById('post-texto').value,
-            legenda: document.getElementById('post-legenda').value,
-            data: serverTimestamp()
-        };
-        if(id) await setDoc(doc(db, "noticias", id), dados, {merge:true});
-        else { dados.cliques = 0; await addDoc(collection(db, "noticias"), dados); }
-        fecharEditor(); carregarPosts();
+        document.getElementById('lista-posts').style.display = 'block';
+        document.getElementById('editor-noticia').style.display = 'none';
     };
 
     window.deletar = async (id) => {
-        if(confirm("Apagar para sempre?")) { await deleteDoc(doc(db, "noticias", id)); carregarPosts(); }
+        if(confirm("Deseja apagar definitivamente?")) { await deleteDoc(doc(db, "noticias", id)); carregar(); }
+    };
+
+    window.uploadExtra = async (input) => {
+        const file = input.files[0];
+        if(!file) return;
+        document.getElementById('status-txt').style.display = 'block';
+        try {
+            const url = await subirImg(file);
+            document.getElementById('p-texto').value += `\n<img src="${url}" style="width:100%; border-radius:10px; margin:10px 0;">\n`;
+        } catch(e) { alert("Falha no upload da imagem interna."); }
+        document.getElementById('status-txt').style.display = 'none';
+    };
+
+    document.getElementById('btn-save').onclick = async () => {
+        const id = document.getElementById('p-id').value;
+        const file = document.getElementById('p-file').files[0];
+        let url = document.getElementById('p-foto-velha').value;
+
+        if(!url && !file) return alert("A notícia precisa de uma foto de capa!");
+
+        document.getElementById('status-txt').style.display = 'block';
+        try {
+            if(file) url = await subirImg(file);
+
+            const dados = {
+                titulo: document.getElementById('p-titulo').value,
+                categoria: document.getElementById('p-cat').value,
+                autor: document.getElementById('p-autor').value,
+                foto: url,
+                legenda: document.getElementById('p-legenda').value,
+                conteudo: document.getElementById('p-texto').value,
+                data: serverTimestamp()
+            };
+
+            if(id) await setDoc(doc(db, "noticias", id), dados, {merge:true});
+            else { dados.cliques = 0; await addDoc(collection(db, "noticias"), dados); }
+            
+            alert("Publicado com sucesso!");
+            fecharEditor(); carregar();
+        } catch (e) { alert("Erro ao publicar: " + e.message); }
+        document.getElementById('status-txt').style.display = 'none';
+    };
+
+    document.getElementById('busca').oninput = (e) => {
+        const t = e.target.value.toLowerCase();
+        render(noticias.filter(n => n.titulo.toLowerCase().includes(t)));
+    };
+
+    window.format = (type) => {
+        const area = document.getElementById('p-texto');
+        const start = area.selectionStart;
+        const end = area.selectionEnd;
+        const sel = area.value.substring(start, end);
+        let novo = sel;
+        if(type === 'bold') novo = `<b>${sel}</b>`;
+        if(type === 'italic') novo = `<i>${sel}</i>`;
+        area.value = area.value.substring(0, start) + novo + area.value.substring(end);
+        area.focus();
+    };
+
+    window.addLink = () => {
+        const url = prompt("Cole o link (ex: https://...):");
+        if(url) {
+            const area = document.getElementById('p-texto');
+            area.value += `<a href="${url}" target="_blank">Clique aqui</a>`;
+        }
+    };
+
+    const btnD = document.getElementById('dark-btn');
+    if(localStorage.getItem('dark') === 'on') document.body.classList.add('dark-mode');
+    btnD.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('dark', document.body.classList.contains('dark-mode') ? 'on' : 'off');
     };
 </script>
-
-<script>
-    function formatar(t) {
-        const a = document.getElementById('post-texto');
-        const s = a.selectionStart;
-        const e = a.selectionEnd;
-        const sel = a.value.substring(s, e);
-        let tag = t === 'bold' ? `**${sel}**` : `*${sel}*`;
-        a.value = a.value.substring(0, s) + tag + a.value.substring(e);
-    }
-    function addLink() {
-        const l = prompt("URL:");
-        if(l) document.getElementById('post-texto').value += ` [Link](${l})`;
-    }
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-</script>
-
 </body>
 </html>

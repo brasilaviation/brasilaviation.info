@@ -3,86 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícia | BrasilAviation.info</title>
+    <title>BrasilAviation | Notícia</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-        .noticia-container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; }
+        /* --- ESTILOS PADRONIZADOS --- */
+        .noticia-container { padding: 20px; max-width: 800px; margin: 0 auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Imagem e Legenda */
-        .noticia-capa { width: 100%; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .legenda-foto {
-            display: block;
-            border-left: 5px solid #2e7d32;
-            border-radius: 4px;
-            padding: 2px 0 2px 12px;
-            margin-bottom: 25px;
-            font-size: 13px;
-            font-style: italic;
-            color: #666; /* Cor para modo claro */
-            text-align: left;
-            line-height: 1.4;
-        }
-
-        /* Títulos e Textos */
-        .noticia-titulo { font-size: 28px; font-weight: bold; margin: 10px 0; color: #111; line-height: 1.2; }
-        .info-publicacao { font-size: 13px; color: #888; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .noticia-corpo { font-size: 18px; line-height: 1.8; color: #333; text-align: justify; margin-bottom: 40px; }
+        .logo-cia { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; vertical-align: middle; }
+        .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         
-        /* Ajustes para Modo Escuro */
-        body.dark-mode { background-color: #121212; color: #ffffff; }
-        body.dark-mode .noticia-titulo { color: #ffffff; }
-        body.dark-mode .noticia-corpo { color: #dddddd; }
-        body.dark-mode .legenda-foto { color: #bbbbbb; border-left-color: #4caf50; }
-        body.dark-mode .info-publicacao { border-bottom-color: #333; }
+        /* Breadcrumb */
+        .breadcrumb { font-size: 13px; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        .breadcrumb span { color: #2e7d32; }
+        .breadcrumb b { color: #ccc; margin: 0 8px; }
 
-        /* Navegação */
-        .breadcrumbs { padding: 10px 0; font-size: 13px; color: #888; margin-bottom: 15px; }
-        .breadcrumbs a { color: #2e7d32; text-decoration: none; font-weight: bold; }
-        .breadcrumbs span { margin: 0 5px; }
+        /* Título e Meta */
+        .noticia-container h1 { font-size: 30px; color: #1a237e; margin-bottom: 15px; font-weight: 800; line-height: 1.2; }
+        .meta-info { display: flex; align-items: center; gap: 15px; color: #777; font-size: 13px; margin-bottom: 25px; font-weight: 500; }
+        .meta-info i { margin-right: 4px; color: #999; }
+        .meta-info a { color: #2e7d32; text-decoration: none; font-weight: 700; }
 
-        .categoria-tag-final { display: inline-block; background: #eef2ff; color: #1a237e; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 14px; margin-top: 20px; border: 1px solid #d1d5db; transition: 0.3s; }
-        body.dark-mode .categoria-tag-final { background: #1e1e1e; color: #8bb1ff; border-color: #444; }
+        /* Imagem de Capa */
+        .main-photo { width: 100%; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; max-height: 450px; }
+
+        /* Barra Lateral Verde e Texto */
+        .quote-box { border-left: 5px solid #2e7d32; padding-left: 15px; font-style: italic; color: #666; margin-bottom: 25px; font-size: 18px; line-height: 1.4; }
+        .corpo-texto { font-size: 17.5px; color: #333; line-height: 1.8; text-align: justify; }
+        .corpo-texto p { margin-bottom: 20px; }
+
+        /* Tags */
+        .tag-area { margin-top: 40px; border-top: 1px solid #eee; padding-top: 25px; }
+        .tag-label { font-size: 11px; font-weight: 900; color: #999; margin-bottom: 12px; display: block; }
+        .btn-tag { background: #f0f3ff; color: #1a237e; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; border: 1px solid #e0e6ff; }
+
+        /* Header e Footer */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #eee; }
+        .btn-icon-top { background: none; border: none; font-size: 20px; color: #2e7d32; cursor: pointer; }
         
-        footer { background: #f9f9f9; padding: 30px 20px; border-top: 1px solid #eee; margin-top: 40px; text-align: center; }
-        body.dark-mode footer { background: #1a1a1a; border-color: #333; }
+        footer { text-align: center; padding: 60px 20px; background: #fafafa; border-top: 1px solid #eee; margin-top: 50px; }
+        footer img { height: 45px; margin-bottom: 25px; opacity: 0.8; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; font-size: 13px; }
+        .footer-links a { color: #555; text-decoration: none; font-weight: 600; }
+
+        /* Submenu das Categorias */
+        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.03); border-radius: 0 0 8px 8px; }
+        .submenu.active { max-height: 1500px; padding-bottom: 10px; }
+        .submenu a { padding: 10px 20px 10px 50px !important; font-size: 13px !important; color: #555 !important; border: none !important; }
+        .menu-arrow { transition: transform 0.3s; font-size: 12px; color: #bbb; }
+        .menu-arrow.rotate { transform: rotate(180deg); }
+
+        /* Dark Mode */
+        body.dark-mode { background: #121212; color: #eee; }
+        body.dark-mode header { background: #121212; border-bottom-color: #333; }
+        body.dark-mode .noticia-container h1 { color: #fff; }
+        body.dark-mode .corpo-texto { color: #ccc; }
+        body.dark-mode .quote-box { color: #bbb; }
+        body.dark-mode footer { background: #1a1a1a; border-top-color: #333; }
+        body.dark-mode .btn-tag { background: #222; color: #8bb1ff; border-color: #333; }
+        body.dark-mode .submenu { background: rgba(255,255,255,0.05); }
     </style>
 </head>
-<body>
+<body id="body">
 
 <header>
-    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-arrow-left"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height:30px; cursor:pointer;" onclick="location.href='index.html'">
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <button class="btn-dark-toggle" id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
-        <button class="btn-icon"><i class="fas fa-share-alt"></i></button>
+    <button class="btn-icon-top" id="open-menu"><i class="fas fa-bars"></i></button>
+    <img src="3_20250925_005418_0002.png" style="height: 35px; cursor: pointer;" onclick="location.href='index.html'">
+    <div style="display: flex; gap: 18px;">
+        <button class="btn-icon-top" id="dark-toggle"><i class="far fa-moon"></i></button>
+        <button class="btn-icon-top" id="share-btn"><i class="fas fa-share-alt"></i></button>
     </div>
 </header>
 
-<main class="noticia-container">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <a href="index.html">Início</a> <span>/</span> <a href="#">Notícias</a>
-    </div>
-    <div id="conteudo-noticia">
-        <p style="text-align:center; padding-top:50px; color:#888;">Carregando conteúdo exclusivo...</p>
-    </div>
-</main>
+<div id="menu-container"></div>
 
-<footer>
-    <img src="3_20250925_005418_0002.png" style="height: 35px; margin-bottom: 20px;">
-    <ul style="display: flex; justify-content: center; gap: 15px; list-style: none; margin-bottom: 15px; padding: 0;">
-        <li><a href="pagina.html?ref=sobre" style="text-decoration: none; color: inherit; font-size: 13px;">Sobre Nós</a></li>
-        <li><a href="pagina.html?ref=contato" style="text-decoration: none; color: inherit; font-size: 13px;">Contato</a></li>
-        <li><a href="pagina.html?ref=privacidade" style="text-decoration: none; color: inherit; font-size: 13px;">Privacidade</a></li>
-        <li><a href="pagina.html?ref=termos" style="text-decoration: none; color: inherit; font-size: 13px;">Termos de Uso</a></li>
-    </ul>
-    <p style="font-size: 11px; color: #999;">&copy; 2026 BrasilAviation.info - Jornalismo Aeronáutico Independente</p>
-</footer>
+<main class="noticia-container" id="noticia-render">
+    <p style="text-align:center; padding:100px; color:#888;">Preparando motores...</p>
+</main>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -96,65 +97,105 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // MODO ESCURO
-    const btnDark = document.getElementById('dark-mode-toggle');
-    const iconDark = btnDark.querySelector('i');
-    if (localStorage.getItem('dark-mode') === 'active') {
-        document.body.classList.add('dark-mode');
-        iconDark.classList.replace('fa-moon', 'fa-sun');
+    // --- CARREGAR MENU EXTERNO ---
+    async function carregarMenu() {
+        try {
+            const resp = await fetch('menu.html');
+            const html = await resp.text();
+            document.getElementById('menu-container').innerHTML = html;
+            
+            const menu = document.getElementById('side-menu');
+            document.getElementById('open-menu').onclick = () => menu.classList.add('active');
+            document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
+        } catch (e) { console.error("Erro ao carregar menu:", e); }
     }
-    btnDark.onclick = () => {
-        document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
-        iconDark.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
-    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const noticiaId = urlParams.get('id');
 
     async function carregarNoticia() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        if(!id) return;
+        if (!noticiaId) return;
 
         try {
-            const docRef = doc(db, "noticias", id);
+            const docRef = doc(db, "noticias", noticiaId);
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
                 const n = docSnap.data();
-                
-                // Incrementar Cliques
-                await updateDoc(docRef, { cliques: increment(1) });
+                const dataFormatada = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                }) : "Data não disponível";
 
-                // Data por Extenso (Ex: 22 de abril de 2026)
-                const dataExtenso = n.data ? n.data.toDate().toLocaleDateString('pt-BR', {
-                    day: '2-digit', month: 'long', year: 'numeric'
-                }) : "Data indisponível";
+                document.title = `BrasilAviation | ${n.titulo}`;
 
-                const autor = n.autor || "Redação BrasilAviation";
-                const cat = n.categoria || "Geral";
-                const cias = ["AZUL", "GOL", "LATAM"];
-                const linkDestino = cias.includes(cat.toUpperCase()) ? `companhia.html?cia=${cat.toLowerCase()}` : `categoria.html?cat=${cat}`;
-
-                document.getElementById('breadcrumbs').innerHTML = `<a href="index.html">Início</a> <span>/</span> <a href="${linkDestino}">${cat}</a>`;
-                
-                document.getElementById('conteudo-noticia').innerHTML = `
-                    <h1 class="noticia-titulo">${n.titulo}</h1>
-                    <div class="info-publicacao">
-                        <i class="far fa-calendar-alt"></i> ${dataExtenso} | 
-                        <i class="far fa-user"></i> Por: <strong>${autor}</strong>
+                document.getElementById('noticia-render').innerHTML = `
+                    <div class="breadcrumb">
+                        <span>Início</span> <b>/</b> <span>${n.categoria || 'AVIAÇÃO'}</span>
                     </div>
-                    <img src="${n.foto}" class="noticia-capa">
-                    ${n.legenda ? `<span class="legenda-foto">${n.legenda}</span>` : ''}
-                    <div class="noticia-corpo">${n.texto.replace(/\n/g, '<br>')}</div>
-                    
-                    <p style="font-size: 14px; font-weight: bold; color: #888; margin-top:30px;">CATEGORIA:</p>
-                    <a href="${linkDestino}" class="categoria-tag-final"><i class="fas fa-tag" style="margin-right:8px;"></i>${cat}</a>
+
+                    <h1>${n.titulo}</h1>
+
+                    <div class="meta-info">
+                        <span><i class="far fa-calendar-alt"></i> ${dataFormatada}</span>
+                        <span>| <i class="far fa-user"></i> Por: <a href="perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
+                    </div>
+
+                    <img src="${n.foto}" class="main-photo">
+
+                    <div class="quote-box">${n.resumo || n.titulo}</div>
+
+                    <div class="corpo-texto">
+                        ${n.conteudo}
+                    </div>
+
+                    <div class="tag-area">
+                        <span class="tag-label">ASSUNTO RELACIONADO:</span>
+                        <a href="categoria.html?cat=${n.categoria}" class="btn-tag">
+                            <i class="fas fa-plane"></i> ${n.categoria || 'Notícias'}
+                        </a>
+                    </div>
+
+                    <footer>
+                        <img src="3_20250925_005418_0002.png">
+                        <div class="footer-links">
+                            <a href="pagina.html?ref=sobre">Quem Somos</a>
+                            <a href="pagina.html?ref=contato">Redação</a>
+                            <a href="pagina.html?ref=privacidade">Privacidade</a>
+                            <a href="pagina.html?ref=termos">Termos</a>
+                        </div>
+                    </footer>
                 `;
-                document.title = n.titulo + " | BrasilAviation.info";
+
+                document.getElementById('share-btn').onclick = () => {
+                    if (navigator.share) {
+                        navigator.share({ title: n.titulo, url: window.location.href });
+                    }
+                };
             }
-        } catch (e) { console.error("Erro ao carregar matéria:", e); }
+        } catch (e) { console.error(e); }
     }
+
+    carregarMenu();
     carregarNoticia();
+</script>
+
+<script>
+    // Lógica global para o Dark Mode e Toggle de Categorias
+    window.toggleCategorias = function() {
+        const lista = document.getElementById('lista-cat');
+        const seta = document.getElementById('seta-cat');
+        if(lista) lista.classList.toggle('active');
+        if(seta) seta.classList.toggle('rotate');
+    }
+
+    const btnDark = document.getElementById('dark-toggle');
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+
+    btnDark.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        const mode = document.body.classList.contains('dark-mode') ? 'active' : 'inactive';
+        localStorage.setItem('dark-mode', mode);
+    };
 </script>
 </body>
 </html>

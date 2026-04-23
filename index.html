@@ -8,57 +8,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .logo-cia { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; vertical-align: middle; }
-        .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         
-        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.03); border-radius: 0 0 8px 8px; }
-        .submenu.active { max-height: 1500px; padding-bottom: 10px; }
-        .submenu a { padding: 10px 20px 10px 50px !important; font-size: 13px !important; color: #555 !important; border: none !important; }
-        .menu-arrow { transition: transform 0.3s; font-size: 12px; color: #bbb; }
-        .menu-arrow.rotate { transform: rotate(180deg); }
+        /* Ajuste do Carrossel para tirar o Zoom */
+        .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; overflow: hidden; }
+        .carousel-slide.active { display: block; }
+        .carousel-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Mantém a proporção sem esticar */
+            display: block;
+        }
 
-        /* --- BARRA DE PESQUISA ANIMADA --- */
-        .search-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-            background: rgba(0,0,0,0.05);
-            padding: 5px;
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 35px;
-            height: 35px;
-            overflow: hidden;
+        .search-container { 
+            display: flex; align-items: center; position: relative; border: 1.5px solid #2e7d32; 
+            padding: 2px; border-radius: 25px; transition: all 0.4s; width: 38px; height: 38px; overflow: hidden; 
         }
-        .search-container.active {
-            width: 180px;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .search-input {
-            border: none;
-            background: transparent;
-            outline: none;
-            padding: 0 10px;
-            width: 0;
-            font-size: 14px;
-            transition: width 0.4s;
-        }
-        .search-container.active .search-input { width: 130px; }
-        .btn-search { background: none; border: none; cursor: pointer; color: #2e7d32; font-size: 16px; padding: 5px; display: flex; align-items: center; justify-content: center; }
+        .search-container.active { width: 190px; background: #fff; border-color: #eee; }
+        .search-input { border: none; background: transparent; outline: none; width: 0; font-size: 14px; transition: 0.4s; }
+        .search-container.active .search-input { width: 140px; padding: 0 10px; }
+        .btn-search { background: none; border: none; cursor: pointer; color: #2e7d32; width: 32px; display: flex; align-items: center; justify-content: center; }
         
-        body.dark-mode .search-container { background: rgba(255,255,255,0.1); }
+        .news-meta { font-size: 11px; color: #777; margin-top: 5px; }
+        .news-meta a { color: #2e7d32; text-decoration: none; font-weight: bold; }
+        
         body.dark-mode .search-container.active { background: #222; }
-        body.dark-mode .search-input { color: white; }
-
-        footer { background: #f9f9f9; padding: 30px 20px; border-top: 1px solid #eee; margin-top: 40px; text-align: center; }
-        body.dark-mode footer { background: #1a1a1a; border-color: #333; }
     </style>
 </head>
 <body>
 
 <header>
     <button class="btn-icon" id="open-menu"><i class="fas fa-bars"></i></button>
-    <img src="3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation" onclick="location.href='index.html'" style="cursor:pointer;">
+    <img src="3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation" onclick="location.href='index.html'">
     <div style="display: flex; gap: 8px; align-items: center;">
         <div class="search-container" id="search-box">
             <input type="text" id="input-busca" class="search-input" placeholder="Pesquisar...">
@@ -68,64 +48,26 @@
     </div>
 </header>
 
-<nav class="side-menu" id="side-menu">
-    <div class="menu-close-area">
-        <button class="btn-icon" id="close-menu"><i class="fas fa-times"></i></button>
-    </div>
-    <ul>
-        <li class="menu-section-title">PÁGINAS</li>
-        <li><a href="index.html"><i class="fas fa-home" style="margin-right:12px; color:#2e7d32;"></i> Início</a></li>
-        <li><a href="pagina.html?ref=sobre"><i class="fas fa-info-circle" style="margin-right:12px; color:#2e7d32;"></i> Sobre Nós</a></li>
-        
-        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
-        
-        <li class="menu-section-title">COMPANHIAS</li>
-        <li><a href="companhia.html?cia=azul" class="link-azul"><img src="COLE_URL_AZUL" class="logo-cia"> Azul</a></li>
-        <li><a href="companhia.html?cia=gol" class="link-gol"><img src="COLE_URL_GOL" class="logo-cia"> GOL</a></li>
-        <li><a href="companhia.html?cia=latam" class="link-latam"><img src="COLE_URL_LATAM" class="logo-cia"> LATAM</a></li>
-
-        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
-
-        <li>
-            <a href="javascript:void(0)" onclick="toggleCategorias()" style="display:flex; justify-content:space-between; align-items:center;">
-                <span><i class="fas fa-list-ul" style="margin-right:12px; color:#2e7d32;"></i> Categorias</span>
-                <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
-            </a>
-            <div class="submenu" id="lista-cat">
-                <a href="categoria.html?cat=PINTURA">Pintura/Adesivos</a>
-                <a href="categoria.html?cat=DEPORTACAO">Deportação</a>
-                <a href="categoria.html?cat=CURIOSIDADES">Curiosidades</a>
-                <a href="categoria.html?cat=ROTAS">Novas Rotas</a>
-                <a href="categoria.html?cat=PEDIDOS">Pedidos e Entregas</a>
-                <a href="categoria.html?cat=INCIDENTES">Incidentes e Acidentes</a>
-                <a href="categoria.html?cat=CARGUEIRA">Aviação Cargueira</a>
-                <a href="categoria.html?cat=MILITAR">Militar</a>
-                <a href="categoria.html?cat=FROTA">Movimentação de Frota</a>
-            </div>
-        </li>
-        <hr class="menu-divider" style="opacity: 0.1; margin: 10px 0;">
-        <li class="menu-section-title">ADMINISTRAÇÃO</li>
-        <li><a href="admin.html"><i class="fas fa-lock" style="margin-right:12px; color:#888;"></i> Área Admin</a></li>
-    </ul>
-</nav>
+<div id="menu-container"></div>
 
 <main>
-    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques (Mais Vistas)</h2>
+    <h2 class="section-title" style="padding: 15px; font-weight: bold;">Destaques</h2>
     <div class="carousel-wrapper">
         <div class="carousel-container" id="carousel-area">
-            <button class="carousel-btn btn-prev" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
-            <button class="carousel-btn btn-next" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+            <button class="carousel-btn btn-prev" id="prev-btn" style="z-index: 20;"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-btn btn-next" id="next-btn" style="z-index: 20;"><i class="fas fa-chevron-right"></i></button>
+            
+            <div id="slides-holder" style="width: 100%; height: 100%;">
+                </div>
         </div>
     </div>
 
     <h2 class="feed-header" style="margin: 20px 15px 10px; border-bottom:3px solid #2e7d32; display:inline-block; font-weight:bold; font-size:20px;">Últimas Notícias</h2>
-    <div id="news-feed">
-        <p style="padding: 20px; color: #888;">Buscando as últimas atualizações...</p>
-    </div>
+    <div id="news-feed"></div>
 </main>
 
 <footer>
-    <img src="3_20250925_005418_0002.png" style="height: 35px; margin-bottom: 20px;">
+    <img src="3_20250925_005418_0002.png" style="height: 35px; margin-bottom: 10px;">
     <p style="font-size: 11px; color: #999;">&copy; 2026 BrasilAviation.info</p>
 </footer>
 
@@ -145,28 +87,29 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. CARREGAR DESTAQUES (Mais Lidas)
     async function carregarDestaques() {
-        const container = document.getElementById('carousel-area');
+        const holder = document.getElementById('slides-holder');
         const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(5));
         const snap = await getDocs(q);
         let html = "";
         let i = 0;
+        
         snap.forEach(doc => {
             const n = doc.data();
             html += `
-                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?id=${doc.id}'" style="background-image: url('${n.foto}')">
+                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='noticia.html?id=${doc.id}'">
+                    <img src="${n.foto}">
                     <div class="carousel-caption">
-                        <span class="badge-cat">${n.categoria}</span>
-                        <h3>${n.titulo}</h3>
+                        <span class="badge-cat" style="background:#2e7d32; padding:3px 8px; border-radius:5px; font-size:10px;">${n.categoria}</span>
+                        <h3 style="margin-top:5px;">${n.titulo}</h3>
                     </div>
                 </div>`;
             i++;
         });
-        container.insertAdjacentHTML('afterbegin', html);
+        holder.innerHTML = html;
+        iniciarLogicaCarrossel();
     }
 
-    // 2. CARREGAR FEED (Mais Novas)
     async function carregarFeed() {
         const feed = document.getElementById('news-feed');
         const q = query(collection(db, "noticias"), orderBy("data", "desc"));
@@ -174,78 +117,69 @@
         let html = "";
         snap.forEach(doc => {
             const n = doc.data();
+            const data = n.data ? n.data.toDate().toLocaleDateString('pt-BR') : "";
             html += `
                 <article class="news-item" onclick="location.href='noticia.html?id=${doc.id}'">
                     <div class="news-photo"><img src="${n.foto}"></div>
                     <div class="news-info">
                         <h3>${n.titulo}</h3>
-                        <p>${n.data.toDate().toLocaleDateString('pt-BR')}</p>
+                        <div class="news-meta"><span>${n.autor || 'Redação'}</span> • ${data}</div>
                     </div>
                 </article>`;
         });
         feed.innerHTML = html;
     }
 
+    // Lógica do Carrossel (Girar sozinho)
+    let slideIndex = 0;
+    function iniciarLogicaCarrossel() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if(slides.length === 0) return;
+
+        function mostrarSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            slideIndex = (n + slides.length) % slides.length;
+            slides[slideIndex].classList.add('active');
+        }
+
+        document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex + 1); };
+        document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex - 1); };
+
+        // Auto-play a cada 5 segundos
+        setInterval(() => mostrarSlide(slideIndex + 1), 5000);
+    }
+
+    fetch('menu.html').then(r => r.text()).then(h => {
+        document.getElementById('menu-container').innerHTML = h;
+        const menu = document.getElementById('side-menu');
+        document.getElementById('open-menu').onclick = () => menu.classList.add('active');
+        document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
+    });
+
     carregarDestaques();
     carregarFeed();
 </script>
 
 <script>
-    // Lógica do Menu e Barra de Pesquisa
-    const menu = document.getElementById('side-menu');
+    // Pesquisa e Dark Mode
     const searchBox = document.getElementById('search-box');
     const inputBusca = document.getElementById('input-busca');
-    const btnLupa = document.getElementById('btn-lupa');
-
-    document.getElementById('open-menu').onclick = () => menu.classList.add('active');
-    document.getElementById('close-menu').onclick = () => menu.classList.remove('active');
-
-    function toggleCategorias() {
-        document.getElementById('lista-cat').classList.toggle('active');
-        document.getElementById('seta-cat').classList.toggle('rotate');
-    }
-
-    // Lógica da Pesquisa Animada
-    btnLupa.onclick = (e) => {
+    document.getElementById('btn-lupa').onclick = (e) => {
+        e.stopPropagation();
         if (!searchBox.classList.contains('active')) {
             searchBox.classList.add('active');
             inputBusca.focus();
-        } else {
-            const termo = inputBusca.value.trim();
-            if (termo) {
-                window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
-            } else {
-                searchBox.classList.remove('active');
-            }
+        } else if (inputBusca.value.trim()) {
+            window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value)}`;
         }
     };
+    document.addEventListener('click', (e) => { if (!searchBox.contains(e.target)) searchBox.classList.remove('active'); });
 
-    inputBusca.onkeypress = (e) => {
-        if (e.key === 'Enter') {
-            const termo = inputBusca.value.trim();
-            if(termo) window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
-        }
-    };
-
-    // Fechar pesquisa se clicar fora
-    document.addEventListener('click', (e) => {
-        if (!searchBox.contains(e.target) && searchBox.classList.contains('active')) {
-            searchBox.classList.remove('active');
-        }
-    });
-
-    // Dark Mode
     const btnDark = document.getElementById('dark-mode-toggle');
-    const iconDark = btnDark.querySelector('i');
-    if (localStorage.getItem('dark-mode') === 'active') {
-        document.body.classList.add('dark-mode');
-        iconDark.classList.replace('fa-moon', 'fa-sun');
-    }
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
     btnDark.onclick = () => {
         document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
-        iconDark.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
     };
 </script>
 </body>

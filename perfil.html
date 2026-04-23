@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrasilAviation | Perfil do Autor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .perfil-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .autor-header { 
+            background: white; padding: 30px; border-radius: 20px; 
+            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px;
+        }
+        .autor-header img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #2e7d32; object-fit: cover; margin-bottom: 15px; }
+        .autor-header h2 { margin: 0; color: #1a237e; font-size: 24px; }
+        .autor-header span { color: #2e7d32; font-weight: bold; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+        .autor-header p { color: #666; margin-top: 15px; line-height: 1.6; font-size: 15px; }
+        .stats { margin-top: 15px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 10px; }
+
+        .lista-titulo { font-size: 18px; color: #1a237e; margin-bottom: 20px; border-left: 5px solid #2e7d32; padding-left: 10px; }
+        .news-item { display: flex; gap: 15px; background: white; padding: 12px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; }
+        .news-photo img { width: 110px; height: 80px; border-radius: 10px; object-fit: cover; }
+        .news-info h3 { font-size: 15px; margin: 0 0 5px 0; color: #222; }
+        .news-date { font-size: 11px; color: #888; }
+
+        body.dark-mode { background: #121212; color: white; }
+        body.dark-mode .autor-header, body.dark-mode .news-item { background: #1e1e1e; border: none; }
+        body.dark-mode .autor-header h2, body.dark-mode .news-info h3 { color: #eee; }
+        body.dark-mode .autor-header p { color: #bbb; }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="btn-icon" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button>
+    <img src="3_20250925_005418_0002.png" class="site-logo" onclick="location.href='index.html'">
+    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-home"></i></button>
+</header>
+
+<main class="perfil-container">
+    <div class="autor-header" id="header-autor">
+        </div>
+
+    <h3 class="lista-titulo">Publicações Recentes</h3>
+    <div id="lista-publicacoes">
+        </div>
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const nomeAutor = urlParams.get('nome');
+
+    // Banco de Dados de Descrições dos Redatores
+    const dadosAutores = {
+        'Miguel Barbosa': {
+            cargo: 'Fundador & Editor-Chefe',
+            bio: 'Idealizador do BrasilAviation.info, entusiasta de frotas e spotter. Focado em trazer a verdade técnica da aviação nacional.',
+            foto: 'IMG_7814_edited.jpg'
+        },
+        'Henrique Saito': {
+            cargo: 'Colunista & Redator',
+            bio: 'Especialista em redação jornalística e cobertura de frotas internacionais e movimentações de longo curso.',
+            foto: 'placeholder.jpg'
+        },
+        'Murilo': {
+            cargo: 'Redator & Social Media',
+            bio: 'Responsável pela cobertura de notícias de última hora e engajamento da comunidade aeronáutica.',
+            foto: 'placeholder.jpg'
+        }
+    };
+
+    async function carregarPerfil() {
+        if(!nomeAutor) return;
+
+        const info = dadosAutores[nomeAutor] || { cargo: 'Colaborador', bio: 'Membro da equipe BrasilAviation.info', foto: 'placeholder.jpg' };
+        
+        // Renderiza Header do Autor
+        document.getElementById('header-autor').innerHTML = `
+            <img src="${info.foto}">
+            <h2>${nomeAutor}</h2>
+            <span>${info.cargo}</span>
+            <p>${info.bio}</p>
+            <div class="stats" id="contador-posts">Calculando publicações...</div>
+        `;
+
+        try {
+            const snap = await getDocs(collection(db, "noticias"));
+            let posts = [];
+            snap.forEach(d => {
+                if(d.data().autor === nomeAutor) posts.push({ id: d.id, ...d.data() });
+            });
+
+            posts.sort((a, b) => (b.data?.seconds || 0) - (a.data?.seconds || 0));
+            document.getElementById('contador-posts').innerText = `${posts.length} matérias publicadas no portal`;
+
+            let html = "";
+            posts.forEach(n => {
+                const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'}) : "";
+                html += `
+                    <article class="news-item" onclick="location.href='noticia.html?id=${n.id}'">
+                        <div class="news-photo"><img src="${n.foto}"></div>
+                        <div class="news-info">
+                            <h3>${n.titulo}</h3>
+                            <span class="news-date">${dataFmt}</span>
+                        </div>
+                    </article>`;
+            });
+            document.getElementById('lista-publicacoes').innerHTML = html || "<p>Este autor ainda não possui publicações.</p>";
+
+        } catch (e) { console.error(e); }
+    }
+
+    carregarPerfil();
+    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+</script>
+</body>
+</html>

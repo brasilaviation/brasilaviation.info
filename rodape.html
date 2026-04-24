@@ -1,11 +1,13 @@
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-column branding">
-            <a href="/"><img src="3_20250925_005418_0002.png" alt="BrasilAviation.info" class="footer-logo"></a>
+            <a href="index.html">
+                <img src="logonomeBrasilaviation.info.png" alt="BrasilAviation.info" class="footer-logo">
+            </a>
             <p>Sua fonte principal de notícias sobre a aviação comercial e spotting no Brasil.</p>
             <div class="footer-social">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="https://instagram.com/miguel_spotter" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://youtube.com/@MiguelSpotter" target="_blank"><i class="fab fa-youtube"></i></a>
                 <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
@@ -13,26 +15,26 @@
         <div class="footer-column">
             <h3>Navegação</h3>
             <ul>
-                <li><a href="/">Início</a></li>
-                <li><a href="/sobre">Sobre Nós</a></li>
-                <li><a href="/contato">Contato</a></li>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="sobre.html">Sobre Nós</a></li>
+                <li><a href="contato.html">Contato</a></li>
             </ul>
         </div>
 
         <div class="footer-column">
             <h3>Destaques</h3>
             <ul>
-                <li><a href="/categoria?cat=FROTA">Movimentação de Frota</a></li>
-                <li><a href="/categoria?cat=PINTURA">Pinturas Especiais</a></li>
-                <li><a href="/categoria?cat=PEDIDOS">Entregas de Aeronaves</a></li>
+                <li><a href="categoria.html?cat=FROTA">Movimentação de Frota</a></li>
+                <li><a href="categoria.html?cat=PINTURA">Pinturas Especiais</a></li>
+                <li><a href="categoria.html?cat=PEDIDOS">Entregas de Aeronaves</a></li>
             </ul>
         </div>
 
         <div class="footer-column">
             <h3>Legal</h3>
             <ul>
-                <li><a href="/termos">Termos de Uso</a></li>
-                <li><a href="/privacidade">Privacidade</a></li>
+                <li><a href="termos.html">Termos de Uso</a></li>
+                <li><a href="privacidade.html">Privacidade</a></li>
             </ul>
         </div>
     </div>
@@ -45,40 +47,89 @@
 </footer>
 
 <style>
-    .main-footer { background-color: #f9f9f9; padding: 40px 20px 20px; border-top: 3px solid #2e7d32; margin-top: 50px; color: #333; }
-    .footer-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
-    .footer-logo { height: 40px; margin-bottom: 15px; }
-    .footer-column h3 { font-size: 16px; color: #2e7d32; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+    .main-footer { 
+        background-color: var(--card); 
+        padding: 40px 20px 20px; 
+        border-top: 3px solid var(--secondary); 
+        margin-top: 50px; 
+        color: var(--text-main); 
+        font-family: 'Inter', sans-serif;
+        transition: 0.3s;
+    }
+    .footer-container { 
+        max-width: 1100px; 
+        margin: 0 auto; 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 30px; 
+    }
+    /* Ajuste para a logo não ficar distorcida */
+    .footer-logo { 
+        max-height: 45px; 
+        width: auto; 
+        margin-bottom: 15px; 
+        transition: 0.3s; 
+        display: block;
+    }
+    .footer-logo:hover { opacity: 0.8; }
+    
+    .footer-column h3 { 
+        font-size: 14px; 
+        color: var(--secondary); 
+        margin-bottom: 15px; 
+        text-transform: uppercase; 
+        font-weight: 800; 
+        letter-spacing: 0.5px;
+    }
+    .footer-column p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
     .footer-column ul { list-style: none; padding: 0; }
-    .footer-column ul li { margin-bottom: 8px; }
-    .footer-column ul li a { text-decoration: none; color: #666; font-size: 14px; transition: 0.3s; }
-    .footer-column ul li a:hover { color: #2e7d32; padding-left: 5px; }
-    .footer-social { display: flex; gap: 15px; margin-top: 15px; }
-    .footer-social a { color: #2e7d32; font-size: 20px; }
-    .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
-    body.dark-mode .main-footer { background-color: #1a1a1a; color: #eee; border-top-color: #2e7d32; }
-    body.dark-mode .footer-column ul li a { color: #bbb; }
-    body.dark-mode .footer-bottom { border-top-color: #333; }
+    .footer-column ul li { margin-bottom: 10px; }
+    .footer-column ul li a { 
+        text-decoration: none; 
+        color: var(--text-muted); 
+        font-size: 14px; 
+        transition: 0.3s ease; 
+        display: inline-block;
+    }
+    .footer-column ul li a:hover { color: var(--secondary); transform: translateX(5px); }
+    
+    .footer-social { display: flex; gap: 12px; margin-top: 20px; }
+    .footer-social a { 
+        color: #fff; 
+        background-color: var(--secondary); 
+        width: 32px; 
+        height: 32px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        border-radius: 50%; 
+        font-size: 14px; 
+        transition: 0.3s;
+    }
+    .footer-social a:hover { transform: translateY(-3px); filter: brightness(1.2); }
+    
+    .footer-bottom { 
+        text-align: center; 
+        margin-top: 40px; 
+        padding-top: 20px; 
+        border-top: 1px solid rgba(0,0,0,0.1); 
+        font-size: 11px; 
+        color: var(--text-muted); 
+    }
+
+    body.dark-mode .main-footer { background-color: #1a1a1a; }
 </style>
 
 <script>
-    // Lógica auto-executável para garantir que funcione em qualquer página
     (function() {
         let count = 0;
         let last = 0;
-
-        // Função que monitora os cliques no documento inteiro (delegação de evento)
-        // Isso resolve o problema de o footer ser carregado depois do script
         document.addEventListener('click', function(e) {
             if (e.target && e.target.id === 'admin-gate') {
                 const now = Date.now();
-                
-                // Se demorar mais de 1.5s entre cliques, reseta
                 if (now - last > 1500) count = 0;
-                
                 count++;
                 last = now;
-
                 if (count === 4) {
                     window.location.href = 'admin.html';
                     count = 0;

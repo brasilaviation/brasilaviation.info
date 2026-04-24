@@ -20,11 +20,9 @@ async function carregarPortal() {
     console.log("Tentando conectar ao Firebase...");
 
     try {
-        // Pega TUDO da coleção noticias sem filtros para não dar erro de índice
         const snap = await getDocs(collection(db, "noticias"));
         
         if (snap.empty) {
-            console.log("Banco de dados vazio!");
             if(feed) feed.innerHTML = "<p>Nenhuma notícia encontrada no banco.</p>";
             return;
         }
@@ -34,7 +32,6 @@ async function carregarPortal() {
             lista.push({ id: res.id, ...res.data() });
         });
 
-        // Ordena por data (mais nova primeiro)
         lista.sort((a, b) => (b.data?.seconds || 0) - (a.data?.seconds || 0));
 
         let feedHTML = "";
@@ -43,7 +40,6 @@ async function carregarPortal() {
         lista.forEach((n, i) => {
             const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR') : "";
             
-            // Primeiras 3 no carrossel
             if(i < 3) {
                 carouselHTML += `
                     <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="contarViewEIr('${n.id}')">
@@ -52,7 +48,6 @@ async function carregarPortal() {
                     </div>`;
             }
 
-            // Todas no feed
             feedHTML += `
                 <article class="news-item" onclick="contarViewEIr('${n.id}')" style="display:flex; gap:10px; margin-bottom:15px; background:white; padding:10px; border-radius:10px;">
                     <img src="${n.foto}" style="width:100px; height:70px; border-radius:5px; object-fit:cover;">
@@ -64,12 +59,8 @@ async function carregarPortal() {
                 </article>`;
         });
 
-        if(carouselArea) {
-            carouselArea.innerHTML = carouselHTML; 
-        }
+        if(carouselArea) carouselArea.innerHTML = carouselHTML; 
         if(feed) feed.innerHTML = feedHTML;
-
-        console.log("Portal carregado com sucesso!");
 
     } catch (e) { 
         console.error("ERRO CRÍTICO:", e);

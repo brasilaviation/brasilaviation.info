@@ -1,62 +1,53 @@
-/* =========================================
-   RESET E CONFIGURAÇÕES GERAIS
-   ========================================= */
+/* VARIÁVEIS DE CORES - O coração do seu design */
+:root {
+    --primary: #1a237e;    /* Azul Aviação */
+    --secondary: #2e7d32;  /* Verde BrasilAviation */
+    --bg: #f4f7f6;
+    --card: #ffffff;
+    --text-main: #1c1c1c;
+    --text-muted: #757575;
+    --border: #eeeeee;
+    --radius: 18px;
+}
+
+/* MODO ESCURO - Troca as cores das variáveis */
+body.dark-mode {
+    --bg: #121212;
+    --card: #1e1e1e;
+    --text-main: #f0f0f0;
+    --text-muted: #aaaaaa;
+    --border: #333333;
+}
+
+/* RESET E BASE */
 * { 
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-family: 'Inter', 'Segoe UI', sans-serif; 
 }
 
 body { 
-    background: white; 
-    color: #333; 
+    background-color: var(--bg); 
+    color: var(--text-main); 
     line-height: 1.6; 
     overflow-x: hidden; 
     -webkit-tap-highlight-color: transparent; 
     transition: background 0.3s, color 0.3s; 
 }
 
-/* =========================================
-   MODO ESCURO (DARK MODE)
-   ========================================= */
-body.dark-mode { 
-    background-color: #121212; 
-    color: #e0e0e0; 
-}
-
-body.dark-mode header, 
-body.dark-mode .side-menu, 
-body.dark-mode .news-item, 
-body.dark-mode .carousel-container { 
-    background-color: #1e1e1e; 
-    border-color: #333; 
-}
-
-body.dark-mode h2, 
-body.dark-mode h3, 
-body.dark-mode .side-menu li a { 
-    color: #ffffff; 
-}
-
-body.dark-mode .news-meta, 
-body.dark-mode p { 
-    color: #bbb; 
-}
-
-/* =========================================
-   HEADER E NAVEGAÇÃO
-   ========================================= */
+/* CABEÇALHO */
 header { 
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
     padding: 10px 15px; 
-    border-bottom: 1px solid #eee; 
+    border-bottom: 1px solid var(--border); 
     position: sticky; 
     top: 0; 
-    background: white; 
+    background: var(--card); 
     z-index: 1000; 
+    height: 60px;
 }
 
 .site-logo { 
@@ -64,20 +55,18 @@ header {
     cursor: pointer; 
 }
 
-.btn-icon, .btn-dark-toggle { 
+.btn-icon { 
     background: none; 
     border: none; 
     font-size: 22px; 
-    color: #2e7d32; 
+    color: var(--secondary); 
     cursor: pointer; 
     padding: 5px; 
-    display: flex;
-    align-items: center;
+    display: flex; 
+    align-items: center; 
 }
 
-/* =========================================
-   MENU LATERAL (SIDE MENU)
-   ========================================= */
+/* MENU LATERAL (SIDE-MENU) */
 .side-menu { 
     position: fixed; 
     top: 0; 
@@ -85,119 +74,77 @@ header {
     width: 85%; 
     max-width: 300px; 
     height: 100%; 
-    background: white; 
+    background: var(--card); 
     z-index: 9999; 
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     box-shadow: 5px 0 25px rgba(0,0,0,0.2); 
-    overflow-y: auto; 
+    padding: 20px;
 }
 
-.side-menu.active { left: 0; }
-.menu-close-area { padding: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; }
-.side-menu ul { list-style: none; padding: 10px 0; }
-.side-menu li a { display: flex; align-items: center; padding: 14px 20px; text-decoration: none; color: #333; font-size: 16px; }
-
-/* Cores das Cias no Menu */
-.link-azul { background: #eef2ff !important; margin: 5px 15px; border-radius: 8px; color: #1a237e !important; font-weight: bold; }
-.link-gol { background: #fff7ed !important; margin: 5px 15px; border-radius: 8px; color: #c2410c !important; font-weight: bold; }
-.link-latam { background: #fef2f2 !important; margin: 5px 15px; border-radius: 8px; color: #991b1b !important; font-weight: bold; }
-
-/* =========================================
-   CARROSSEL (PROPORÇÃO 3:2)
-   ========================================= */
-.carousel-wrapper { 
-    padding: 0 15px; 
-    margin-bottom: 25px; 
-    position: relative; 
+.side-menu.active { 
+    left: 0; 
 }
 
+.side-menu ul {
+    list-style: none;
+    margin-top: 30px;
+}
+
+.side-menu li {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.side-menu li a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: block;
+}
+
+/* CARROSSEL E FEED */
 .carousel-container { 
     width: 100%; 
-    aspect-ratio: 3 / 2; /* FORÇA O FORMATO 3:2 */
+    aspect-ratio: 3 / 2; 
     position: relative; 
     overflow: hidden; 
-    border-radius: 18px; 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
-    background: #000;
+    border-radius: var(--radius); 
+    background: #000; 
 }
 
-.carousel-slide { 
-    display: none; 
-    width: 100%; 
-    height: 100%; 
-    animation: fade 0.8s ease-in-out; 
-}
-
-.carousel-slide.active { display: block; }
-
-.carousel-slide img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    opacity: 0.85; 
-}
-
-.carousel-caption { 
-    position: absolute; 
-    bottom: 0; 
-    width: 100%; 
-    background: linear-gradient(transparent, rgba(0,0,0,0.95)); 
-    color: white; 
-    padding: 45px 15px 15px; 
-}
-
-.carousel-caption h3 { font-size: 18px; font-weight: bold; line-height: 1.3; color: #fff; }
-
-.badge-cat {
-    background: #2e7d32;
-    color: white;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.carousel-btn {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.4); color: white; border: none;
-    width: 40px; height: 40px; cursor: pointer; border-radius: 50%; z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-}
-.btn-prev { left: 10px; }
-.btn-next { right: 10px; }
-
-/* =========================================
-   FEED DE NOTÍCIAS (PROPORÇÃO 3:2)
-   ========================================= */
 .news-item { 
     display: flex; 
     padding: 15px; 
-    border-bottom: 1px solid #f0f0f0; 
+    border-bottom: 1px solid var(--border); 
     gap: 15px; 
     align-items: center; 
     cursor: pointer; 
+    background: var(--card);
+    transition: 0.2s;
+}
+
+.news-item:hover {
+    background-color: rgba(46, 125, 50, 0.05); /* Leve toque verde ao passar o mouse */
 }
 
 .news-photo img { 
     width: 110px; 
-    aspect-ratio: 3 / 2; /* MINIATURA TAMBÉM EM 3:2 */
+    aspect-ratio: 3 / 2; 
     object-fit: cover; 
     border-radius: 10px; 
-    background: #eee;
 }
 
-.news-info { flex: 1; }
-.news-info h3 { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
-.news-meta { font-size: 11px; color: #888; }
-
-/* =========================================
-   ANIMAÇÕES E FOOTER
-   ========================================= */
-@keyframes fade { 
-    from { opacity: 0.4; transform: scale(1.02); } 
-    to { opacity: 1; transform: scale(1); } 
+/* RODAPÉ (FOOTER) */
+footer {
+    background: var(--card);
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
 }
 
-footer { background: #f9f9f9; padding: 40px 20px; text-align: center; margin-top: 30px; border-top: 1px solid #eee; }
-body.dark-mode footer { background: #1a1a1a; border-color: #333; }
+footer p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}

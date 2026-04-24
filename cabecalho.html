@@ -1,70 +1,98 @@
 <style>
     header { 
         display: flex; justify-content: space-between; align-items: center; 
-        padding: 10px 15px; background: #fff; border-bottom: 1px solid #eee;
+        padding: 10px 15px; background: var(--card); border-bottom: 1px solid rgba(0,0,0,0.05);
         position: sticky; top: 0; z-index: 1000; height: 60px;
     }
-    body.dark-mode header { border-color: #333; background: #121212; }
+    body.dark-mode header { border-color: #333; background: #1e1e1e; }
 
     .search-container { 
         display: flex; align-items: center; justify-content: flex-end;
-        position: relative; border: 1.5px solid #2e7d32; 
+        position: relative; border: 1.5px solid var(--secondary); 
         border-radius: 25px; transition: 0.4s; width: 38px; height: 38px; 
         overflow: hidden; background: transparent;
     }
-    .search-container.active { width: 190px; background: #fff; }
-    body.dark-mode .search-container.active { background: #121212; }
+    .search-container.active { width: 190px; background: var(--card); }
 
     .search-input { 
         border: none; background: transparent; outline: none; 
-        width: 0; font-size: 14px; color: inherit; padding: 0;
+        width: 0; font-size: 14px; color: var(--text-main); padding: 0;
     }
     .search-container.active .search-input { width: 100%; padding: 0 10px 0 15px; }
     
     .btn-header { 
-        background: none; border: none; cursor: pointer; color: #2e7d32; 
+        background: none; border: none; cursor: pointer; color: var(--secondary); 
         display: flex; align-items: center; justify-content: center; 
-        padding: 0; min-width: 38px; height: 38px; font-size: 20px;
+        padding: 0; min-width: 38px; height: 38px; font-size: 18px;
     }
-    .site-logo { height: 35px; cursor: pointer; }
+    .site-logo { height: 30px; cursor: pointer; transition: 0.3s; }
+    .site-logo:hover { opacity: 0.8; }
 </style>
 
 <header>
-    <button class="btn-header" id="open-menu"><i class="fas fa-bars"></i></button>
-    <img src="/3_20250925_005418_0002.png" class="site-logo" alt="BrasilAviation" onclick="location.href='/'">
+    <button class="btn-header" id="open-menu" title="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <img src="1001427906-removebg-preview.png" class="site-logo" alt="BrasilAviation" onclick="location.href='index.html'">
     
     <div style="display: flex; gap: 5px; align-items: center;">
         <div class="search-container" id="search-box-header">
-            <input type="text" id="input-busca-header" class="search-input" placeholder="Pesquisar...">
-            <button class="btn-header" id="btn-lupa-header"><i class="fas fa-search"></i></button>
+            <input type="text" id="input-busca-header" class="search-input" placeholder="Buscar notícia...">
+            <button class="btn-header" id="btn-lupa-header" type="button">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
-        <button class="btn-header" id="dark-toggle-header"><i class="fas fa-moon"></i></button>
+        <button class="btn-header" id="dark-toggle-header" title="Alternar tema">
+            <i class="fas fa-moon"></i>
+        </button>
     </div>
 </header>
 
 <script>
-    const searchBox = document.getElementById('search-box-header');
-    const searchInput = document.getElementById('input-busca-header');
-    const btnLupa = document.getElementById('btn-lupa-header');
+    // Função para inicializar os eventos, chamada com um pequeno delay para garantir que o DOM esteja pronto
+    function initHeaderSearch() {
+        const searchBox = document.getElementById('search-box-header');
+        const btnLupa = document.getElementById('btn-lupa-header');
+        const inputBusca = document.getElementById('input-busca-header');
 
-    btnLupa.addEventListener('click', () => {
-        if (!searchBox.classList.contains('active')) {
-            searchBox.classList.add('active');
-            searchInput.focus();
-        } else {
-            const termo = searchInput.value.trim();
-            if (termo) {
-                window.location.href = `/pesquisa?q=${encodeURIComponent(termo)}`;
+        if (!btnLupa || !searchBox) return;
+
+        btnLupa.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation(); // Essencial para o clique não "vazar" pro document
+            
+            if (!searchBox.classList.contains('active')) {
+                searchBox.classList.add('active');
+                setTimeout(() => inputBusca.focus(), 100);
             } else {
+                const termo = inputBusca.value.trim();
+                if (termo !== "") {
+                    window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+                } else {
+                    searchBox.classList.remove('active');
+                }
+            }
+        };
+
+        inputBusca.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                const termo = inputBusca.value.trim();
+                if (termo !== "") {
+                    window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+                }
+            }
+        };
+
+        // Fecha a busca se clicar fora dela
+        document.addEventListener('click', (e) => {
+            if (searchBox.classList.contains('active') && !searchBox.contains(e.target)) {
                 searchBox.classList.remove('active');
             }
-        }
-    });
+        });
+    }
 
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const termo = searchInput.value.trim();
-            if (termo) window.location.href = `/pesquisa?q=${encodeURIComponent(termo)}`;
-        }
-    });
+    // Tenta inicializar imediatamente e também após 300ms (garantia por causa do loader.js)
+    initHeaderSearch();
+    setTimeout(initHeaderSearch, 300);
 </script>

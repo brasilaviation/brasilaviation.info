@@ -4,21 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contato | BrasilAviation.info</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; --text: #333; --card: #ffffff; }
-        body.dark-mode { --bg: #121212; --text: #eee; --primary: #fff; --card: #1e1e1e; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; }
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.8; }
-        .legal-card { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: var(--primary); border-bottom: 3px solid var(--secondary); display: inline-block; margin-bottom: 20px; font-size: 26px; }
-        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-        label { font-weight: bold; font-size: 14px; color: var(--secondary); }
-        input, select, textarea { padding: 12px; border-radius: 10px; border: 1px solid #ddd; background: var(--bg); color: var(--text); font-family: inherit; }
-        .hidden-field { display: none; margin-top: 10px; }
-        .btn-send { background: var(--secondary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; width: 100%; }
-        .btn-send:hover { filter: brightness(1.1); }
+        main { max-width: 700px; margin: 40px auto; padding: 0 20px; min-height: 80vh; }
+        
+        .contact-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .contact-header { text-align: center; margin-bottom: 30px; }
+        .contact-header h1 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+        .contact-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; text-transform: uppercase; }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .form-control:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1); }
+
+        select.form-control { cursor: pointer; }
+
+        .file-input-wrapper {
+            position: relative;
+            padding: 20px;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .file-input-wrapper:hover { border-color: var(--secondary); background: rgba(46, 125, 50, 0.02); }
+        .file-input-wrapper input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .file-label { font-size: 13px; color: var(--text-muted); }
+        .file-label i { display: block; font-size: 24px; color: var(--secondary); margin-bottom: 8px; }
+
+        .btn-send {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-send:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -26,93 +83,83 @@
 <div id="header-container"></div>
 <div id="menu-container"></div>
 
-<main class="container">
-    <article class="legal-card">
-        <h1>Fale Conosco</h1>
+<main>
+    <div class="contact-card">
+        <div class="contact-header">
+            <h1>Fale Conosco</h1>
+            <p>Dúvidas, sugestões de pauta ou parcerias? Envie sua mensagem para a nossa redação.</p>
+        </div>
+
         <form action="https://formspree.io/f/meevpvqq" method="POST" enctype="multipart/form-data">
+            
             <div class="form-group">
-                <label>Nome e Sobrenome:</label>
-                <input type="text" name="Nome" required>
+                <label>Nome Completo</label>
+                <input type="text" name="nome" class="form-control" placeholder="Seu nome" required>
             </div>
-            <div class="form-group">
-                <label>E-mail:</label>
-                <input type="email" name="Email" required>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" name="email" class="form-control" placeholder="email@exemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmar E-mail</label>
+                    <input type="email" name="_replyto" class="form-control" placeholder="Repita seu e-mail" required>
+                </div>
             </div>
+
             <div class="form-group">
-                <label>Confirmar E-mail:</label>
-                <input type="email" name="Confirmacao_Email" required>
-            </div>
-            <div class="form-group">
-                <label>Motivo do Contato:</label>
-                <select name="Motivo" id="motivo-select" required onchange="if(this.value=='Outro'){document.getElementById('outro-motivo').style.display='block'}else{document.getElementById('outro-motivo').style.display='none'}">
+                <label>Motivo do Contato</label>
+                <select name="assunto" class="form-control" required>
                     <option value="" disabled selected>Selecione uma opção</option>
-                    <option value="Pauta">Sugestão de Pauta / Flagrante</option>
-                    <option value="Critica">Crítica</option>
-                    <option value="Sugestao">Sugestão</option>
-                    <option value="Outro">Outro</option>
+                    <option value="Sugestão de Pauta">Sugestão de Pauta / Flagra</option>
+                    <option value="Crítica/Sugestão">Crítica ou Sugestão</option>
+                    <option value="Reclamação">Reclamação</option>
+                    <option value="Parceria">Parceria Comercial</option>
+                    <option value="Outros">Outros Assuntos</option>
                 </select>
-                <input type="text" id="outro-motivo" name="Qual_Motivo" class="hidden-field" placeholder="Especifique o motivo">
             </div>
+
             <div class="form-group">
-                <label>Anexar Arquivo (Max 10MB):</label>
-                <input type="file" name="Anexo">
+                <label>Sua Mensagem</label>
+                <textarea name="mensagem" class="form-control" rows="5" placeholder="Como podemos ajudar?" required></textarea>
             </div>
+
             <div class="form-group">
-                <label>Mensagem:</label>
-                <textarea name="Mensagem" rows="5" required></textarea>
+                <label>Anexar Imagem ou Documento (Máx. 10MB)</label>
+                <div class="file-input-wrapper">
+                    <input type="file" name="upload" accept="image/*,.pdf,.doc,.docx">
+                    <div class="file-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Clique para selecionar ou arraste o arquivo aqui</span>
+                        <br><small>(Opcional)</small>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn-send"><i class="fas fa-paper-plane"></i> Enviar</button>
+
+            <input type="text" name="_gotcha" style="display:none">
+
+            <button type="submit" class="btn-send">
+                <i class="fas fa-paper-plane"></i> Enviar Mensagem
+            </button>
+
         </form>
-    </article>
+    </div>
 </main>
 
 <div id="footer-container"></div>
 
+<script type="module" src="loader.js"></script>
+
 <script>
-    // --- SCRIPTS DE INTERAÇÃO (COPIADOS DA HOME PARA FUNCIONAR TUDO) ---
-    function ativarComandosCabecalho() {
-        const openBtn = document.getElementById('open-menu');
-        const btnDark = document.getElementById('dark-toggle-header');
-        const sBox = document.getElementById('search-box-header');
-        const sInput = document.getElementById('input-busca-header');
-        const btnLupa = document.getElementById('btn-lupa-header');
-
-        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
-        if(btnDark) {
-            btnDark.onclick = () => {
-                document.body.classList.toggle('dark-mode');
-                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-            };
-        }
-        if(btnLupa) {
-            btnLupa.onclick = (e) => {
-                e.stopPropagation();
-                sBox.classList.toggle('active');
-                if(sBox.classList.contains('active')) sInput.focus();
-            };
-        }
-    }
-
-    function ativarComandosMenu() {
-        const closeBtn = document.getElementById('close-menu');
-        const btnToggleCat = document.getElementById('btn-toggle-cat');
-        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
-        if(btnToggleCat) {
-            btnToggleCat.onclick = () => {
-                document.getElementById('lista-cat').classList.toggle('active');
-                document.getElementById('seta-cat').classList.toggle('rotate');
-            };
-        }
-    }
-
-    async function carregarComponentes() {
-        await fetch('cabecalho.html').then(r => r.text()).then(h => { document.getElementById('header-container').innerHTML = h; ativarComandosCabecalho(); });
-        await fetch('menu.html').then(r => r.text()).then(h => { document.getElementById('menu-container').innerHTML = h; ativarComandosMenu(); });
-        fetch('rodape.html').then(r => r.text()).then(h => { document.getElementById('footer-container').innerHTML = h; });
-    }
-
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    carregarComponentes();
+    // Pequeno script para mostrar o nome do arquivo selecionado
+    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+        const fileName = e.target.files[0].name;
+        const label = e.target.nextElementSibling.querySelector('span');
+        label.innerText = "Arquivo selecionado: " + fileName;
+        label.style.color = "var(--secondary)";
+    });
 </script>
+
 </body>
 </html>

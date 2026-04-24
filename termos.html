@@ -10,119 +10,25 @@
         :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; --text: #333; --card: #ffffff; }
         body.dark-mode { --bg: #121212; --text: #eee; --primary: #fff; --card: #1e1e1e; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; }
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.8; }
+        .container { max-width: 850px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
         .legal-card { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: var(--primary); border-bottom: 3px solid var(--secondary); display: inline-block; margin-bottom: 30px; font-size: 26px; }
-        h2 { color: var(--primary); margin-top: 25px; font-size: 20px; }
-        p, li { font-size: 16px; opacity: 0.9; margin-bottom: 15px; }
+        h1 { color: var(--primary); border-left: 5px solid var(--secondary); padding-left: 15px; margin-bottom: 30px; font-size: 28px; text-transform: uppercase; }
+        h2 { color: var(--secondary); margin-top: 35px; font-size: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
+        .update-date { font-size: 13px; color: var(--secondary); font-weight: bold; margin-top: 50px; text-align: center; border-top: 1px dashed #ccc; padding-top: 20px; }
     </style>
 </head>
 <body>
-
 <div id="header-container"></div>
-<div id="menu-container"></div>
-
 <main class="container">
     <article class="legal-card">
-        <h1>Termos de Uso</h1>
-        <p>Bem-vindo ao <strong>BrasilAviation.info</strong>. Ao acessar e utilizar este site, você concorda com os termos e condições descritos abaixo:</p>
-
+        <h1>Termos e Condições de Uso</h1>
+        <p>Ao acessar e utilizar o portal <strong>BrasilAviation.info</strong>, o usuário concorda em cumprir os presentes Termos...</p>
         <h2>1. Aceitação dos Termos</h2>
-        <p>O acesso ao BrasilAviation.info é gratuito. A utilização do site atribui a condição de usuário e implica na aceitação plena de todas as diretrizes aqui presentes.</p>
-
-        <h2>2. Propriedade Intelectual</h2>
-        <p>Todo o conteúdo publicado (textos, notícias, análises e fotografias autorais) é de propriedade do BrasilAviation.info...</p>
-
-        <h2>3. Responsabilidade sobre a Informação</h2>
-        <p>O BrasilAviation.info busca a precisão técnica em todas as publicações...</p>
-
-        <p style="margin-top: 40px;"><small>Atualizado em: 23 de abril de 2026.</small></p>
+        <p>Caso você não concorde, interrompa o uso do site imediatamente.</p>
+        <div class="update-date">Última atualização: 24 de abril de 2026</div>
     </article>
 </main>
-
 <div id="footer-container"></div>
-
-<script>
-    // --- FUNÇÕES DE INTERAÇÃO (NECESSÁRIAS PARA O MENU E DARK MODE) ---
-    function ativarComandosCabecalho() {
-        const openBtn = document.getElementById('open-menu');
-        const btnDark = document.getElementById('dark-toggle-header');
-        const sBox = document.getElementById('search-box-header');
-        const sInput = document.getElementById('input-busca-header');
-        const btnLupa = document.getElementById('btn-lupa-header');
-
-        // Abrir Menu Lateral
-        if(openBtn) {
-            openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
-        }
-
-        // Dark Mode
-        if(btnDark) {
-            btnDark.onclick = () => {
-                document.body.classList.toggle('dark-mode');
-                const isDark = document.body.classList.contains('dark-mode');
-                localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
-                btnDark.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            };
-            // Ajusta o ícone se já começar no dark
-            if(document.body.classList.contains('dark-mode')) btnDark.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-
-        // Pesquisa
-        if(btnLupa) {
-            btnLupa.onclick = (e) => {
-                e.stopPropagation();
-                if (!sBox.classList.contains('active')) {
-                    sBox.classList.add('active');
-                    sInput.focus();
-                } else if (sInput.value.trim()) {
-                    window.location.href = `pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
-                }
-            };
-        }
-    }
-
-    function ativarComandosMenu() {
-        const closeBtn = document.getElementById('close-menu');
-        const btnToggleCat = document.getElementById('btn-toggle-cat');
-        
-        if(closeBtn) {
-            closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
-        }
-
-        if(btnToggleCat) {
-            btnToggleCat.onclick = (e) => {
-                e.preventDefault();
-                document.getElementById('lista-cat').classList.toggle('active');
-                document.getElementById('seta-cat').classList.toggle('rotate');
-            };
-        }
-    }
-
-    // --- CARREGAMENTO DOS COMPONENTES ---
-    async function carregarComponentes() {
-        // Carrega o Cabeçalho e ativa os botões
-        await fetch('cabecalho.html').then(r => r.text()).then(h => {
-            document.getElementById('header-container').innerHTML = h;
-            ativarComandosCabecalho();
-        });
-
-        // Carrega o Menu e ativa os botões
-        await fetch('menu.html').then(r => r.text()).then(h => {
-            document.getElementById('menu-container').innerHTML = h;
-            ativarComandosMenu();
-        });
-
-        // Carrega o Rodapé
-        fetch('rodape.html').then(r => r.text()).then(h => {
-            document.getElementById('footer-container').innerHTML = h;
-        });
-    }
-
-    // Aplica o tema antes de carregar o resto para evitar o clarão branco
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-
-    carregarComponentes();
-</script>
+<script src="/loader.js"></script>
 </body>
 </html>

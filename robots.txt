@@ -1,0 +1,16 @@
+User-agent: *
+# Permite tudo o que é público
+Allow: /
+Allow: /index.html
+Allow: /noticia.html
+Allow: /sobre.html
+
+# BLOQUEIO: O Google não vai indexar nada que comece com esses nomes
+Disallow: /admin/
+Disallow: /login/
+Disallow: /painel/
+Disallow: /firebase-config.js
+Disallow: /config/
+
+# Indica onde está o mapa do site para o Google
+Sitemap: https://brasilaviation.info/sitemap.xml

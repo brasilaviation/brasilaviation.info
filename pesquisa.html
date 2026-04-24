@@ -4,32 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesquisa | BrasilAviation.info</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
     <style>
-        body { display: flex; flex-direction: column; min-height: 100vh; font-family: sans-serif; }
-        .pesquisa-container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; }
-        .termo-busca { color: #2e7d32; font-style: italic; }
-        .resultado-item { display: flex; gap: 15px; margin-bottom: 20px; cursor: pointer; border-bottom: 1px solid #eee; padding-bottom: 15px; transition: 0.3s; }
-        .resultado-item:hover { opacity: 0.7; }
-        .resultado-item img { width: 100px; height: 70px; border-radius: 8px; object-fit: cover; }
-        .resultado-info h3 { font-size: 16px; margin: 0 0 5px 0; color: var(--text); }
-        body.dark-mode .resultado-item { border-color: #333; }
+        .pesquisa-container { max-width: 800px; margin: 30px auto; padding: 0 20px; min-height: 80vh; }
+        .busca-header { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .busca-header h2 { font-size: 22px; font-weight: 800; color: var(--text-main); }
+        .termo-busca { color: var(--secondary); font-style: italic; }
+
+        .resultado-item { 
+            display: flex; gap: 20px; margin-bottom: 20px; cursor: pointer; padding: 15px; 
+            background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+            transition: 0.3s; align-items: center;
+        }
+        .resultado-item:hover { transform: translateX(5px); border-color: var(--secondary); }
+        .resultado-item img { width: 120px; height: 85px; border-radius: 10px; object-fit: cover; }
+        .resultado-info h3 { font-size: 17px; margin: 0 0 8px 0; color: var(--text-main); line-height: 1.3; }
+        .resultado-meta { font-size: 12px; color: var(--text-muted); }
+        
+        .no-results { text-align: center; padding: 50px 20px; color: var(--text-muted); }
+        .no-results i { font-size: 40px; margin-bottom: 15px; display: block; opacity: 0.5; }
     </style>
 </head>
-<body>
+<body class="loading-state">
+
+<div id="header-container"></div>
+<div id="menu-container"></div>
 
 <main class="pesquisa-container">
-    <h2>Resultados para: <span id="label-busca" class="termo-busca">...</span></h2>
-    <hr style="opacity: 0.1; margin: 15px 0;">
+    <div class="busca-header">
+        <h2>Resultados para: <span id="label-busca" class="termo-busca">...</span></h2>
+    </div>
     <div id="lista-resultados">
-        <p style="text-align:center; color:#888;">Buscando nas nuvens...</p>
+        <div class="no-results"><i class="fas fa-search fa-spin"></i> Sintonizando radar...</div>
     </div>
 </main>
 
+<div id="footer-container"></div>
+
+<script type="module" src="loader.js"></script>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -43,13 +63,18 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Função para aplicar o Dark Mode imediatamente ao carregar a página
+    if (localStorage.getItem('dark-mode') === 'active') {
+        document.body.classList.add('dark-mode');
+    }
+
     async function realizarBusca() {
         const params = new URLSearchParams(window.location.search);
-        const termo = params.get('q')?.toLowerCase() || "";
-        document.getElementById('label-busca').innerText = termo;
+        const termo = params.get('q')?.toLowerCase().trim() || "";
+        document.getElementById('label-busca').innerText = termo || "...";
 
         if (!termo) {
-            document.getElementById('lista-resultados').innerHTML = "<p>Digite algo para pesquisar.</p>";
+            document.getElementById('lista-resultados').innerHTML = `<div class="no-results"><p>O que vamos buscar hoje?</p></div>`;
             return;
         }
 
@@ -59,31 +84,32 @@
             let html = "";
             let encontrados = 0;
 
-            snap.forEach(doc => {
-                const n = doc.data();
-                const titulo = n.titulo.toLowerCase();
-                
-                if (titulo.includes(termo)) {
+            snap.forEach(docSnap => {
+                const n = docSnap.data();
+                if (n.titulo?.toLowerCase().includes(termo) || n.tags?.toLowerCase().includes(termo) || n.cat?.toLowerCase().includes(termo)) {
                     encontrados++;
-                    // LINK LIMPO: /noticia?id=...
+                    const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR') : "";
                     html += `
-                        <div class="resultado-item" onclick="location.href='/noticia?id=${doc.id}'">
-                            <img src="${n.foto}">
+                        <div class="resultado-item" onclick="location.href='noticia.html?id=${n.slug || docSnap.id}'">
+                            <img src="${n.foto || 'placeholder.jpg'}">
                             <div class="resultado-info">
                                 <h3>${n.titulo}</h3>
-                                <p style="font-size:12px; color:#888;">${n.cat || 'Geral'} | ${n.data.toDate().toLocaleDateString()}</p>
+                                <div class="resultado-meta"><i class="far fa-calendar-alt"></i> ${dataFmt} | ${n.cat || 'Geral'}</div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }
             });
 
-            document.getElementById('lista-resultados').innerHTML = encontrados > 0 ? html : "<p>Nenhuma notícia encontrada.</p>";
+            document.getElementById('lista-resultados').innerHTML = encontrados > 0 ? html : `<div class="no-results"><i class="fas fa-plane-slash"></i><p>Nenhum voo encontrado para "${termo}".</p></div>`;
         } catch (e) {
-            document.getElementById('lista-resultados').innerHTML = "Erro na busca.";
+            console.error(e);
+            document.getElementById('lista-resultados').innerHTML = "<p>Erro na conexão.</p>";
         }
     }
+
+    // Dispara a busca
     realizarBusca();
 </script>
+
 </body>
 </html>

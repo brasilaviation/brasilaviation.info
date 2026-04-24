@@ -1,74 +1,98 @@
-<nav class="side-menu" id="side-menu">
-    <div class="menu-close-area">
-        <button class="btn-icon" id="close-menu"><i class="fas fa-times"></i></button>
+<nav class="side-menu" id="side-menu" style="position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: var(--card); z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto;">
+    <div class="menu-close-area" style="padding: 15px; text-align: right;">
+        <button class="btn-icon" id="close-menu" style="background:none; border:none; font-size:24px; cursor:pointer; color: var(--secondary);"><i class="fas fa-times"></i></button>
     </div>
-    <ul>
+    
+    <ul style="list-style: none; padding: 0;">
         <li class="menu-section-title">PÁGINAS</li>
-        <li><a href="index.html"><i class="fas fa-home menu-main-icon"></i> Início</a></li>
-        <li><a href="sobre.html"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
+        <li><a href="index.html" class="menu-link"><i class="fas fa-home menu-main-icon"></i> Início</a></li>
+        <li><a href="sobre.html" class="menu-link"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
         
         <hr class="menu-divider">
         
         <li class="menu-section-title">COMPANHIAS</li>
-        <li><a href="companhia.html?cia=azul" class="link-azul"><img src="Azul-Airlines-logo-8.png" class="logo-cia"> Azul</a></li>
-        <li><a href="companhia.html?cia=gol" class="link-gol"><img src="GOLL54.SA-7e1c5416.png" class="logo-cia"> GOL</a></li>
-        <li><a href="companhia.html?cia=latam" class="link-latam"><img src="Latam-logo-19.png" class="logo-cia"> LATAM</a></li>
+        
+        <div class="cias-container">
+            <a href="companhia.html?c=AZUL" class="cia-card card-azul">
+                <img src="Azul-Airlines-logo-8.png" alt="Azul">
+                <span>Azul</span>
+            </a>
+            <a href="companhia.html?c=GOL" class="cia-card card-gol">
+                <img src="GOLL54.SA-7e1c5416.png" alt="GOL">
+                <span>GOL</span>
+            </a>
+            <a href="companhia.html?c=LATAM" class="cia-card card-latam">
+                <img src="Latam-logo-19.png" alt="LATAM">
+                <span>LATAM</span>
+            </a>
+        </div>
 
         <hr class="menu-divider">
 
         <li>
-            <a href="javascript:void(0)" id="btn-toggle-cat" style="display:flex; justify-content:space-between; align-items:center;">
+            <a href="javascript:void(0)" id="btn-toggle-cat" style="display:flex; justify-content:space-between; align-items:center;" class="menu-link">
                 <span><i class="fas fa-list-ul menu-main-icon"></i> Categorias</span>
                 <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
             </a>
             <div class="submenu" id="lista-cat">
-                <a href="categoria.html?cat=PINTURA">Pintura/Adesivos</a>
-                <a href="categoria.html?cat=DEPORTACAO">Deportação</a>
-                <a href="categoria.html?cat=CURIOSIDADES">Curiosidades</a>
-                <a href="categoria.html?cat=ROTAS">Novas Rotas</a>
-                <a href="categoria.html?cat=PEDIDOS">Pedidos e Entregas</a>
-                <a href="categoria.html?cat=INCIDENTES">Incidentes e Acidentes</a>
-                <a href="categoria.html?cat=CARGUEIRA">Aviação Cargueira</a>
-                <a href="categoria.html?cat=MILITAR">Militar</a>
-                <a href="categoria.html?cat=FROTA">Movimentação de Frota</a>
+                <div id="dinamic-cats-menu">
+                    <small style="padding-left: 50px; color: var(--text-muted);">Carregando...</small>
+                </div>
             </div>
         </li>
 
         <hr class="menu-divider">
 
         <li class="menu-section-title">LEGAL</li>
-        <li><a href="termos.html"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
-        <li><a href="privacidade.html"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
-        <li><a href="contato.html"><i class="fas fa-envelope menu-main-icon"></i> Contato</a></li>
+        <li><a href="termos.html" class="menu-link"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
+        <li><a href="privacidade.html" class="menu-link"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
+        <li><a href="contato.html" class="menu-link"><i class="fas fa-envelope menu-main-icon"></i> Contato</a></li>
     </ul>
 </nav>
 
 <style>
-    /* --- EFEITO SANFONA --- */
-    .submenu { 
-        max-height: 0; 
-        overflow: hidden; 
-        transition: max-height 0.4s ease-out; 
-        background: rgba(0,0,0,0.03); 
+    /* Estilos Gerais do Menu */
+    .menu-link { padding: 12px 20px; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; }
+    .menu-link:hover { background: rgba(0,0,0,0.05); color: var(--secondary); }
+    
+    /* Container e Cards das Cias */
+    .cias-container { padding: 10px 20px; display: flex; flex-direction: column; gap: 10px; }
+    
+    .cia-card {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        padding: 12px 15px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: white;
+        font-weight: 700;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .submenu.active { 
-        max-height: 600px; /* Aumentado para caber todas as categorias */
+    
+    .cia-card:hover { transform: scale(1.02); }
+    
+    .cia-card img {
+        height: 25px;
+        width: 40px;
+        object-fit: contain;
+        background: white;
+        padding: 3px;
+        border-radius: 6px;
+        margin-right: 12px;
     }
-    .menu-arrow { transition: transform 0.3s; }
+
+    /* Cores das Cias */
+    .card-azul { background: linear-gradient(135deg, #003399 0%, #00a3e0 100%); }
+    .card-gol { background: linear-gradient(135deg, #FF6600 0%, #4d4d4d 100%); }
+    .card-latam { background: linear-gradient(135deg, #950054 0%, #1a237e 100%); }
+
+    /* Outros estilos */
+    .submenu { max-height: 0; overflow: hidden; transition: 0.4s; background: rgba(0,0,0,0.03); }
+    .submenu.active { max-height: 1000px; } 
+    .menu-arrow { transition: 0.3s; }
     .menu-arrow.rotate { transform: rotate(180deg); }
-
-    .submenu a {
-        padding: 12px 20px 12px 50px !important;
-        font-size: 14px;
-        opacity: 0.8;
-    }
-
-    /* Estilos das logos e ícones */
-    .logo-cia { height: 18px; width: auto; margin-right: 10px; vertical-align: middle; object-fit: contain; }
-    .menu-section-title { padding: 15px 20px 5px !important; font-size: 10px !important; font-weight: 700 !important; color: #999 !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; }
-    .menu-main-icon { margin-right: 12px; color: #2e7d32; width: 18px; text-align: center; }
-    .menu-divider { opacity: 0.05; margin: 10px 20px; border: 0; border-top: 1px solid #000; }
-    body.dark-mode .menu-divider { border-top-color: #fff; }
+    .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; }
+    .menu-main-icon { color: var(--secondary); width: 20px; }
+    .menu-divider { opacity: 0.1; margin: 10px 20px; border: 0; border-top: 1px solid #000; }
 </style>

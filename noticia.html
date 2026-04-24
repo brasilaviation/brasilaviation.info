@@ -3,47 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation | Notícia</title>
+    <title>Carregando notícia... | BrasilAviation.info</title>
     
-    <meta property="og:type" content="article">
-    <meta id="og-title" property="og:title" content="BrasilAviation.info">
-    <meta id="og-desc" property="og:description" content="Leia a matéria completa no portal BrasilAviation.info">
-    <meta id="og-image" property="og:image" content="https://brasilaviation.info/logo-padrao.png">
-    <meta id="og-url" property="og:url" content="">
-    <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <style>
+        :root {
+            --primary: #1a237e; --secondary: #2e7d32; --bg: #ffffff;
+            --text-main: #1c1c1c; --text-muted: #666; --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; transition: 0.3s; margin: 0; }
+        body.dark-mode { --bg: #121212; --text-main: #f0f0f0; --text-muted: #aaa; }
 
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --text: #222; --light-text: #555; --bg: #ffffff; }
-        body.dark-mode { --bg: #121212; --text: #ddd; --light-text: #aaa; --primary: #ffffff; }
+        main { max-width: 800px; margin: 20px auto; padding: 0 20px; min-height: 80vh; }
 
-        body { margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; transition: 0.3s; background: var(--bg); color: var(--text); line-height: 1.6; }
-        #header-container { position: sticky; top: 0; z-index: 1000; }
-        .noticia-container { padding: 15px; max-width: 750px; margin: 0 auto; width: 100%; box-sizing: border-box; }
-        .breadcrumb { font-size: 11px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; color: #888; letter-spacing: 0.5px; }
-        .breadcrumb a { color: var(--secondary); text-decoration: none; }
-        h1 { font-size: 26px; color: var(--primary); margin: 0 0 15px 0; line-height: 1.2; font-weight: 800; }
-        .meta-info { display: flex; gap: 15px; margin-bottom: 20px; color: var(--light-text); font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px; }
-        .meta-info a { color: inherit; text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; }
-        .meta-info a:hover { border-bottom-color: var(--secondary); }
-        .main-photo-wrapper { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .main-photo { width: 100%; display: block; object-fit: cover; }
-        .foto-legenda { margin-bottom: 25px; font-size: 12px; color: var(--light-text); line-height: 1.4; border-left: 3px solid var(--secondary); padding-left: 10px; font-style: italic; }
-        .corpo-texto { font-size: 16px; line-height: 1.75; color: var(--text); text-align: left; }
-        .corpo-texto p { margin-bottom: 20px; }
-        .corpo-texto img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
-        .share-section { display: flex; align-items: center; gap: 15px; margin: 30px 0; padding: 15px 0; border-top: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .share-title { font-size: 12px; font-weight: bold; color: var(--light-text); text-transform: uppercase; }
-        .share-buttons { display: flex; gap: 10px; }
-        .share-btn { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white !important; text-decoration: none; font-size: 15px; transition: 0.3s; }
-        .bg-wa { background: #25d366; }
-        .bg-tw { background: #000000; }
-        .bg-fb { background: #1877f2; }
-        .bg-copy { background: #666; }
-        .tags-container { margin-top: 20px; }
-        .tag-item { background: rgba(0,0,0,0.05); color: var(--light-text); padding: 4px 10px; border-radius: 4px; font-size: 11px; margin-right: 5px; display: inline-block; text-decoration: none; }
-        body.dark-mode .tag-item { background: rgba(255,255,255,0.1); }
+        .breadcrumb { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--secondary); margin-bottom: 15px; letter-spacing: 0.5px; }
+        .breadcrumb a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        .noticia-titulo { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 20px; color: var(--primary); letter-spacing: -0.5px; }
+        body.dark-mode .noticia-titulo { color: #fff; }
+
+        .noticia-meta { display: flex; align-items: center; gap: 15px; font-size: 13px; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .meta-item { display: flex; align-items: center; gap: 5px; }
+        .meta-item i { color: var(--secondary); }
+        /* Estilo para o link do autor */
+        .meta-item a { color: inherit; text-decoration: none; font-weight: 600; transition: 0.2s; }
+        .meta-item a:hover { color: var(--secondary); }
+
+        .noticia-imagem-container { width: 100%; margin-bottom: 10px; }
+        .noticia-imagem-container img { width: 100%; border-radius: var(--radius); object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .noticia-legenda { font-size: 12.5px; color: var(--text-muted); border-left: 3px solid var(--secondary); padding-left: 10px; margin-bottom: 30px; font-style: italic; }
+
+        .noticia-corpo { font-size: 18px; margin-bottom: 30px; color: var(--text-main); }
+        .noticia-corpo p { margin-bottom: 20px; }
+        .noticia-corpo img { max-width: 100%; height: auto; border-radius: var(--radius); display: block; margin: 30px 0; }
+
+        .noticia-corpo a { color: var(--secondary); text-decoration: underline; }
+
+        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .tag-item { background: rgba(0,0,0,0.05); padding: 4px 12px; border-radius: 20px; font-size: 12px; color: var(--text-main); text-decoration: none; font-weight: 500; }
+        body.dark-mode .tag-item { background: #252525; }
+
+        .share-bar { display: flex; align-items: center; gap: 10px; margin: 40px 0; padding: 15px; background: rgba(0,0,0,0.03); border-radius: var(--radius); }
+        .share-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-wa { background: #25D366; }
+        .btn-x { background: #000; }
+        .btn-copy { background: var(--secondary); }
+        .share-btn:hover { transform: translateY(-3px); opacity: 0.9; }
+
+        .loading { text-align: center; padding: 100px 20px; color: var(--text-muted); font-weight: 600; }
     </style>
 </head>
 <body>
@@ -51,18 +60,15 @@
 <div id="header-container"></div>
 <div id="menu-container"></div>
 
-<main class="noticia-container" id="noticia-render">
-    <div style="text-align:center; padding:100px; color:#888;">
-        <i class="fas fa-plane fa-spin" style="font-size: 24px;"></i>
-        <p>Sincronizando frotas...</p>
-    </div>
+<main id="noticia-layout">
+    <div class="loading"><i class="fas fa-plane fa-spin"></i> Preparando decolagem da informação...</div>
 </main>
 
 <div id="footer-container"></div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, increment, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -76,142 +82,158 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    function ativarComandosCabecalho() {
-        const openBtn = document.getElementById('open-menu');
-        const sBox = document.getElementById('search-box-header');
-        const sInput = document.getElementById('input-busca-header');
-        const btnLupa = document.getElementById('btn-lupa-header');
-        const btnDark = document.getElementById('dark-toggle-header');
-
-        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
-
-        if(btnLupa) btnLupa.onclick = (e) => {
-            e.stopPropagation();
-            if (!sBox.classList.contains('active')) {
-                sBox.classList.add('active');
-                sInput.focus();
-            } else if (sInput.value.trim()) {
-                window.location.href = `/pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
+    // Carregar componentes
+    async function loadComp(id, path) {
+        try {
+            const r = await fetch(path);
+            if(r.ok) {
+                document.getElementById(id).innerHTML = await r.text();
+                // ATIVAÇÃO MANUAL DA BUSCA E UI
+                if(id === 'header-container') {
+                    setTimeout(ativarBuscaManual, 200);
+                }
+                ativarInteracoesUI();
             }
-        };
-
-        if(btnDark) btnDark.onclick = () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-        };
+        } catch (e) { console.error("Erro ao carregar:", path); }
     }
 
-    function ativarComandosMenu() {
-        const closeBtn = document.getElementById('close-menu');
-        const btnToggleCat = document.getElementById('btn-toggle-cat');
-        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
-        if(btnToggleCat) {
-            btnToggleCat.onclick = (e) => {
+    function ativarBuscaManual() {
+        const searchBox = document.getElementById('search-box-header');
+        const btnLupa = document.getElementById('btn-lupa-header');
+        const inputBusca = document.getElementById('input-busca-header');
+
+        if (btnLupa && searchBox) {
+            btnLupa.onclick = (e) => {
                 e.preventDefault();
-                document.getElementById('lista-cat').classList.toggle('active');
-                document.getElementById('seta-cat').classList.toggle('rotate');
+                e.stopPropagation();
+                if (!searchBox.classList.contains('active')) {
+                    searchBox.classList.add('active');
+                    inputBusca.focus();
+                } else {
+                    const termo = inputBusca.value.trim();
+                    if (termo !== "") window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+                    else searchBox.classList.remove('active');
+                }
+            };
+            inputBusca.onkeypress = (e) => {
+                if (e.key === 'Enter' && inputBusca.value.trim() !== "") {
+                    window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value.trim())}`;
+                }
             };
         }
     }
 
-    // Carregamento de componentes com barra inicial
-    fetch('/cabecalho.html').then(r => r.text()).then(html => {
-        document.getElementById('header-container').innerHTML = html;
-        ativarComandosCabecalho();
-    });
-
-    fetch('/menu.html').then(r => r.text()).then(html => {
-        document.getElementById('menu-container').innerHTML = html;
-        ativarComandosMenu();
-    });
-
-    fetch('/rodape.html').then(r => r.text()).then(html => {
-        document.getElementById('footer-container').innerHTML = html;
-    });
-
-    // Lógica de Slug para link profissional
-    const path = window.location.pathname;
-    const idOuSlug = path.split('/').filter(Boolean).pop(); 
-
-    function gerarLinkCat(cat) {
-        if(!cat) return '/index.html';
-        const c = cat.toLowerCase();
-        if(["azul", "gol", "latam"].includes(c)) return `/companhia.html?cia=${c}`;
-        return `/categoria.html?cat=${encodeURIComponent(cat)}`;
+    function ativarInteracoesUI() {
+        const btnMenu = document.getElementById('open-menu'); 
+        const sideMenu = document.getElementById('side-menu'); 
+        const btnClose = document.getElementById('close-menu');
+        const btnDark = document.getElementById('dark-toggle-header');
+        
+        if (btnMenu && sideMenu) btnMenu.onclick = () => sideMenu.style.left = "0";
+        if (btnClose && sideMenu) btnClose.onclick = () => sideMenu.style.left = "-100%";
+        if (btnDark) {
+            btnDark.onclick = () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+            };
+        }
+        if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
     }
 
-    async function buscarNoticia() {
-        if (!idOuSlug || idOuSlug === 'noticia.html') return;
-        let snap = await getDoc(doc(db, "noticias", idOuSlug));
-        let data = snap.exists() ? snap.data() : null;
-        let docId = snap.id;
+    loadComp('header-container', 'cabecalho.html');
+    loadComp('menu-container', 'menu.html');
+    loadComp('footer-container', 'rodape.html');
 
-        if (!data) {
-            const q = await getDocs(collection(db, "noticias"));
-            q.forEach(d => { if(d.data().slug === idOuSlug) { data = d.data(); docId = d.id; } });
+    window.copiarLink = function() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link da notícia copiado!");
+    };
+
+    async function carregarNoticia() {
+        const params = new URLSearchParams(window.location.search);
+        let idOuSlug = params.get('id');
+
+        if (!idOuSlug) {
+            const pathParts = window.location.pathname.split('/');
+            idOuSlug = pathParts[pathParts.length - 1].replace('.html', '');
         }
 
-        if (data) renderizar(data, docId);
+        if (!idOuSlug || idOuSlug === 'noticia') {
+            document.getElementById('noticia-layout').innerHTML = "<p>Notícia não encontrada ou link inválido.</p>";
+            return;
+        }
+
+        try {
+            let n = null;
+            let docRefReal = null;
+
+            const q = query(collection(db, "noticias"), where("slug", "==", idOuSlug));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                n = querySnapshot.docs[0].data();
+                docRefReal = querySnapshot.docs[0].ref;
+            } else {
+                const docRef = doc(db, "noticias", idOuSlug);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    n = docSnap.data();
+                    docRefReal = docRef;
+                }
+            }
+
+            if (n) {
+                const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR', {
+                    day: '2-digit', month: 'long', year: 'numeric'
+                }) : "Recentemente";
+
+                let tagsHtml = "";
+                if (n.tags) {
+                    n.tags.split(',').forEach(t => {
+                        tagsHtml += `<a href="pesquisa.html?q=${t.trim()}" class="tag-item">#${t.trim()}</a>`;
+                    });
+                }
+
+                updateDoc(docRefReal, { cliques: increment(1) });
+
+                const shareText = encodeURIComponent(n.titulo);
+                const shareUrl = encodeURIComponent(window.location.href);
+                const nomeAutor = n.autor || 'Miguel Barbosa';
+
+                document.getElementById('noticia-layout').innerHTML = `
+                    <div class="breadcrumb">
+                        <a href="index.html">INÍCIO</a> / 
+                        <a href="categoria.html?cat=${encodeURIComponent(n.cat || 'Geral')}">${n.cat || 'GERAL'}</a>
+                    </div>
+                    <h1 class="noticia-titulo">${n.titulo}</h1>
+                    <div class="noticia-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-user"></i> Por 
+                            <a href="perfil.html?nome=${encodeURIComponent(nomeAutor)}">${nomeAutor}</a>
+                        </div>
+                        <div class="meta-item"><i class="fas fa-calendar-alt"></i> ${dataFmt}</div>
+                    </div>
+                    <div class="noticia-imagem-container"><img src="${n.foto}"></div>
+                    <div class="noticia-legenda">${n.legenda || 'Foto: Reprodução / BrasilAviation'}</div>
+                    <div class="noticia-corpo">${n.texto || n.corpo || 'O conteúdo desta notícia está sendo processado...'}</div>
+                    <div class="tag-list">${tagsHtml}</div>
+                    <div class="share-bar">
+                        <a href="https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}" target="_blank" class="share-btn btn-wa"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}" target="_blank" class="share-btn btn-x"><i class="fab fa-x-twitter"></i></a>
+                        <button onclick="copiarLink()" class="share-btn btn-copy"><i class="fas fa-link"></i></button>
+                    </div>
+                `;
+                document.title = `${n.titulo} | BrasilAviation.info`;
+            } else {
+                document.getElementById('noticia-layout').innerHTML = "<p>Notícia não encontrada no nosso hangar.</p>";
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById('noticia-layout').innerHTML = "<p>Erro técnico ao carregar a notícia.</p>";
+        }
     }
 
-    function renderizar(n, id) {
-        updateDoc(doc(db, "noticias", id), { cliques: increment(1) }).catch(()=>{});
-        
-        document.title = n.titulo + " | BrasilAviation.info";
-        
-        const metaTitle = document.getElementById('og-title');
-        const metaImg = document.getElementById('og-image');
-        const metaUrl = document.getElementById('og-url');
-        const metaDesc = document.getElementById('og-desc');
-
-        if(metaTitle) metaTitle.setAttribute('content', n.titulo);
-        if(metaImg) metaImg.setAttribute('content', n.foto);
-        if(metaUrl) metaUrl.setAttribute('content', window.location.href);
-        
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = n.texto || n.conteudo || "";
-        const textoLimpo = tempDiv.textContent || tempDiv.innerText || "";
-        const resumo = textoLimpo.substring(0, 160) + "...";
-        if(metaDesc) metaDesc.setAttribute('content', resumo);
-        
-        document.querySelector('meta[property="og:title"]')?.setAttribute('content', n.titulo);
-        document.querySelector('meta[property="og:image"]')?.setAttribute('content', n.foto);
-
-        const dataFmt = n.data ? n.data.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) : "";
-        const urlFull = window.location.href;
-        const shareMsg = encodeURIComponent(`${n.titulo} - BrasilAviation.info`);
-        const categoriaNome = n.cat || n.categoria || 'Geral';
-
-        document.getElementById('noticia-render').innerHTML = `
-            <div class="breadcrumb"><a href="/index.html">Início</a> / <a href="${gerarLinkCat(categoriaNome)}">${categoriaNome}</a></div>
-            <h1>${n.titulo}</h1>
-            
-            <div class="meta-info">
-                <span>Por <a href="/perfil.html?nome=${encodeURIComponent(n.autor || 'Miguel Barbosa')}">${n.autor || 'Miguel Barbosa'}</a></span>
-                <span><i class="far fa-calendar"></i> ${dataFmt}</span>
-            </div>
-
-            <div class="main-photo-wrapper"><img src="${n.foto}" class="main-photo"></div>
-            ${n.legenda ? `<div class="foto-legenda">${n.legenda}</div>` : ''}
-
-            <div class="corpo-texto">${n.texto || n.conteudo}</div>
-
-            <div class="share-section">
-                <span class="share-title">Compartilhar:</span>
-                <div class="share-buttons">
-                    <a href="https://wa.me/?text=${shareMsg}%20${urlFull}" target="_blank" class="share-btn bg-wa"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://twitter.com/intent/tweet?text=${shareMsg}&url=${urlFull}" target="_blank" class="share-btn bg-tw"><i class="fab fa-x-twitter"></i></a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=${urlFull}" target="_blank" class="share-btn bg-fb"><i class="fab fa-facebook-f"></i></a>
-                    <a href="javascript:void(0)" onclick="navigator.clipboard.writeText('${urlFull}'); alert('Link copiado!')" class="share-btn bg-copy"><i class="fas fa-link"></i></a>
-                </div>
-            </div>
-
-            ${n.tags ? `<div class="tags-container">${n.tags.split(',').map(t => `<span class="tag-item">#${t.trim()}</span>`).join('')}</div>` : ''}
-        `;
-    }
-
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    buscarNoticia();
+    carregarNoticia();
 </script>
 </body>
 </html>

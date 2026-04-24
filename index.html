@@ -3,94 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation.info | Notícias de Aviação</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>BrasilAviation.info | Home</title>
+    
+    <meta property="og:title" content="BrasilAviation.info | Notícias da Aviação">
+    <meta property="og:description" content="Acompanhe as últimas notícias, frotas e entregas da aviação brasileira.">
+    <meta property="og:type" content="website">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f4f9; transition: 0.3s; }
-        body.dark-mode { background: #121212; color: #eee; }
-
-        /* --- CONFIGURAÇÃO DO CARROSSEL --- */
-        .carousel-wrapper { 
-            padding: 0 15px; 
-            margin-bottom: 20px;
+        :root {
+            --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6;
+            --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575;
+            --radius: 18px;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.4; transition: 0.3s; }
+        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; }
 
-        .carousel-container { 
-            position: relative; 
-            aspect-ratio: 3/2; 
-            width: 100%; 
-            background: #000; 
-            border-radius: 18px; 
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-        }
-
-        .carousel-slide { position: relative; width: 100%; height: 100%; display: none; cursor: pointer; }
-        .carousel-slide.active { display: block; }
+        #header-container { min-height: 60px; }
+        main { max-width: 900px; margin: 0 auto; padding-bottom: 60px; }
         
-        .carousel-slide img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            display: block;
-            border-radius: 18px; 
-        }
+        .section-title { padding: 20px 15px 10px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
 
-        .carousel-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            padding: 30px 15px 15px;
-            color: white;
-            text-align: left;
-        }
+        /* CARROSSEL */
+        .carousel-wrapper { padding: 0 15px; margin-bottom: 20px; }
+        .carousel-container { position: relative; width: 100%; aspect-ratio: 3 / 2; background: #000; border-radius: var(--radius); overflow: hidden; }
+        .carousel-slide { position: absolute; inset: 0; opacity: 0; transition: 0.6s; cursor: pointer; z-index: 1; }
+        .carousel-slide.active { opacity: 1; z-index: 2; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 15px 15px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); color: white; z-index: 3; }
+        .carousel-overlay h3 { font-size: 1.1rem; font-weight: 700; }
+        .badge-destaque { background: var(--secondary); color: #fff; padding: 2px 8px; font-size: 8px; font-weight: 800; text-transform: uppercase; border-radius: 4px; margin-bottom: 6px; display: inline-block; }
 
-        .badge-cat {
-            background-color: #2e7d32;
-            color: white;
-            padding: 5px 12px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 8px;
-            letter-spacing: 0.8px;
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: rgba(0,0,0,0.3); border: none; color: white; border-radius: 50%; z-index: 10; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+        #prev-btn { left: 10px; } #next-btn { right: 10px; }
 
-        .carousel-caption h3 {
-            margin: 0;
-            font-size: 19px;
-            line-height: 1.2;
-            font-weight: 700;
-        }
+        /* FEED */
+        .feed-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 0 15px; }
+        @media (min-width: 768px) { .feed-container { grid-template-columns: 1fr 1fr; } }
+        .news-card { display: flex; background: var(--card); padding: 10px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .news-card:hover { border-color: var(--secondary); }
+        .news-card img { width: 95px; height: 65px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+        .news-content { margin-left: 12px; display: flex; flex-direction: column; justify-content: center; }
+        .news-content h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 4px; line-height: 1.2; }
+        .news-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+        .news-meta .author { font-weight: 600; color: var(--secondary); }
+        .news-meta .dot { width: 3px; height: 3px; background: #ccc; border-radius: 50%; }
 
-        .carousel-btn {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(5px);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .carousel-btn:hover { background: rgba(255,255,255,0.4); }
+        /* PAGINAÇÃO */
+        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 30px; }
+        .page-btn { background: none; border: 1px solid rgba(0,0,0,0.1); color: var(--text-main); width: 35px; height: 35px; border-radius: 50%; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .page-btn:hover:not(:disabled) { border-color: var(--secondary); color: var(--secondary); }
+        .page-btn:disabled { opacity: 0.3; cursor: default; }
+        .page-number { font-size: 13px; font-weight: 700; color: var(--text-muted); }
 
-        .section-title { padding: 15px; font-weight: bold; font-size: 22px; color: #1a237e; }
-        body.dark-mode .section-title { color: #fff; }
-        
-        .news-item { 
-            display: flex; gap: 15px; background: white; margin: 0 15px 15px; 
-            padding: 10px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
-        body.dark-mode .news-item { background: #1e1e1e; }
+        .skeleton { background: #e0e0e0; border-radius: 12px; height: 85px; width: 100%; position: relative; overflow: hidden; animation: skeleton-loading 1.5s infinite linear; }
+        @keyframes skeleton-loading { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        body.dark-mode .skeleton { background: #2a2a2a; }
     </style>
 </head>
 <body>
@@ -99,29 +72,34 @@
 <div id="menu-container"></div>
 
 <main>
-    <h2 class="section-title">Destaques</h2>
-    
+    <section class="section-title">Mais Lidas</section>
     <div class="carousel-wrapper">
-        <div class="carousel-container" id="carousel-area">
-            <button class="carousel-btn btn-prev" id="prev-btn" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); z-index: 20;">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="carousel-btn btn-next" id="next-btn" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); z-index: 20;">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-            <div id="slides-holder" style="width: 100%; height: 100%;"></div>
+        <div class="carousel-container">
+            <button class="nav-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-btn" id="next-btn"><i class="fas fa-chevron-right"></i></button>
+            <div id="slides-holder" style="height: 100%;">
+                <div class="carousel-slide active skeleton"></div>
+            </div>
         </div>
     </div>
 
-    <h2 class="feed-header" style="margin: 20px 15px 10px; border-bottom:3px solid #2e7d32; display:inline-block; font-weight:bold; font-size:20px;">Últimas Notícias</h2>
-    <div id="news-feed"></div>
+    <section class="section-title">Mais Recentes</section>
+    <div id="news-feed" class="feed-container">
+        <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+
+    <div class="pagination-container">
+        <button id="prev-page" class="page-btn" disabled><i class="fas fa-arrow-left"></i></button>
+        <span class="page-number" id="current-page-label">Página 1</span>
+        <button id="next-page" class="page-btn"><i class="fas fa-arrow-right"></i></button>
+    </div>
 </main>
 
 <div id="footer-container"></div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy, limit, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -135,132 +113,158 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    function ativarComandosCabecalho() {
-        const openBtn = document.getElementById('open-menu');
-        const sBox = document.getElementById('search-box-header');
-        const sInput = document.getElementById('input-busca-header');
-        const btnLupa = document.getElementById('btn-lupa-header');
-        const btnDark = document.getElementById('dark-toggle-header');
-
-        if(openBtn) openBtn.onclick = () => document.getElementById('side-menu').classList.add('active');
-
-        if(btnLupa) btnLupa.onclick = (e) => {
-            e.stopPropagation();
-            if (!sBox.classList.contains('active')) {
-                sBox.classList.add('active');
-                sInput.focus();
-            } else if (sInput.value.trim()) {
-                window.location.href = `/pesquisa.html?q=${encodeURIComponent(sInput.value)}`;
+    // FUNÇÃO PARA CARREGAR COMPONENTES E ATIVAR SCRIPTS
+    async function loadComp(id, path) {
+        try {
+            const r = await fetch(path + "?v=" + Date.now());
+            if(r.ok) {
+                const htmlContent = await r.text();
+                document.getElementById(id).innerHTML = htmlContent;
+                
+                // Se for o header, ativa a busca manualmente para garantir
+                if(id === 'header-container') {
+                    setTimeout(ativarBuscaIndex, 200);
+                }
+                ativarInteracoesUI();
             }
-        };
+        } catch (e) { console.error("Erro ao carregar componente:", path); }
+    }
 
-        if(btnDark) {
+    // LOGICA MANUAL PARA BUSCA NO INDEX
+    function ativarBuscaIndex() {
+        const searchBox = document.getElementById('search-box-header');
+        const btnLupa = document.getElementById('btn-lupa-header');
+        const inputBusca = document.getElementById('input-busca-header');
+
+        if (btnLupa && searchBox) {
+            btnLupa.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!searchBox.classList.contains('active')) {
+                    searchBox.classList.add('active');
+                    inputBusca.focus();
+                } else {
+                    const termo = inputBusca.value.trim();
+                    if (termo !== "") window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+                    else searchBox.classList.remove('active');
+                }
+            };
+            inputBusca.onkeypress = (e) => {
+                if (e.key === 'Enter' && inputBusca.value.trim() !== "") {
+                    window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value.trim())}`;
+                }
+            };
+        }
+    }
+
+    function ativarInteracoesUI() {
+        const btnMenu = document.getElementById('open-menu');
+        const sideMenu = document.getElementById('side-menu');
+        const btnClose = document.getElementById('close-menu');
+        const btnDark = document.getElementById('dark-toggle-header');
+        
+        if (btnMenu && sideMenu) btnMenu.onclick = () => sideMenu.style.left = "0";
+        if (btnClose && sideMenu) btnClose.onclick = () => sideMenu.style.left = "-100%";
+        if (btnDark) {
             btnDark.onclick = () => {
                 document.body.classList.toggle('dark-mode');
                 localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
             };
         }
+        if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
     }
 
-    function ativarComandosMenu() {
-        const closeBtn = document.getElementById('close-menu');
-        const btnToggleCat = document.getElementById('btn-toggle-cat');
-        if(closeBtn) closeBtn.onclick = () => document.getElementById('side-menu').classList.remove('active');
-        if(btnToggleCat) {
-            btnToggleCat.onclick = (e) => {
-                e.preventDefault();
-                document.getElementById('lista-cat').classList.toggle('active');
-                document.getElementById('seta-cat').classList.toggle('rotate');
-            };
-        }
+    loadComp('header-container', 'cabecalho.html');
+    loadComp('footer-container', 'rodape.html');
+    loadComp('menu-container', 'menu.html');
+
+    // SISTEMA DE DESTAQUES E FEED
+    let lastDocs = []; 
+    let currentPage = 1;
+    const pageSize = 12;
+
+    async function getDestaques() {
+        try {
+            const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(3));
+            const snap = await getDocs(q);
+            let h = "";
+            snap.docs.forEach((ds, i) => {
+                const n = ds.data();
+                const link = `noticia.html?id=${ds.id}`;
+                h += `<div class="carousel-slide ${i===0?'active':''}" onclick="location.href='${link}'">
+                        <img src="${n.foto}">
+                        <div class="carousel-overlay"><span class="badge-destaque">${n.cat || "DESTAQUE"}</span><h3>${n.titulo}</h3></div>
+                      </div>`;
+            });
+            document.getElementById('slides-holder').innerHTML = h;
+            initCarousel();
+        } catch (e) { console.error("Erro Destaques:", e); }
     }
 
-    // Adicionada barra inicial nos fetchs
-    fetch('/cabecalho.html').then(r => r.text()).then(h => {
-        document.getElementById('header-container').innerHTML = h;
-        ativarComandosCabecalho();
-    });
+    function initCarousel() {
+        let idx = 0; 
+        const slides = document.querySelectorAll('.carousel-slide');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        if(slides.length < 2) return;
+        const move = (n) => {
+            slides[idx].classList.remove('active');
+            idx = (n + slides.length) % slides.length;
+            slides[idx].classList.add('active');
+        };
+        nextBtn.onclick = (e) => { e.stopPropagation(); move(idx+1); };
+        prevBtn.onclick = (e) => { e.stopPropagation(); move(idx-1); };
+        setInterval(() => move(idx+1), 6000);
+    }
 
-    fetch('/menu.html').then(r => r.text()).then(h => {
-        document.getElementById('menu-container').innerHTML = h;
-        ativarComandosMenu();
-    });
+    async function getFeed() {
+        try {
+            let q;
+            if (currentPage === 1) {
+                q = query(collection(db, "noticias"), orderBy("data", "desc"), limit(pageSize));
+            } else {
+                q = query(collection(db, "noticias"), orderBy("data", "desc"), startAfter(lastDocs[currentPage - 2]), limit(pageSize));
+            }
 
-    fetch('/rodape.html').then(r => r.text()).then(h => {
-        document.getElementById('footer-container').innerHTML = h;
-    });
+            const snap = await getDocs(q);
+            if (snap.empty) return;
 
-    async function carregarDestaques() {
-        const holder = document.getElementById('slides-holder');
-        const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(5));
-        const snap = await getDocs(q);
-        
-        let html = "";
-        let i = 0;
-        
-        snap.forEach(docSnap => {
-            const n = docSnap.data();
-            const categoria = n.cat || n.categoria || "Notícia";
-            const idNoticia = n.slug || docSnap.id;
+            if (!lastDocs[currentPage - 1]) {
+                lastDocs.push(snap.docs[snap.docs.length - 1]);
+            }
 
-            html += `
-                <div class="carousel-slide ${i === 0 ? 'active' : ''}" onclick="location.href='/noticia/${idNoticia}'">
+            let h = "";
+            snap.forEach(ds => {
+                const n = ds.data();
+                const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR') : "";
+                const link = `noticia.html?id=${ds.id}`;
+                h += `
+                <article class="news-card" onclick="location.href='${link}'">
                     <img src="${n.foto}">
-                    <div class="carousel-caption">
-                        <span class="badge-cat">${categoria}</span>
-                        <h3>${n.titulo}</h3>
-                    </div>
-                </div>`;
-            i++;
-        });
-        
-        holder.innerHTML = html;
-        iniciarLogicaCarrossel();
-    }
-
-    async function carregarFeed() {
-        const feed = document.getElementById('news-feed');
-        const q = query(collection(db, "noticias"), orderBy("data", "desc"));
-        const snap = await getDocs(q);
-        let html = "";
-        snap.forEach(docSnap => {
-            const n = docSnap.data();
-            const data = n.data ? n.data.toDate().toLocaleDateString('pt-BR') : "";
-            const idNoticia = n.slug || docSnap.id;
-
-            html += `
-                <article class="news-item" onclick="location.href='/noticia/${idNoticia}'" style="cursor:pointer;">
-                    <div class="news-photo"><img src="${n.foto}" style="width:110px; height:75px; object-fit:cover; border-radius:10px;"></div>
-                    <div class="news-info">
-                        <h3 style="margin:0; font-size:15px;">${n.titulo}</h3>
-                        <div class="news-meta"><span>${n.autor || 'BrasilAviation'}</span> • ${data}</div>
+                    <div class="news-content">
+                        <h4>${n.titulo}</h4>
+                        <div class="news-meta">
+                            <span class="author">${n.autor || 'Miguel Barbosa'}</span>
+                            <div class="dot"></div>
+                            <span>${dataFmt}</span>
+                        </div>
                     </div>
                 </article>`;
-        });
-        feed.innerHTML = html;
+            });
+
+            document.getElementById('news-feed').innerHTML = h;
+            document.getElementById('current-page-label').innerText = `Página ${currentPage}`;
+            document.getElementById('prev-page').disabled = (currentPage === 1);
+            document.getElementById('next-page').disabled = (snap.docs.length < pageSize);
+        } catch (e) { console.error("Erro Feed:", e); }
     }
 
-    let slideIndex = 0;
-    function iniciarLogicaCarrossel() {
-        const slides = document.querySelectorAll('.carousel-slide');
-        if(slides.length === 0) return;
-        
-        const mostrarSlide = (n) => {
-            slides.forEach(s => s.classList.remove('active'));
-            slideIndex = (n + slides.length) % slides.length;
-            slides[slideIndex].classList.add('active');
-        };
+    document.getElementById('next-page').onclick = () => { currentPage++; getFeed(); };
+    document.getElementById('prev-page').onclick = () => { if(currentPage > 1) { currentPage--; getFeed(); } };
 
-        document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex + 1); };
-        document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); mostrarSlide(slideIndex - 1); };
-        
-        setInterval(() => mostrarSlide(slideIndex + 1), 5000);
-    }
-
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    carregarDestaques();
-    carregarFeed();
+    getDestaques(); 
+    getFeed();
 </script>
+
 </body>
 </html>
-

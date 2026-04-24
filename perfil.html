@@ -4,80 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrasilAviation | Perfil do Autor</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; }
-        body.dark-mode { --bg: #121212; --text: #eee; }
-
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); transition: 0.3s; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 10px 15px; background: white; border-bottom: 1px solid #eee;
-            position: sticky; top: 0; z-index: 1000;
-        }
-        body.dark-mode header { background: #181818; border-color: #333; }
-
-        .perfil-container { max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; width: 100%; box-sizing: border-box; }
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <style>
+        .perfil-container { max-width: 800px; margin: 30px auto; padding: 0 20px; min-height: 80vh; }
         
         .autor-header { 
-            background: white; padding: 30px; border-radius: 20px; 
-            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px;
+            background: var(--card); 
+            padding: 40px 30px; 
+            border-radius: var(--radius); 
+            text-align: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
         }
-        body.dark-mode .autor-header { background: #1e1e1e; color: #eee; }
 
-        .autor-header img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--secondary); object-fit: cover; margin-bottom: 15px; }
-        .autor-header h2 { margin: 0; color: var(--primary); font-size: 24px; }
+        .autor-header img { 
+            width: 130px; height: 130px; 
+            border-radius: 50%; 
+            border: 4px solid var(--secondary); 
+            object-fit: cover; 
+            margin-bottom: 15px; 
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.2);
+        }
+        
+        .autor-header h2 { margin: 0; color: var(--primary); font-size: 26px; font-weight: 800; }
         body.dark-mode .autor-header h2 { color: #fff; }
         
-        .autor-header span { color: var(--secondary); font-weight: bold; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
-        .autor-header p { color: #666; margin-top: 15px; line-height: 1.6; font-size: 15px; }
-        body.dark-mode .autor-header p { color: #bbb; }
+        .autor-header .cargo { color: var(--secondary); font-weight: 700; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; display: block; margin-top: 5px; }
+        .autor-header p { color: var(--text-muted); margin-top: 15px; line-height: 1.6; font-size: 16px; max-width: 600px; margin-left: auto; margin-right: auto; }
 
-        .stats { margin-top: 15px; font-size: 13px; color: #888; border-top: 1px solid #eee; padding-top: 10px; }
+        .stats { margin-top: 20px; font-size: 14px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 15px; font-weight: 500; }
 
-        .lista-titulo { font-size: 18px; color: var(--primary); margin-bottom: 20px; border-left: 5px solid var(--secondary); padding-left: 10px; }
-        body.dark-mode .lista-titulo { color: #fff; }
+        .lista-titulo { font-size: 18px; color: var(--text-main); margin-bottom: 20px; border-left: 5px solid var(--secondary); padding-left: 12px; font-weight: 800; }
 
-        .news-item { 
-            display: flex; gap: 15px; background: white; padding: 12px; 
-            border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            cursor: pointer; transition: 0.2s;
+        /* Estilo dos itens de notícia do autor */
+        .author-news-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .news-item-mini { 
+            display: flex; gap: 15px; background: var(--card); padding: 12px; 
+            border-radius: 15px; border: 1px solid var(--border);
+            cursor: pointer; transition: 0.3s; align-items: center;
         }
-        body.dark-mode .news-item { background: #1e1e1e; }
-        .news-item:hover { transform: translateY(-3px); }
+        .news-item-mini:hover { transform: translateX(5px); border-color: var(--secondary); }
 
-        .news-photo img { width: 110px; height: 80px; border-radius: 10px; object-fit: cover; }
-        .news-info h3 { font-size: 15px; margin: 0 0 5px 0; color: #222; line-height: 1.3; }
-        body.dark-mode .news-info h3 { color: #eee; }
-        .news-date { font-size: 11px; color: #888; }
-
-        .btn-icon { background: none; border: none; font-size: 20px; color: var(--secondary); cursor: pointer; }
+        .news-item-mini img { width: 100px; height: 70px; border-radius: 10px; object-fit: cover; }
+        .news-item-mini h3 { font-size: 15px; margin: 0; color: var(--text-main); line-height: 1.3; flex: 1; }
+        .news-date-mini { font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-<header>
-    <button class="btn-icon" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button>
-    <img src="3_20250925_005418_0002.png" style="height: 30px; cursor: pointer;" onclick="location.href='index.html'">
-    <button class="btn-icon" onclick="location.href='index.html'"><i class="fas fa-home"></i></button>
-</header>
+<div id="header-container"></div>
+<div id="menu-container"></div>
 
 <main class="perfil-container">
     <div class="autor-header" id="header-autor">
-        <i class="fas fa-circle-notch fa-spin"></i> Carregando perfil...
+        <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> Preparando perfil do tripulante...</div>
     </div>
 
-    <h3 class="lista-titulo">Publicações do Autor</h3>
-    <div id="lista-publicacoes"></div>
+    <h3 class="lista-titulo">Matérias Publicadas</h3>
+    <div id="lista-publicacoes" class="author-news-list"></div>
 </main>
 
 <div id="footer-container"></div>
 
+<script type="module" src="loader.js"></script>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -94,6 +91,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const nomeAutor = urlParams.get('nome');
 
+    // Seus dados de equipe
     const dadosAutores = {
         'Miguel Barbosa': {
             cargo: 'Fundador & Editor-Chefe',
@@ -114,22 +112,22 @@
 
     async function carregarPerfil() {
         if(!nomeAutor) {
-            document.getElementById('header-autor').innerHTML = "Autor não especificado.";
+            document.getElementById('header-autor').innerHTML = "Autor não selecionado.";
             return;
         }
 
         const info = dadosAutores[nomeAutor] || { 
             cargo: 'Colaborador', 
-            bio: 'Membro da equipe BrasilAviation.info contribuindo para o crescimento da aviação.', 
+            bio: 'Membro da equipe BrasilAviation.info contribuindo para o crescimento do portal.', 
             foto: 'placeholder.jpg' 
         };
         
         document.getElementById('header-autor').innerHTML = `
             <img src="${info.foto}" alt="${nomeAutor}">
             <h2>${nomeAutor}</h2>
-            <span>${info.cargo}</span>
+            <span class="cargo">${info.cargo}</span>
             <p>${info.bio}</p>
-            <div class="stats" id="contador-posts">Buscando matérias...</div>
+            <div class="stats" id="contador-posts"><i class="fas fa-sync fa-spin"></i> Contando publicações...</div>
         `;
 
         try {
@@ -141,59 +139,37 @@
                 posts.push({ id: d.id, ...d.data() });
             });
 
-            posts.sort((a, b) => {
-                const dataA = a.data?.seconds || 0;
-                const dataB = b.data?.seconds || 0;
-                return dataB - dataA;
-            });
+            // Ordenar por data (mais recente primeiro)
+            posts.sort((a, b) => (b.data?.seconds || 0) - (a.data?.seconds || 0));
 
-            document.getElementById('contador-posts').innerText = `${posts.length} matérias publicadas no portal`;
+            document.getElementById('contador-posts').innerHTML = `<i class="fas fa-pen-nib"></i> ${posts.length} matérias publicadas no portal`;
 
             let html = "";
             if (posts.length > 0) {
                 posts.forEach(n => {
-                    const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR', {day:'numeric', month:'long', year:'numeric'}) : "Data não disponível";
+                    const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR', {day:'numeric', month:'short'}) : "";
                     html += `
-                        <article class="news-item" onclick="location.href='noticia.html?p=${n.slug || n.id}'">
-                            <div class="news-photo"><img src="${n.foto}"></div>
-                            <div class="news-info">
+                        <article class="news-item-mini" onclick="location.href='noticia.html?id=${n.slug || n.id}'">
+                            <img src="${n.foto}" alt="Miniatura">
+                            <div>
                                 <h3>${n.titulo}</h3>
-                                <span class="news-date"><i class="far fa-calendar-alt"></i> ${dataFmt}</span>
+                                <span class="news-date-mini"><i class="far fa-calendar-alt"></i> ${dataFmt}</span>
                             </div>
                         </article>`;
                 });
             } else {
-                html = "<p style='text-align:center; color:#888;'>Este autor ainda não possui publicações.</p>";
+                html = "<p style='text-align:center; color:var(--text-muted);'>Nenhuma publicação encontrada para este autor.</p>";
             }
             
             document.getElementById('lista-publicacoes').innerHTML = html;
 
         } catch (e) { 
             console.error(e); 
-            document.getElementById('lista-publicacoes').innerHTML = "Erro ao carregar publicações.";
+            document.getElementById('lista-publicacoes').innerHTML = "Erro ao conectar com o hangar de dados.";
         }
     }
 
-    // CARREGAR RODAPÉ E ATIVAR SEGREDO
-    fetch('rodape.html').then(r => r.text()).then(h => {
-        document.getElementById('footer-container').innerHTML = h;
-        
-        let secretClicks = 0;
-        let secretTimer;
-        const adminGate = document.getElementById('admin-gate');
-        if(adminGate) {
-            adminGate.onclick = () => {
-                secretClicks++;
-                clearTimeout(secretTimer);
-                secretTimer = setTimeout(() => secretClicks = 0, 1500); 
-                if(secretClicks === 4) window.location.href = 'admin.html';
-            };
-        }
-    });
-
     carregarPerfil();
-
-    if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
 </script>
 </body>
 </html>

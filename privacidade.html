@@ -60,40 +60,22 @@
     <article class="legal-card">
         <p>O <strong>BrasilAviation.info</strong> preza pela transparência e pela proteção dos dados de seus usuários. Esta Política de Privacidade explica como coletamos, utilizamos e protegemos suas informações de acordo com a Lei Geral de Proteção de Dados (LGPD).</p>
 
-        <h2>1. Coleta de Informações</h2>
+        <h2>1. COLETA DE INFORMAÇÕES</h2>
         <p>Coletamos informações de duas formas:</p>
         <ul>
             <li><strong>Informações fornecidas por você:</strong> Como nome e e-mail ao se cadastrar em nossa newsletter ou criar uma conta em nossa área de membros.</li>
-            <li><strong>Informações de navegação:</strong> Coletamos dados automaticamente através de cookies e tecnologias similares (via Firebase e Google Analytics), que incluem seu endereço IP, tipo de navegador, páginas visitadas e o tempo de permanência no site.</li>
+            <li><strong>Informações de navegação:</strong> Coletamos dados automaticamente através de cookies e tecnologias similares (via Firebase e Google Analytics).</li>
         </ul>
 
-        <h2>2. Uso dos Dados</h2>
-        <p>Os dados coletados são utilizados exclusivamente para:</p>
-        <ul>
-            <li>Melhorar a experiência de navegação no portal.</li>
-            <li>Enviar atualizações de notícias e novidades da frota (apenas com seu consentimento).</li>
-            <li>Garantir a segurança do site e prevenir fraudes ou acessos indevidos.</li>
-            <li>Análise estatística de audiência para entendermos quais temas de aviação mais interessam aos nossos leitores.</li>
-        </ul>
+        <h2>2. USO DOS DADOS</h2>
+        <p>Os dados coletados são utilizados exclusivamente para melhorar a experiência de navegação e garantir a segurança do site.</p>
 
-        <h2>3. Cookies e Tecnologias de Rastreamento</h2>
-        <p>Utilizamos cookies para lembrar suas preferências (como o Modo Escuro/Dark Mode) e para entender como você interage com o conteúdo. Você pode desativar os cookies nas configurações do seu navegador, mas isso pode afetar algumas funcionalidades do BrasilAviation.info.</p>
-
-        <h2>4. Compartilhamento de Dados</h2>
-        <p>O BrasilAviation.info <strong>não vende, aluga ou comercializa</strong> seus dados pessoais para terceiros. Podemos compartilhar informações apenas com provedores de serviços essenciais (como o Firebase para hospedagem e autenticação), que também seguem normas rígidas de segurança.</p>
-
-        <h2>5. Segurança dos Dados</h2>
-        <p>Implementamos medidas técnicas para proteger suas informações contra acessos não autorizados, perda ou alteração. Recomendamos que o usuário mantenha suas senhas de acesso em sigilo.</p>
-
-        <h2>6. Direitos do Usuário</h2>
-        <p>De acordo com a LGPD, você tem o direito de acessar seus dados, solicitar a correção de informações incompletas ou solicitar a exclusão definitiva de seus dados de nossa base a qualquer momento.</p>
-
-        <h2>7. Links para Sites Externos</h2>
-        <p>Nosso site contém links para outros portais, redes sociais e parceiros da aviação. Esta política não se aplica a esses sites; recomendamos a leitura das políticas de cada um deles.</p>
+        <h2>3. COOKIES</h2>
+        <p>Utilizamos cookies para lembrar suas preferências (como o Modo Escuro) e para análise de audiência.</p>
 
         <div class="contact-box">
             <strong>Dúvidas sobre seus dados?</strong><br>
-            Entre em contato através do nosso <a href="contato.html" class="contact-link">formulário de contato oficial</a>.
+            Entre em contato através do nosso <a href="contato.html" class="contact-link">Formulário de Contato</a>.
         </div>
 
         <span class="update-date">Última atualização: 24 de abril de 2026</span>
@@ -101,6 +83,94 @@
 </main>
 
 <div id="footer-container"></div>
+
+<script>
+    /**
+     * FUNÇÃO PARA CARREGAR COMPONENTES EXTERNOS
+     */
+    async function loadComp(id, path) {
+        try {
+            const r = await fetch(path + "?v=" + Date.now());
+            if(r.ok) {
+                const htmlContent = await r.text();
+                document.getElementById(id).innerHTML = htmlContent;
+                
+                // Aplica o tema escuro imediatamente após carregar o header
+                if (localStorage.getItem('dark-mode') === 'active') {
+                    document.body.classList.add('dark-mode');
+                }
+            }
+        } catch (e) { console.error("Erro ao carregar:", path); }
+    }
+
+    /**
+     * SISTEMA DE INTERAÇÃO GLOBAL (DELEGAÇÃO DE EVENTOS)
+     * Resolve o problema dos botões que não funcionam após o fetch.
+     */
+    document.addEventListener('click', function(e) {
+        
+        // 1. BUSCA (LUPA)
+        const btnLupa = e.target.closest('#btn-lupa-header');
+        const searchBox = document.getElementById('search-box-header');
+        const inputBusca = document.getElementById('input-busca-header');
+
+        if (btnLupa) {
+            e.preventDefault();
+            if (!searchBox.classList.contains('active')) {
+                searchBox.classList.add('active');
+                if(inputBusca) setTimeout(() => inputBusca.focus(), 150);
+            } else {
+                const termo = inputBusca.value.trim();
+                if (termo !== "") {
+                    window.location.href = `pesquisa.html?q=${encodeURIComponent(termo)}`;
+                } else {
+                    searchBox.classList.remove('active');
+                }
+            }
+        }
+
+        // 2. ABRIR MENU SIDEBAR
+        const btnMenu = e.target.closest('#open-menu');
+        const sideMenu = document.getElementById('side-menu');
+        if (btnMenu && sideMenu) {
+            sideMenu.style.left = "0";
+        }
+
+        // 3. FECHAR MENU SIDEBAR
+        const btnClose = e.target.closest('#close-menu');
+        if (btnClose && sideMenu) {
+            sideMenu.style.left = "-100%";
+        }
+
+        // 4. ALTERNAR DARK MODE
+        const btnDark = e.target.closest('#dark-toggle-header');
+        if (btnDark) {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('dark-mode', isDark ? 'active' : 'inactive');
+        }
+
+        // FECHAR BUSCA AO CLICAR FORA
+        if (searchBox && searchBox.classList.contains('active') && !searchBox.contains(e.target)) {
+            searchBox.classList.remove('active');
+        }
+    });
+
+    // TRATAMENTO DO ENTER NA BUSCA
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const inputBusca = document.getElementById('input-busca-header');
+            if (document.activeElement === inputBusca && inputBusca.value.trim() !== "") {
+                window.location.href = `pesquisa.html?q=${encodeURIComponent(inputBusca.value.trim())}`;
+            }
+        }
+    });
+
+    // INICIALIZAÇÃO
+    loadComp('header-container', 'cabecalho.html');
+    loadComp('menu-container', 'menu.html');
+    loadComp('footer-container', 'rodape.html');
+</script>
 
 <script src="/loader.js"></script>
 

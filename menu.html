@@ -1,6 +1,8 @@
-<nav class="side-menu" id="side-menu" style="position: fixed; top: 0; left: -100%; width: 280px; height: 100%; background: var(--card); z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto;">
-    <div class="menu-close-area" style="padding: 15px; text-align: right;">
-        <button class="btn-icon" id="close-menu" style="background:none; border:none; font-size:24px; cursor:pointer; color: var(--secondary);"><i class="fas fa-times"></i></button>
+<div id="menu-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none;"></div>
+
+<nav class="side-menu" id="side-menu">
+    <div class="menu-close-area">
+        <button class="btn-icon" id="close-menu"><i class="fas fa-times"></i></button>
     </div>
     
     <ul style="list-style: none; padding: 0;">
@@ -9,90 +11,92 @@
         <li><a href="sobre.html" class="menu-link"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
         
         <hr class="menu-divider">
-        
         <li class="menu-section-title">COMPANHIAS</li>
-        
         <div class="cias-container">
             <a href="companhia.html?c=AZUL" class="cia-card card-azul">
-                <img src="Azul-Airlines-logo-8.png" alt="Azul">
+                <img src="azul-logo.png" alt="Azul">
                 <span>Azul</span>
             </a>
             <a href="companhia.html?c=GOL" class="cia-card card-gol">
-                <img src="GOLL54.SA-7e1c5416.png" alt="GOL">
+                <img src="gol-logo.png" alt="GOL">
                 <span>GOL</span>
             </a>
             <a href="companhia.html?c=LATAM" class="cia-card card-latam">
-                <img src="Latam-logo-19.png" alt="LATAM">
+                <img src="latam-logo.png" alt="LATAM">
                 <span>LATAM</span>
             </a>
         </div>
 
         <hr class="menu-divider">
-
         <li>
-            <a href="javascript:void(0)" id="btn-toggle-cat" style="display:flex; justify-content:space-between; align-items:center;" class="menu-link">
+            <a href="javascript:void(0)" id="btn-toggle-cat" class="menu-link" style="justify-content:space-between;">
                 <span><i class="fas fa-list-ul menu-main-icon"></i> Categorias</span>
                 <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
             </a>
             <div class="submenu" id="lista-cat">
-                <div id="dinamic-cats-menu">
-                    <small style="padding-left: 50px; color: var(--text-muted);">Carregando...</small>
-                </div>
+                <div id="dinamic-cats-menu"><small style="padding-left: 50px; color: var(--text-muted);">Carregando...</small></div>
             </div>
         </li>
 
         <hr class="menu-divider">
-
         <li class="menu-section-title">LEGAL</li>
         <li><a href="termos.html" class="menu-link"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
         <li><a href="privacidade.html" class="menu-link"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
-        <li><a href="contato.html" class="menu-link"><i class="fas fa-envelope menu-main-icon"></i> Contato</a></li>
     </ul>
 </nav>
 
 <style>
-    /* Estilos Gerais do Menu */
-    .menu-link { padding: 12px 20px; text-decoration: none; color: var(--text-main); display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; }
-    .menu-link:hover { background: rgba(0,0,0,0.05); color: var(--secondary); }
+    .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card, #fff); z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto; font-family: sans-serif; }
+    body.menu-active .side-menu { left: 0; }
+    body.menu-active #menu-overlay { display: block; }
     
-    /* Container e Cards das Cias */
-    .cias-container { padding: 10px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .menu-close-area { padding: 15px; text-align: right; }
+    .btn-icon { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-main, #333); }
     
-    .cia-card {
-        display: flex;
-        align-items: center;
-        padding: 12px 15px;
-        border-radius: 12px;
-        text-decoration: none;
-        color: white;
-        font-weight: 700;
-        transition: transform 0.2s;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .menu-link { padding: 12px 20px; text-decoration: none; color: var(--text-main, #333); display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; font-size: 14px; }
+    .menu-link:hover { background: rgba(0,0,0,0.05); color: var(--secondary, #003399); }
+    
+    .cias-container { padding: 5px 20px; display: flex; flex-direction: column; gap: 8px; }
+    
+    .cia-card { 
+        display: flex; 
+        align-items: center; 
+        padding: 8px 12px; 
+        border-radius: 8px; 
+        text-decoration: none; 
+        color: white; 
+        font-weight: 600; 
+        font-size: 13px; 
+        height: 38px; 
+        gap: 12px;
     }
-    
-    .cia-card:hover { transform: scale(1.02); }
-    
+
+    /* CORREÇÃO DO TAMANHO DAS LOGOS */
     .cia-card img {
-        height: 25px;
-        width: 40px;
+        height: 22px;       /* Altura fixa para não estourarem */
+        width: auto;        /* Mantém a proporção da largura */
+        max-width: 60px;    /* Limite para logos compridas */
         object-fit: contain;
-        background: white;
-        padding: 3px;
-        border-radius: 6px;
-        margin-right: 12px;
     }
 
-    /* Cores das Cias */
     .card-azul { background: linear-gradient(135deg, #003399 0%, #00a3e0 100%); }
-    .card-gol { background: linear-gradient(135deg, #FF6600 0%, #4d4d4d 100%); }
+    .card-gol { background: linear-gradient(135deg, #FF6600 0%, #cc5200 100%); }
     .card-latam { background: linear-gradient(135deg, #950054 0%, #1a237e 100%); }
-
-    /* Outros estilos */
+    
     .submenu { max-height: 0; overflow: hidden; transition: 0.4s; background: rgba(0,0,0,0.03); }
-    .submenu.active { max-height: 1000px; } 
+    .submenu.active { max-height: 500px; }
     .menu-arrow { transition: 0.3s; }
     .menu-arrow.rotate { transform: rotate(180deg); }
-    .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.2px; }
-    .menu-main-icon { color: var(--secondary); width: 20px; }
+    .menu-section-title { padding: 12px 20px 4px; font-size: 10px; font-weight: 700; color: var(--secondary, #003399); text-transform: uppercase; }
     .menu-divider { opacity: 0.1; margin: 10px 20px; border: 0; border-top: 1px solid #000; }
 </style>
+
+<script>
+    document.getElementById('close-menu').addEventListener('click', () => document.body.classList.remove('menu-active'));
+    document.getElementById('menu-overlay').addEventListener('click', () => document.body.classList.remove('menu-active'));
+    
+    document.getElementById('btn-toggle-cat').addEventListener('click', function() {
+        document.getElementById('lista-cat').classList.toggle('active');
+        document.getElementById('seta-cat').classList.toggle('rotate');
+    });
+</script>

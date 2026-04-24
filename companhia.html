@@ -6,13 +6,13 @@
     <title>Companhia | BrasilAviation.info</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css"> 
     <style>
         :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575; --radius: 18px; --cor-cia: #1a237e; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.4; transition: 0.3s; }
         body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; }
 
-        /* Estilo do Hero da Companhia */
         .hero-cia {
             padding: 60px 20px;
             text-align: center;
@@ -31,7 +31,6 @@
         .cia-nome { font-size: 1.8rem; font-weight: 800; }
         .cia-sub { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 5px; }
 
-        /* Feed de Notícias (Estilo igual ao Index) */
         main { max-width: 900px; margin: 0 auto; padding-bottom: 60px; }
         .feed-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 0 15px; }
         @media (min-width: 768px) { .feed-container { grid-template-columns: 1fr 1fr; } }
@@ -57,7 +56,7 @@
         <img id="cia-logo" src="" alt="Logo">
     </div>
     <h1 class="cia-nome" id="cia-titulo">Sintonizando...</h1>
-    <p class="cia-sub">Brasil Aviation Info</p>
+    <p class="cia-sub">Ultimas notícias</p></p>
 </section>
 
 <main>
@@ -85,19 +84,18 @@
     const db = getFirestore(app);
 
     const temas = {
-        'GOL': { cor: '#FF6600', logo: 'GOLL54.SA-7E1C5416.PNG', nome: 'GOL Linhas Aéreas' },
-        'Azul': { cor: '#003399', logo: 'Azul-Airlines-logo-8.png', nome: 'Azul Linhas Aéreas' },
-        'LATAM': { cor: '#950054', logo: 'Latam-logo-19.png', nome: 'LATAM Airlines' }
+        'GOL': { cor: '#FF6600', logo: '/gol-logo.png', nome: 'GOL Linhas Aéreas' },
+        'Azul': { cor: '#003399', logo: '/azul-logo.png', nome: 'Azul Linhas Aéreas' },
+        'LATAM': { cor: '#950054', logo: '/latam-logo.png', nome: 'LATAM Airlines' }
     };
 
-    // --- FUNÇÕES DE COMPONENTE IGUAIS AO INDEX ---
     async function loadComp(id, path) {
         try {
-            const r = await fetch(path + "?v=" + Date.now());
+            const r = await fetch('/' + path + "?v=" + Date.now());
             if(r.ok) {
                 const htmlContent = await r.text();
                 document.getElementById(id).innerHTML = htmlContent;
-                ativarInteracoesUI(); // Ativa menu e dark mode
+                ativarInteracoesUI();
             }
         } catch (e) { console.error("Erro ao carregar componente:", path); }
     }
@@ -119,14 +117,12 @@
         if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
     }
 
-    // --- LÓGICA DA PÁGINA DE COMPANHIA ---
     async function carregarCia() {
         const params = new URLSearchParams(window.location.search);
         const urlKey = params.get('c') || params.get('comp') || 'GOL';
         const ciaKey = Object.keys(temas).find(k => k.toLowerCase() === urlKey.toLowerCase()) || 'GOL';
         const config = temas[ciaKey];
 
-        // Atualiza UI da companhia
         document.title = `${config.nome} | Brasil Aviation`;
         document.getElementById('cia-titulo').innerText = config.nome;
         document.getElementById('cia-logo').src = config.logo;
@@ -147,22 +143,27 @@
             snap.forEach(ds => {
                 const n = ds.data();
                 const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR') : "";
+                const slugUrl = n.slug ? `/noticia/${n.slug}` : `/noticia/${ds.id}`;
+                const imgNoticia = n.foto ? n.foto : config.logo;
+
                 feed.innerHTML += `
-                <article class="news-card" onclick="location.href='noticia.html?id=${ds.id}'">
-                    <img src="${n.foto}">
+                <article class="news-card" onclick="location.href='${slugUrl}'">
+                    <img src="${imgNoticia}" alt="Notícia">
                     <div class="news-content">
                         <h4>${n.titulo}</h4>
                         <div class="news-meta">
-                            <span class="author">${n.autor || 'Redação'}</span>
+                            <span class="author">${n.autor}</span>
                             <span>${dataFmt}</span>
                         </div>
                     </div>
                 </article>`;
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error(e);
+            document.getElementById('news-feed').innerHTML = "<p style='text-align:center;'>Erro ao carregar notícias.</p>";
+        }
     }
 
-    // Inicialização
     loadComp('header-container', 'cabecalho.html');
     loadComp('footer-container', 'rodape.html');
     loadComp('menu-container', 'menu.html');

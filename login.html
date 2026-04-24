@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Administrativo | BrasilAviation</title>
-    <link rel="stylesheet" href="style.css">
     <style>
         .login-box { max-width: 350px; margin: 100px auto; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
         .login-box img { width: 150px; margin-bottom: 20px; }
@@ -25,7 +24,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -45,11 +44,11 @@
         const erroMsg = document.getElementById('erro');
 
         try {
+            await setPersistence(auth, browserLocalPersistence);
             await signInWithEmailAndPassword(auth, email, senha);
             window.location.href = "admin.html";
         } catch (error) {
             erroMsg.style.display = 'block';
-            console.error("Erro ao logar:", error.message);
         }
     };
 </script>

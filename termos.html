@@ -7,28 +7,148 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f4f9; --text: #333; --card: #ffffff; }
-        body.dark-mode { --bg: #121212; --text: #eee; --primary: #fff; --card: #1e1e1e; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; min-height: 100vh; }
-        .container { max-width: 850px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
-        .legal-card { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: var(--primary); border-left: 5px solid var(--secondary); padding-left: 15px; margin-bottom: 30px; font-size: 28px; text-transform: uppercase; }
-        h2 { color: var(--secondary); margin-top: 35px; font-size: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 10px; }
-        .update-date { font-size: 13px; color: var(--secondary); font-weight: bold; margin-top: 50px; text-align: center; border-top: 1px dashed #ccc; padding-top: 20px; }
+        :root { 
+            --primary: #1a237e; 
+            --secondary: #2e7d32; 
+            --bg: #f4f4f9; 
+            --text: #333; 
+            --card: #ffffff; 
+        }
+        body.dark-mode { 
+            --bg: #121212; 
+            --text: #eee; 
+            --primary: #fff; 
+            --card: #1e1e1e; 
+        }
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            transition: 0.3s; 
+            min-height: 100vh; 
+        }
+        .container { 
+            max-width: 850px; 
+            margin: 40px auto; 
+            padding: 0 20px; 
+            line-height: 1.8; 
+        }
+        .legal-card { 
+            background: var(--card); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        h1 { 
+            color: var(--primary); 
+            border-left: 5px solid var(--secondary); 
+            padding-left: 15px; 
+            margin-bottom: 30px; 
+            font-size: 28px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+        h2 { 
+            color: var(--secondary); 
+            margin-top: 35px; 
+            font-size: 20px; 
+            border-bottom: 1px solid rgba(0,0,0,0.1); 
+            padding-bottom: 10px; 
+            display: flex;
+            align-items: center;
+        }
+        h2::before {
+            content: "\f05a";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        p { margin-bottom: 15px; }
+        ul { margin-bottom: 20px; padding-left: 20px; }
+        ul li { margin-bottom: 8px; }
+        strong { color: var(--primary); }
+        .update-date { 
+            font-size: 13px; 
+            color: var(--secondary); 
+            font-weight: bold; 
+            margin-top: 50px; 
+            text-align: center; 
+            border-top: 1px dashed #ccc; 
+            padding-top: 20px; 
+        }
+        hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 30px 0; }
     </style>
 </head>
 <body>
+
 <div id="header-container"></div>
+
 <main class="container">
     <article class="legal-card">
         <h1>Termos e Condições de Uso</h1>
-        <p>Ao acessar e utilizar o portal <strong>BrasilAviation.info</strong>, o usuário concorda em cumprir os presentes Termos...</p>
-        <h2>1. Aceitação dos Termos</h2>
-        <p>Caso você não concorde, interrompa o uso do site imediatamente.</p>
-        <div class="update-date">Última atualização: 24 de abril de 2026</div>
+        
+        <p>Ao acessar e utilizar o portal <strong>BrasilAviation.info</strong>, o usuário concorda em cumprir e estar vinculado aos presentes Termos e Condições de Uso. Este documento rege a relação entre o portal e seus visitantes. Caso você não concorde com qualquer cláusula aqui descrita, orientamos que interrompa o uso do site imediatamente.</p>
+
+        <h2>1. ACEITAÇÃO DOS TERMOS</h2>
+        <p>Este documento constitui o acordo integral entre o usuário e o BrasilAviation.info. O acesso contínuo às nossas páginas implica na aceitação automática de todas as diretrizes aqui estabelecidas.</p>
+
+        <h2>2. NATUREZA E PRECISÃO DO CONTEÚDO</h2>
+        <p>O BrasilAviation.info é um veículo de comunicação especializado no setor aeronáutico.</p>
+        <ul>
+            <li>O conteúdo publicado (notícias, análises, dados de frotas e matrículas) tem caráter meramente informativo.</li>
+            <li>Embora trabalhemos para garantir a precisão dos dados técnicos, não nos responsabilizamos por alterações súbitas em operações de malhas aéreas, mudanças de livery (pintura) ou atualizações de registros feitas por órgãos reguladores ou companhias aéreas.</li>
+        </ul>
+
+        <h2>3. PROPRIEDADE INTELECTUAL E DIREITOS AUTORAIS</h2>
+        <p>O respeito aos direitos autorais é um valor fundamental da nossa comunidade:</p>
+        <ul>
+            <li><strong>Fotografias (Spotting):</strong> Todas as imagens publicadas no site que ostentam a marca d'água do BrasilAviation.info ou créditos de nossos fotógrafos são protegidas pela Lei de Direitos Autorais. É terminantemente proibida a reprodução, cópia, edição ou uso comercial sem autorização expressa.</li>
+            <li><strong>Textos:</strong> A reprodução parcial de notícias é permitida, desde que acompanhada de crédito obrigatório com link ativo para a página original do BrasilAviation.info. A reprodução integral sem autorização é considerada plágio.</li>
+        </ul>
+
+        <h2>4. CONDUTA DO USUÁRIO</h2>
+        <p>Ao interagir nas áreas de comentários ou fóruns, o usuário compromete-se a:</p>
+        <ul>
+            <li>Manter um tom respeitoso com outros entusiastas, profissionais da aviação e membros da equipe.</li>
+            <li>Não publicar conteúdo que contenha discurso de ódio, difamação ou ataques pessoais.</li>
+            <li>Não utilizar o espaço para spam, venda de produtos não autorizados ou disseminação de arquivos maliciosos.</li>
+        </ul>
+
+        <h2>5. LINKS DE TERCEIROS E PARCEIROS</h2>
+        <p>O site pode conter links para serviços de rastreamento de voos, sites de fabricantes ou companhias aéreas. O BrasilAviation.info não possui controle sobre o conteúdo ou práticas de privacidade desses sites externos, não sendo responsável por quaisquer danos ou perdas causados por eles.</p>
+
+        <h2>6. CADASTRO E PRIVACIDADE (LGPD)</h2>
+        <p>Para serviços de newsletter ou áreas de membros:</p>
+        <ul>
+            <li>Os dados fornecidos (como nome e e-mail) serão tratados conforme a Lei Geral de Proteção de Dados (LGPD).</li>
+            <li>Não vendemos ou compartilhamos suas informações pessoais com terceiros para fins de marketing.</li>
+            <li>O usuário é responsável por manter a confidencialidade de sua senha de acesso.</li>
+        </ul>
+
+        <h2>7. LIMITAÇÃO DE RESPONSABILIDADE</h2>
+        <p>O BrasilAviation.info não se responsabiliza por:</p>
+        <ul>
+            <li>Decisões logísticas ou financeiras tomadas pelos usuários com base em nossas notícias.</li>
+            <li>Indisponibilidade técnica temporária do site por falhas de servidor ou manutenção.</li>
+            <li>Comentários de terceiros, que representam exclusivamente a opinião de seus autores.</li>
+        </ul>
+
+        <h2>8. ALTERAÇÕES NOS TERMOS</h2>
+        <p>Reservamo-nos o direito de modificar estes termos a qualquer momento para refletir mudanças na legislação ou nas funcionalidades do site. A continuidade do uso do site após tais alterações constitui aceitação dos novos termos.</p>
+
+        <h2>9. FORO E LEGISLAÇÃO</h2>
+        <p>Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de residência do administrador do site para dirimir eventuais controvérsias.</p>
+
+        <div class="update-date">
+            <i class="fa-regular fa-calendar-check"></i> Última atualização: 24 de abril de 2026
+        </div>
     </article>
 </main>
+
 <div id="footer-container"></div>
+
 <script src="/loader.js"></script>
 </body>
 </html>

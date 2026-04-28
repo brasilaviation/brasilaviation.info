@@ -7,7 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     
     <style>
         main { max-width: 700px; margin: 40px auto; padding: 0 20px; min-height: 80vh; }
@@ -22,6 +22,7 @@
 
         .contact-header { text-align: center; margin-bottom: 30px; }
         .contact-header h1 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
+        body.dark-mode .contact-header h1 { color: #fff; }
         .contact-header p { color: var(--text-muted); font-size: 0.95rem; }
 
         .form-group { margin-bottom: 20px; }
@@ -39,8 +40,6 @@
             transition: 0.3s;
         }
         .form-control:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1); }
-
-        select.form-control { cursor: pointer; }
 
         .file-input-wrapper {
             position: relative;
@@ -93,7 +92,7 @@
         <form action="https://formspree.io/f/meevpvqq" method="POST" enctype="multipart/form-data">
             
             <div class="form-group">
-                <label>Nome Completo</label>
+                <label>Nome e sobrenome</label>
                 <input type="text" name="nome" class="form-control" placeholder="Seu nome" required>
             </div>
 
@@ -128,10 +127,10 @@
             <div class="form-group">
                 <label>Anexar Imagem ou Documento (Máx. 10MB)</label>
                 <div class="file-input-wrapper">
-                    <input type="file" name="upload" accept="image/*,.pdf,.doc,.docx">
+                    <input type="file" id="file-upload" name="upload" accept="image/*,.pdf,.doc,.docx">
                     <div class="file-label">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <span>Clique para selecionar ou arraste o arquivo aqui</span>
+                        <span id="file-name-display">Clique para selecionar ou arraste o arquivo aqui</span>
                         <br><small>(Opcional)</small>
                     </div>
                 </div>
@@ -140,7 +139,7 @@
             <input type="text" name="_gotcha" style="display:none">
 
             <button type="submit" class="btn-send">
-                <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                <i class="fas fa-paper-plane"></i> Enviar
             </button>
 
         </form>
@@ -149,16 +148,21 @@
 
 <div id="footer-container"></div>
 
-<script type="module" src="loader.js"></script>
+<script type="module" src="/loader.js"></script>
 
 <script>
-    // Pequeno script para mostrar o nome do arquivo selecionado
-    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
-        const fileName = e.target.files[0].name;
-        const label = e.target.nextElementSibling.querySelector('span');
-        label.innerText = "Arquivo selecionado: " + fileName;
-        label.style.color = "var(--secondary)";
-    });
+    // Script local apenas para a estética do input de arquivo
+    const fileInput = document.getElementById('file-upload');
+    const display = document.getElementById('file-name-display');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                display.innerText = "Arquivo: " + e.target.files[0].name;
+                display.style.color = "var(--secondary)";
+            }
+        });
+    }
 </script>
 
 </body>

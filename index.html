@@ -11,10 +11,10 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrasilAviation.info | Home</title>
+    <title>BrasilAviation.info | Pagina inicial</title>
     
     <meta property="og:title" content="BrasilAviation.info | Notícias da Aviação">
-    <meta property="og:description" content="Acompanhe as últimas notícias, frotas e entregas da aviação brasileira.">
+    <meta property="og:description" content="Acompanhe notícias da aviação brasileira. Saiba de tudo que acontece nas companhias, aeroportos e frota.">
     <meta property="og:type" content="website">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,13 +83,13 @@
 
 <div id="header-container">
     <a href="/index.html">
-        <img src="/logobrasilaviation.info.png" alt="Brasil Aviation" class="logo-site">
+        <img src="/logobrasilaviation.info.png" alt="BrasilAviation.info" class="logo-site">
     </a>
 </div>
 <div id="menu-container"></div>
 
 <main>
-    <section class="section-title">Mais Lidas</section>
+    <section class="section-title">Destaques</section>
     <div class="carousel-wrapper">
         <div class="carousel-container">
             <button class="nav-btn" id="prev-btn"><i class="fas fa-chevron-left"></i></button>
@@ -166,15 +166,19 @@
         const sideMenu = document.getElementById('side-menu');
         const btnClose = document.getElementById('close-menu');
         const btnDark = document.getElementById('dark-toggle-header');
+        
         if (btnMenu && sideMenu) btnMenu.onclick = () => sideMenu.style.left = "0";
         if (btnClose && sideMenu) btnClose.onclick = () => sideMenu.style.left = "-100%";
+        
         if (btnDark) {
             btnDark.onclick = () => {
                 document.body.classList.toggle('dark-mode');
-                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
+                // Alterado para 'theme' para unificar com o resto do site
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
             };
         }
-        if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
+        // Verifica o tema salvo
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     }
 
     loadComp('header-container', 'cabecalho.html');

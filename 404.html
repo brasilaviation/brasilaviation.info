@@ -87,9 +87,16 @@
 </head>
 <body>
 
+<script>
+    // Mantém o Dark Mode consistente
+    if (localStorage.getItem('theme') === 'dark' || localStorage.getItem('dark-mode') === 'active') {
+        document.body.classList.add('dark-mode');
+    }
+</script>
+
 <div class="error-container">
     <a href="/index.html">
-        <img src="/logobrasilaviation.info.png" alt="Brasil Aviation" class="logo-site">
+        <img src="/logobrasilaviation.info.png" alt="BrasilAviation.info" class="logo-site">
     </a>
 
     <div class="error-icon">
@@ -104,13 +111,6 @@
         <i class="fas fa-home"></i> Voltar para a Base
     </a>
 </div>
-
-<script>
-    // Mantém o Dark Mode consistente com o resto do site
-    if (localStorage.getItem('dark-mode') === 'active') {
-        document.body.classList.add('dark-mode');
-    }
-</script>
 
 </body>
 </html>

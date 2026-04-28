@@ -3,68 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Brasil Aviation | Mobile</title>
+    <title>Painel de controle | BrasilAviation.info</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root { --primary: #1a237e; --secondary: #2e7d32; --danger: #d32f2f; --bg: #f4f2f5; --accent: #673ab7; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        
         body { display: none; background: var(--bg); padding-bottom: 80px; }
-        
         header { background: var(--primary); color: white; padding: 15px; text-align: center; font-weight: 800; border-bottom: 4px solid var(--secondary); position: relative; }
         .btn-sair { position: absolute; right: 10px; top: 12px; background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; }
-
-        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; overflow-x: auto; }
+        .nav-tabs { display: flex; background: white; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
         .tab-link { padding: 15px; border: none; background: none; font-weight: 600; color: #666; cursor: pointer; flex: 1; font-size: 0.75rem; white-space: nowrap; }
         .tab-link.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-
         .content { padding: 15px; max-width: 800px; margin: 0 auto; }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
         .stat-card h3 { font-size: 0.8rem; color: #666; margin-bottom: 5px; }
         .stat-card p { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
-
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        label { display: block; font-weight: 700; margin: 15px 0 5px; font-size: 0.9rem; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background: #fff; }
-        
-        .btn-send { background: var(--secondary); color: white; border: none; width: 100%; padding: 18px; border-radius: 10px; font-weight: 800; font-size: 1rem; margin-top: 20px; cursor: pointer; }
-        
+        .card h3 { font-size: 1rem; margin-bottom: 15px; border-left: 4px solid var(--secondary); padding-left: 10px; }
+        .top-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .top-item:last-child { border-bottom: none; }
+        .top-info { flex: 1; padding-right: 10px; }
+        .top-info b { font-size: 0.85rem; display: block; color: #333; line-height: 1.2; }
+        .top-clicks { background: #e8f5e9; color: var(--secondary); padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 0.75rem; }
         .news-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .news-info b { font-size: 0.9rem; display: block; margin-bottom: 3px; }
         .news-info small { color: #888; font-size: 0.75rem; }
-
-        .btn-circle { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; cursor: pointer; }
+        .btn-circle { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-edit { background: var(--primary); }
         .btn-del { background: var(--danger); }
-
+        .btn-send { background: var(--secondary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; }
         #loading { position: fixed; inset: 0; background: rgba(0,0,0,0.8); color: white; display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
     </style>
 </head>
 <body>
 
-<div id="loading"><i class="fas fa-plane fa-spin fa-3x"></i><br><br>Processando...</div>
+<div id="loading"><i class="fas fa-plane fa-spin fa-3x"></i><br><br>Achando portão de embarque</div>
 
 <header>
-    BRASIL AVIATION ADMIN
-    <button class="btn-sair" onclick="logout()">SAIR</button>
+    Painel de Controle
+    <button class="btn-sair" onclick="logout()">Sair</button>
 </header>
 
 <div class="nav-tabs">
-    <button class="tab-link active" onclick="openTab(event, 'dash')">DASHBOARD</button>
-    <button class="tab-link" onclick="openTab(event, 'posts')">NOTÍCIAS</button>
-    <button class="tab-link" onclick="openTab(event, 'criar')">ESCREVER</button>
-    <button class="tab-link" onclick="openTab(event, 'categorias')">TAGS</button>
+    <button class="tab-link active" onclick="openTab(event, 'dash')">Estatísticas</button>
+    <button class="tab-link" onclick="openTab(event, 'posts')">Posts</button>
+    <button class="tab-link" onclick="window.location.href='editor.html'">Escrever</button>
 </div>
 
 <div class="content">
-    
     <div id="dash" class="tab-pane active">
         <div class="stats-grid">
             <div class="stat-card">
@@ -72,88 +63,50 @@
                 <p id="stat-total-cliques">0</p>
             </div>
             <div class="stat-card">
-                <h3>Matérias Online</h3>
+                <h3>Posts</h3>
                 <p id="stat-total-posts">0</p>
             </div>
         </div>
-
         <div class="card">
-            <h3>Visualizações por Matéria</h3>
-            <canvas id="chartCliques" style="width: 100%; height: 250px; margin-top: 20px;"></canvas>
-        </div>
-
-        <div class="card">
-            <h3>Top Matéria (Mais lida)</h3>
-            <p id="top-post-titulo" style="font-weight: 600; color: var(--secondary); margin-top: 10px;">Carregando...</p>
-            <small id="top-post-cliques"></small>
+            <h3>As 5 Mais Vistas</h3>
+            <div id="lista-top-vistas">Carregando ranking...</div>
         </div>
     </div>
 
     <div id="posts" class="tab-pane">
-        <div id="lista-posts">Carregando notícias...</div>
-    </div>
-
-    <div id="criar" class="tab-pane">
         <div class="card">
-            <h2 id="form-title">Nova Publicação</h2>
-            <input type="hidden" id="post-id">
+            <h3>Buscar Notícias</h3>
+            <input type="text" id="search-input" placeholder="Digite o título para pesquisar..." 
+                   style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px;"
+                   onkeyup="filterPosts()">
             
-            <label>Manchete</label>
-            <input type="text" id="post-titulo" placeholder="O que está acontecendo?">
+            <div id="lista-posts">Carregando hangar...</div>
 
-            <label>Slug (URL)</label>
-            <div style="display: flex; gap: 5px;">
-                <input type="text" id="post-slug" placeholder="url-da-materia">
-                <button onclick="gerarSlug()" style="padding: 0 15px; border-radius: 8px; border: none; background: var(--accent); color: white;">⚡</button>
+            <div id="pagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+                <button onclick="changePage(-1)" class="btn-circle btn-edit" style="width: auto; padding: 0 15px; border-radius: 8px;">Anterior</button>
+                <span id="page-info" style="font-weight: 800; color: var(--primary);">Página 1</span>
+                <button onclick="changePage(1)" class="btn-circle btn-edit" style="width: auto; padding: 0 15px; border-radius: 8px;">Próxima</button>
             </div>
-
-            <label>Autor</label>
-            <select id="post-autor">
-                <option value="Miguel Barbosa">Miguel Barbosa</option>
-                <option value="Johnny Galvão">Johnny Galvão</option>
-                <option value="Henrique Saito">Henrique Saito</option>
-                <option value="Murilo Marinho">Murilo Marinho</option>
-            </select>
-
-            <label>Categoria</label>
-            <select id="post-cat-select"></select>
-
-            <label>Capa da Matéria</label>
-            <input type="file" id="post-foto-file" accept="image/*">
-            <input type="text" id="post-capa-desc" placeholder="Créditos da imagem">
-
-            <label>Texto da Matéria</label>
-            <div style="background: #eee; padding: 5px; border-radius: 8px 8px 0 0; display: flex; gap: 5px;">
-                <button onclick="formatar('b')" style="padding: 5px 10px;"><b>B</b></button>
-                <button onclick="addImgInterna()" style="padding: 5px 10px;"><i class="fas fa-image"></i> +Foto</button>
-            </div>
-            <textarea id="post-texto" style="height: 300px; border-radius: 0 0 8px 8px;"></textarea>
-
-            <label>Embed (Instagram/Twitter)</label>
-            <input type="text" id="post-embed" placeholder="Coloque o iframe ou link aqui">
-
-            <button class="btn-send" id="btn-salvar" onclick="salvarPost()">PUBLICAR AGORA 🚀</button>
         </div>
     </div>
 
     <div id="categorias" class="tab-pane">
         <div class="card">
-            <h3>Gerenciar Tags</h3>
+            <h3>Gerenciar Categorias</h3>
             <div style="display: flex; gap: 10px; margin: 15px 0;">
-                <input type="text" id="new-cat-name" placeholder="Nome da tag">
-                <button onclick="addCat()" class="btn-send" style="margin:0; width:auto; padding:0 20px;">+</button>
+                <input type="text" id="new-cat-name" placeholder="Nome da tag" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+                <button onclick="addCat()" class="btn-send" style="width:auto; padding:0 20px;">+</button>
             </div>
             <div id="lista-categorias-ui"></div>
         </div>
     </div>
-
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-<script>
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
         authDomain: "braviation3.firebaseapp.com",
@@ -162,243 +115,147 @@
         messagingSenderId: "979009087877",
         appId: "1:979009087877:web:490bdc36da545d56b87cec"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-    const IMGBB_API = "2ee4c2239a809ffb30ec9c04689ee3ee";
 
-    let chartInstance = null;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-    auth.onAuthStateChanged((user) => {
+    // Variáveis globais para controle de dados
+    let allPosts = [];
+    let filteredPosts = [];
+    let currentPage = 1;
+    const postsPerPage = 30;
+
+    onAuthStateChanged(auth, (user) => {
         if (user) {
             document.body.style.display = "block";
-            loadCats();
             loadStats();
+            loadCats();
         } else {
             window.location.href = "login.html";
         }
     });
 
-    function logout() { auth.signOut().then(() => { window.location.href = "login.html"; }); }
+    window.logout = function() { signOut(auth).then(() => { window.location.href = "login.html"; }); }
 
-    function openTab(evt, name) {
+    window.openTab = function(evt, name) {
         document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
         document.getElementById(name).classList.add('active');
         if(evt) evt.currentTarget.classList.add('active');
-        
         if(name === 'posts') loadPosts();
         if(name === 'dash') loadStats();
-        if(name === 'criar' && !document.getElementById('post-id').value) {
-            document.getElementById('form-title').innerText = "Nova Publicação";
-            document.getElementById('btn-salvar').innerText = "PUBLICAR AGORA 🚀";
-        }
     }
 
     async function loadStats() {
-        const snap = await db.collection("noticias").orderBy("cliques", "desc").get();
-        let totalCliques = 0;
-        let totalPosts = snap.size;
-        let labels = [];
-        let valores = [];
-        let topPost = { titulo: "Nenhuma matéria", cliques: 0 };
-
-        snap.forEach((doc, index) => {
-            const n = doc.data();
-            const cliques = n.cliques || 0;
-            totalCliques += cliques;
-
-            if(index < 5) {
-                labels.push(n.titulo.substring(0, 15) + "...");
-                valores.push(cliques);
-            }
-
-            if(index === 0 && cliques > 0) {
-                topPost = { titulo: n.titulo, cliques: cliques };
-            }
-        });
-
-        document.getElementById('stat-total-cliques').innerText = totalCliques.toLocaleString();
-        document.getElementById('stat-total-posts').innerText = totalPosts;
-        document.getElementById('top-post-titulo').innerText = topPost.titulo;
-        document.getElementById('top-post-cliques').innerText = topPost.cliques + " visualizações";
-
-        renderChart(labels, valores);
+        try {
+            const q = query(collection(db, "noticias"), orderBy("cliques", "desc"));
+            const snap = await getDocs(q);
+            let totalCliques = 0;
+            let totalPosts = snap.size;
+            let topHtml = "";
+            snap.docs.forEach((doc, index) => {
+                const n = doc.data();
+                const cliques = n.cliques || 0;
+                totalCliques += cliques;
+                if(index < 5) {
+                    topHtml += `<div class="top-item"><div class="top-info"><b>${n.titulo}</b></div><div class="top-clicks">${cliques} views</div></div>`;
+                }
+            });
+            document.getElementById('stat-total-cliques').innerText = totalCliques.toLocaleString();
+            document.getElementById('stat-total-posts').innerText = totalPosts;
+            document.getElementById('lista-top-vistas').innerHTML = topHtml || "Nenhuma visualização ainda.";
+        } catch(e) { console.error(e); }
     }
 
-    function renderChart(labels, dados) {
-        const canvas = document.getElementById('chartCliques');
-        if(!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if(chartInstance) chartInstance.destroy();
-        
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Visualizações',
-                    data: dados,
-                    backgroundColor: '#1a237e',
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
-            }
-        });
-    }
-
-    function gerarSlug() {
-        const titulo = document.getElementById('post-titulo').value;
-        const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 -]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
-        document.getElementById('post-slug').value = slug;
-    }
-
-    async function salvarPost() {
-        const titulo = document.getElementById('post-titulo').value;
-        const slug = document.getElementById('post-slug').value;
-        if(!titulo || !slug) return alert("Preencha título e slug!");
-
-        document.getElementById('loading').style.display = 'flex';
-        const id = document.getElementById('post-id').value;
-        const file = document.getElementById('post-foto-file').files[0];
-        let fotoCapa = "";
-
-        if(file) {
-            const formData = new FormData();
-            formData.append("image", file);
-            try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API}`, { method: "POST", body: formData });
-                const json = await res.json();
-                fotoCapa = json.data.url;
-            } catch(e) { alert("Erro ao subir imagem principal."); }
-        }
-
-        const dados = {
-            titulo: titulo,
-            slug: slug,
-            autor: document.getElementById('post-autor').value,
-            cat: document.getElementById('post-cat-select').value,
-            texto: document.getElementById('post-texto').value.replace(/\n/g, '<br>'),
-            legenda: document.getElementById('post-capa-desc').value, // Sincronizado com noticia.html
-            embed: document.getElementById('post-embed').value,
-            data: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        if(fotoCapa) dados.foto = fotoCapa;
+    async function loadPosts() {
+        const div = document.getElementById('lista-posts');
+        div.innerHTML = "Carregando todas as notícias...";
         
         try {
-            if(id) {
-                await db.collection("noticias").doc(id).update(dados);
-                alert("Matéria atualizada!");
-            } else {
-                dados.cliques = 0;
-                await db.collection("noticias").add(dados);
-                alert("Matéria publicada!");
-            }
-            location.reload();
+            // Removido o limite para carregar todas e permitir pesquisa
+            const q = query(collection(db, "noticias"), orderBy("data", "desc"));
+            const snap = await getDocs(q);
+            
+            allPosts = [];
+            snap.forEach(ds => {
+                allPosts.push({ id: ds.id, ...ds.data() });
+            });
+
+            filteredPosts = [...allPosts];
+            renderPosts();
         } catch(e) {
-            alert("Erro ao salvar no banco.");
-            document.getElementById('loading').style.display = 'none';
+            console.error(e);
+            div.innerHTML = "Erro ao carregar hangar.";
         }
     }
 
-    function loadPosts() {
-        db.collection("noticias").orderBy("data", "desc").get().then(snap => {
-            const div = document.getElementById('lista-posts');
-            div.innerHTML = "";
-            snap.forEach(doc => {
-                const n = doc.data();
-                div.innerHTML += `
-                    <div class="news-item">
-                        <div class="news-info">
-                            <b>${n.titulo}</b>
-                            <small>${n.cat} | 📈 ${n.cliques || 0} views</small>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn-circle btn-edit" onclick="editar('${doc.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn-circle btn-del" onclick="deletarPost('${doc.id}')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
-            });
+    window.renderPosts = function() {
+        const div = document.getElementById('lista-posts');
+        div.innerHTML = "";
+        
+        const start = (currentPage - 1) * postsPerPage;
+        const end = start + postsPerPage;
+        const paginatedItems = filteredPosts.slice(start, end);
+
+        if(paginatedItems.length === 0) {
+            div.innerHTML = "<p style='text-align:center; padding:20px;'>Nenhuma notícia encontrada.</p>";
+        }
+
+        paginatedItems.forEach(n => {
+            div.innerHTML += `<div class="news-item"><div class="news-info"><b>${n.titulo}</b><small>${n.cat} | 📈 ${n.cliques || 0} views</small></div>
+            <div style="display:flex; gap:5px;"><button class="btn-circle btn-edit" onclick="window.location.href='editor.html?id=${n.id}'"><i class="fas fa-edit"></i></button>
+            <button class="btn-circle btn-del" onclick="deletarPost('${n.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+        });
+
+        updatePaginationUI();
+    }
+
+    window.filterPosts = function() {
+        const term = document.getElementById('search-input').value.toLowerCase();
+        filteredPosts = allPosts.filter(p => p.titulo.toLowerCase().includes(term));
+        currentPage = 1;
+        renderPosts();
+    }
+
+    window.changePage = function(step) {
+        const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+        const nextStep = currentPage + step;
+        if(nextStep >= 1 && nextStep <= totalPages) {
+            currentPage = nextStep;
+            renderPosts();
+            window.scrollTo(0, 0);
+        }
+    }
+
+    function updatePaginationUI() {
+        const totalPages = Math.ceil(filteredPosts.length / postsPerPage) || 1;
+        document.getElementById('page-info').innerText = `Página ${currentPage} de ${totalPages}`;
+    }
+
+    window.deletarPost = async function(id) {
+        if(confirm("Excluir definitivamente?")) { 
+            await deleteDoc(doc(db, "noticias", id)); 
+            loadPosts(); 
+        }
+    }
+
+    async function loadCats() {
+        const snap = await getDocs(collection(db, "categorias"));
+        const ui = document.getElementById('lista-categorias-ui');
+        ui.innerHTML = "";
+        snap.forEach(ds => {
+            const c = ds.data().nome;
+            ui.innerHTML += `<div class="news-item">${c} <button onclick="delCat('${ds.id}')" style="color:red; border:none; background:none; cursor:pointer;">X</button></div>`;
         });
     }
 
-    function editar(id) {
-        db.collection("noticias").doc(id).get().then(doc => {
-            const n = doc.data();
-            document.getElementById('post-id').value = id;
-            document.getElementById('post-titulo').value = n.titulo;
-            document.getElementById('post-slug').value = n.slug || "";
-            document.getElementById('post-texto').value = n.texto ? n.texto.replace(/<br>/g, '\n') : "";
-            document.getElementById('post-capa-desc').value = n.legenda || n.capaDesc || "";
-            document.getElementById('post-embed').value = n.embed || "";
-            document.getElementById('post-cat-select').value = n.cat;
-            document.getElementById('post-autor').value = n.autor;
-            
-            document.getElementById('form-title').innerText = "Editando Matéria";
-            document.getElementById('btn-salvar').innerText = "SALVAR ALTERAÇÕES 💾";
-            openTab(null, 'criar');
-        });
-    }
-
-    function deletarPost(id) {
-        if(confirm("Apagar permanentemente?")) db.collection("noticias").doc(id).delete().then(() => loadPosts());
-    }
-
-    function loadCats() {
-        db.collection("categorias").get().then(snap => {
-            const sel = document.getElementById('post-cat-select');
-            const ui = document.getElementById('lista-categorias-ui');
-            sel.innerHTML = ""; ui.innerHTML = "";
-            snap.forEach(doc => {
-                const c = doc.data().nome;
-                sel.innerHTML += `<option value="${c}">${c}</option>`;
-                ui.innerHTML += `<div class="news-item">${c} <button onclick="delCat('${doc.id}')" style="color:red; border:none; background:none;">X</button></div>`;
-            });
-        });
-    }
-
-    function addCat() {
+    window.addCat = async function() {
         const n = document.getElementById('new-cat-name').value;
-        if(n) db.collection("categorias").add({nome: n}).then(() => { 
-            document.getElementById('new-cat-name').value = "";
-            loadCats(); 
-        });
+        if(n) { await addDoc(collection(db, "categorias"), {nome: n}); document.getElementById('new-cat-name').value = ""; loadCats(); }
     }
 
-    function delCat(id) { db.collection("categorias").doc(id).delete().then(() => loadCats()); }
-
-    function formatar(tipo) {
-        const txt = document.getElementById('post-texto');
-        const start = txt.selectionStart;
-        const end = txt.selectionEnd;
-        const sel = txt.value.substring(start, end);
-        if(tipo === 'b') txt.setRangeText(`<b>${sel}</b>`, start, end, 'select');
-        txt.focus();
-    }
-
-    async function addImgInterna() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.click();
-        input.onchange = async () => {
-            document.getElementById('loading').style.display = 'flex';
-            const formData = new FormData();
-            formData.append("image", input.files[0]);
-            try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API}`, { method: "POST", body: formData });
-                const json = await res.json();
-                const tag = `\n<img src="${json.data.url}" style="width:100%; border-radius:10px; margin:10px 0;"><br>\n`;
-                const txt = document.getElementById('post-texto');
-                txt.setRangeText(tag, txt.selectionStart, txt.selectionEnd, 'end');
-            } catch (e) { alert("Erro ao subir imagem."); }
-            document.getElementById('loading').style.display = 'none';
-        };
-    }
+    window.delCat = async function(id) { await deleteDoc(doc(db, "categorias", id)); loadCats(); }
 </script>
 </body>
 </html>

@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Frota | BrasilAviation.info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%); 
+            margin: 0; 
+            padding: 10px;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .admin-container { max-width: 1000px; margin: 20px auto; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { 
+            position: relative;
+            padding: 12px 24px; border-radius: 10px; border: none; background: #cbd5e1; 
+            font-weight: 700; cursor: pointer; color: var(--text-main); transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        .badge-notif {
+            position: absolute; top: -5px; right: -5px; background: var(--danger);
+            color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 50%;
+            border: 2px solid white;
+        }
+        .correction-card {
+            background: white; border: 1px solid #e2e8f0; padding: 15px;
+            border-radius: 12px; margin-bottom: 10px; display: flex;
+            justify-content: space-between; align-items: center; transition: 0.2s;
+        }
+        .correction-card:hover { border-color: var(--primary); }
+        .status-pill { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+        .status-pendente { background: #fef3c7; color: #92400e; }
+        .status-concluido { background: #dcfce7; color: #166534; }
+        .modal-cor {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;
+        }
+        .modal-cor-content { background: white; padding: 30px; border-radius: 16px; max-width: 500px; width: 90%; }
+
+        .card { 
+            background: var(--card); 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
+        h2 { margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 12px; }
+
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 16px; 
+        }
+        .full { grid-column: 1 / -1; }
+
+        .search-box { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 24px; 
+            background: var(--primary); 
+            padding: 20px; 
+            border-radius: 16px;
+        }
+        
+        .search-box input { 
+            flex: 1; border: none; border-radius: 10px; padding: 14px; font-weight: 600;
+        }
+
+        label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); text-transform: uppercase; }
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; 
+            box-sizing: border-box; background: #fcfcfc; font-size: 0.95rem;
+        }
+
+        button { 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 20px; border: none; border-radius: 10px; 
+            font-weight: 700; cursor: pointer; transition: 0.2s; 
+        }
+        .btn-save { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
+        .btn-search { background: white; color: var(--primary); }
+        .btn-logout { background: var(--danger); color: white; padding: 8px 16px; font-size: 0.8rem; }
+        .btn-delete { background: #fee2e2; color: var(--danger); border: 1px solid var(--danger); width: 100%; margin-top: 10px; }
+
+        .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .list-table th, .list-table td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+        .list-table tr:hover { background: #f1f5f9; cursor: pointer; }
+        .badge-id { background: #e2e8f0; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; }
+
+        #login-area { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+        .hidden { display: none !important; }
+        .status-msg { margin-top: 15px; font-size: 0.9rem; text-align: center; font-weight: 600; padding: 10px; border-radius: 8px; transition: 0.3s; }
+
+        .historico-section {
+            background: #fff1f2; padding: 15px; border-radius: 12px;
+            border-left: 5px solid var(--danger); margin-top: 15px;
+        }
+        
+        .config-box {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            background: #f1f5f9; padding: 15px; border-radius: 10px;
+        }
+
+        .checkbox-label {
+            display: flex; flex-direction: row; align-items: center; gap: 5px; 
+            text-transform: none; font-size: 0.8rem; font-weight: 500; cursor: pointer;
+            margin-top: 5px;
+        }
+        .checkbox-label input { width: auto; }
+
+        #loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+
+        /* Estilo para as Tags de Remark */
+        .remark-tag {
+            background: var(--primary); color: white; padding: 6px 12px; 
+            border-radius: 8px; font-size: 0.85rem; display: flex; 
+            align-items: center; gap: 10px; font-weight: 500;
+        }
+        .remark-tag i { cursor: pointer; color: #cbd5e1; transition: 0.2s; }
+        .remark-tag i:hover { color: white; }
+    </style>
+</head>
+<body>
+
+<div id="loader-overlay" class="hidden">
+    <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
+    <p style="margin-top: 15px; font-weight: 700;">Processando...</p>
+</div>
+
+<div id="login-area">
+    <div class="card" style="max-width: 350px; width: 100%;">
+        <div style="text-align:center; margin-bottom: 20px;">
+            <i class="fas fa-plane-departure" style="font-size: 2.5rem; color: var(--primary);"></i>
+            <h2 style="border:none; justify-content:center; margin-top:10px">Admin Login</h2>
+        </div>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="pass" placeholder="Senha" style="margin-top:10px">
+        <button class="btn-save" id="btn-login">Acessar Painel</button>
+    </div>
+</div>
+
+<div id="admin-content" class="admin-container hidden">
+    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <div>
+            <h1>BrasilAviation.info</h1>
+            <small style="color: var(--text-muted)">Painel Dinâmico de Frota</small>
+        </div>
+        <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-gestao" onclick="switchTab('gestao')"><i class="fas fa-edit"></i> Gestão</button>
+        <button class="tab-btn" id="tab-btn-lista" onclick="switchTab('lista')"><i class="fas fa-list"></i> Lista de Matrículas</button>
+        <button class="tab-btn" id="tab-btn-correcoes" onclick="switchTab('correcoes')">
+            <i class="fas fa-tools"></i> Correções 
+            <span id="badge-correcoes" class="badge-notif hidden">0</span>
+        </button>
+    </div>
+
+    <div id="tab-gestao">
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Buscar por Matrícula, MSN ou ID">
+            <button class="btn-search" onclick="buscarHibrido()"><i class="fas fa-search"></i> Buscar</button>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-plane"></i> Gestão de Aeronave</h2>
+            <div class="form-grid">
+                <div>
+                    <label>ID Único (Fixo)</label>
+                    <input type="text" id="aero-id" readonly placeholder="Gerado automaticamente" style="background:#f1f5f9; font-weight:bold; color:var(--primary)">
+                </div>
+                
+                <div>
+                    <label>Companhia</label>
+                    <select id="aero-cia" onchange="toggleCiaText()">
+                        <option value="Azul">Azul</option>
+                        <option value="GOL">GOL</option>
+                        <option value="LATAM">LATAM</option>
+                        <option value="Sideral">Sideral</option>
+                        <option value="Placar">Placar</option>
+                        <option value="Avion Express Brasil">Avion Express Brasil</option>
+                        <option value="Modern Logistics">Modern Logistics</option>
+                        <option value="Total Linhas Aéreas">Total Linhas Aéreas</option>
+                        <option value="Outra">Outra (Internacional)...</option>
+                    </select>
+                    <input type="text" id="aero-cia-outra" class="hidden" placeholder="Nome da Cia Internacional" style="margin-top:8px;">
+                </div>
+
+                <div><label>Matrícula *</label><input type="text" id="aero-reg" placeholder="Ex: PR-XMR" style="text-transform: uppercase;"></div>
+                <div><label>MSN (Série) *</label><input type="text" id="aero-msn" placeholder="Ex: 60234"></div>
+                
+                <div>
+                    <label>Modelo da Aeronave *</label>
+                    <select id="aero-mod" onchange="atualizarMotores()"></select>
+                </div>
+
+                <div>
+                    <label>Motores</label>
+                    <select id="aero-motores">
+                        <option value="">Selecione o Modelo Primeiro</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Status Operacional</label>
+                    <select id="aero-status" onchange="toggleStatusSections()">
+                        <option value="Ativa">Ativa</option>
+                        <option value="Futura">Futura</option>
+                        <option value="Estocada">Estocada / Manutenção</option>
+                        <option value="Historico">Histórico (Fora da frota)</option>
+                    </select>
+                </div>
+
+                <div class="full" id="sec-config">
+                    <label>Configuração (Insira a quantidade)</label>
+                    <div class="config-box">
+                        <div><label>First (F)</label><input type="number" id="conf-f" value="0" min="0"></div>
+                        <div><label>Business (C)</label><input type="number" id="conf-c" value="0" min="0"></div>
+                        <div><label>Prem. Eco (W)</label><input type="number" id="conf-w" value="0" min="0"></div>
+                        <div><label>Economy (Y)</label><input type="number" id="conf-y" value="0" min="0"></div>
+                    </div>
+                </div>
+
+                <div id="sec-datas" class="form-grid full">
+                    <div>
+                        <label>Mês e Ano de Fabricação</label>
+                        <input type="month" id="aero-data-fab">
+                        <label class="checkbox-label"><input type="checkbox" id="check-fab-pendente" onchange="togglePendentes()"> Não informado</label>
+                    </div>
+                    <div>
+                        <label>Mês e Ano de Entrega</label>
+                        <input type="month" id="aero-data-ent">
+                        <label class="checkbox-label"><input type="checkbox" id="check-ent-pendente" onchange="togglePendentes()"> Não informado</label>
+                    </div>
+                </div>
+                
+                <div><label>Nome de Batismo</label><input type="text" id="aero-batismo"></div>
+                
+                <div class="full">
+                    <label>Detalhes e Remarks (Abreviações)</label>
+                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                        <select id="remark-prefixo" style="flex: 1;">
+                            <optgroup label="Leasing / Operação">
+                                <option value="WL">WL - Wet Lease</option>
+                                <option value="DL">DL - Damp Lease</option>
+                                <option value="Dry">DL - Dry Lease</option>
+                                <option value="SLB">SLB - Sale-Leaseback</option>
+                                <option value="SUC">SUC - Sub-charter</option>
+                            </optgroup>
+                            <optgroup label="Fabricação / Entrega">
+                                <option value="NE">NE - Não Entregue</option>
+                                <option value="RD">RD - Redelivery (devolução) (adicionar data) ex: 12 de maio</option>
+                                <option value="VE">VE - Delivered(rota de entrega)</option>
+                                <option value="NED">NED - Não informado</option>
+                            </optgroup>
+                            <optgroup label="Equipamento / Tech">
+                                <option value="NLW">NLW - Sem Winglets</option>
+                                <option value="SSW">SSW - Scimitar Winglets</option>
+                                <option value="TM">TM - Transferência de matrícula</option>
+                                <option value="RT">RT - Retrofit</option>
+                            </optgroup>
+                            <optgroup label="Status / Saída">
+                                <option value="EST">EST - Estocado</option>
+                                <option value="MTC">MTC - Manutenção</option>
+                                <option value="PWX">PWX - Preservado</option>
+                                <option value="SCR">SCR - Scrapped</option>
+                                <option value="FDF">FDF - Fora da Frota (WFU)</option>
+                                <option value="BX">BX - Baixa (Acidente/Perda)</option>
+                            </optgroup>
+                            <optgroup label="Pintura / Visual">
+                                <option value="HYB">HYB - Híbrido</option>
+                                <option value="NC">NC - Novas Cores</option>
+                                <option value="OX">OX - Cores Antigas</option>
+                                <option value="ALB">ALB - Albino</option>
+                            </optgroup>
+                        </select>
+                        <input type="text" id="remark-complemento" placeholder="Complemento (Ex: EuroAtlantic, VCV...)" style="flex: 2;">
+                        <button type="button" onclick="addRemarkTag()" style="background: var(--primary); color: white; padding: 0 20px; width: auto;">+</button>
+                    </div>
+                    <div id="remark-tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; padding: 12px; background: #f1f5f9; border-radius: 12px; border: 1px dashed #cbd5e1;"></div>
+                </div>
+
+                <div class="full">
+                    <label>Tipo de Pintura</label>
+                    <select id="aero-tipo-pintura" onchange="togglePintura()">
+                        <option value="Padrão">Padrão</option>
+                        <option value="Pintura Especial">Pintura Especial</option>
+                        <option value="Adesivo">Adesivo</option>
+                    </select>
+                    <input type="text" id="aero-nome-pintura" class="hidden" placeholder="Qual o nome da pintura/adesivo?" style="margin-top:8px;">
+                </div>
+
+                <div>
+                    <label>Origem *</label>
+                    <select id="aero-origem" onchange="toggleOrigem()">
+                        <option value="Novo">Novo de Fábrica</option>
+                        <option value="Usado">Usado (Ex-outro Operador)</option>
+                    </select>
+                </div>
+                <div id="box-reg-antiga" class="hidden"><label>Matrícula Anterior</label><input type="text" id="aero-reg-antiga"></div>
+                <div id="box-op-antigo" class="hidden full"><label>Operador Anterior / Arrendador</label><input type="text" id="aero-antigo-op"></div>
+
+                <div id="secao-historico" class="full hidden historico-section">
+                    <h3 style="margin-top:0; color:var(--danger); font-size: 0.9rem;"><i class="fas fa-history"></i> DETALHES DA SAÍDA / HISTÓRICO</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>Quando parou de voar?</label>
+                            <input type="date" id="hist-data-saida">
+                        </div>
+                        <div>
+                            <label>Situação Final</label>
+                            <select id="hist-situacao">
+                                <option value="Devolvido ao Lessor">Devolvido ao Lessor</option>
+                                <option value="Vendido">Vendido</option>
+                                <option value="Estocado / Preservado">Estocado / Preservado</option>
+                                <option value="Desmontado / Scrapped">Desmontado / Scrapped</option>
+                                <option value="Acidente / Perda Total">Acidente / Perda Total</option>
+                            </select>
+                        </div>
+                        <div class="full">
+                            <label>Destino / Operador Atual</label>
+                            <input type="text" id="hist-destino-atual" placeholder="Ex: Operando pela Avianca como N980AV">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px;">
+                <button class="btn-save" style="background:var(--secondary);" onclick="salvarAero()">
+                    <i class="fas fa-save"></i> Salvar Registro
+                </button>
+                <button class="btn-save" style="background:#64748b" onclick="limparForm()">
+                    <i class="fas fa-eraser"></i> Limpar / Novo
+                </button>
+                <button class="btn-delete full" id="btn-excluir-aero" onclick="excluirAero()">
+                    <i class="fas fa-trash-alt"></i> Excluir Aeronave permanentemente
+                </button>
+            </div>
+
+            <div id="status-aero" class="status-msg"></div>
+        </div>
+    </div>
+
+    <div id="tab-lista" class="hidden">
+        <div class="card">
+            <h2><i class="fas fa-search"></i> Pesquisa Rápida na Tabela</h2>
+            <input type="text" id="list-search" placeholder="Filtrar por matrícula, MSN ou modelo..." onkeyup="filtrarTabela()">
+            <div style="overflow-x: auto; margin-top: 20px;">
+                <table class="list-table" id="tabela-frota">
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>MSN</th>
+                            <th>Modelo</th>
+                            <th>Companhia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-corpo"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-correcoes" class="hidden">
+        <div class="card">
+            <h2><i class="fas fa-tools"></i> Sugestões de Correção</h2>
+            <div id="lista-correcoes-container" style="margin-top:20px"></div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-detalhe-correcao" class="modal-cor">
+    <div class="modal-cor-content">
+        <h2 id="cor-modal-titulo" style="border:none"></h2>
+        <div id="cor-modal-info" style="margin:20px 0; line-height:1.6"></div>
+        <div style="display:flex; gap:10px">
+            <button class="btn-save" style="background:var(--secondary)" id="btn-concluir-cor">Concluído</button>
+            <button class="btn-save" style="background:#64748b" onclick="fecharModalCor()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs, orderBy, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Variável para armazenar os Remarks dinâmicos
+    let currentRemarks = [];
+
+    // --- LOGIN ---
+    document.getElementById('btn-login').addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('pass').value;
+        if (!email || !password) return alert("Preencha tudo!");
+        try { await signInWithEmailAndPassword(auth, email, password); } 
+        catch (error) { alert("Erro: " + error.message); }
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        document.getElementById('login-area').classList.toggle('hidden', user);
+        document.getElementById('admin-content').classList.toggle('hidden', !user);
+    });
+
+    window.logout = () => signOut(auth);
+
+    const MOTORES_POR_MODELO = {
+    // --- AIRBUS ---
+    "Airbus A300-600RF": ["GE CF6-80C2", "PW4158"],
+    "Airbus A318-100": ["CFM56-5B", "PW6000"],
+    "Airbus A319-100": ["CFM56-5B", "IAE V2500"],
+    "Airbus A320-200": ["CFM56-5B", "IAE V2500"],
+    "Airbus A320neo": ["CFM LEAP-1A", "PW1127G"],
+    "Airbus A321-200": ["CFM56-5B", "IAE V2500"],
+    "Airbus A321neo": ["CFM LEAP-1A", "PW1133G"],
+    "Airbus A330-200": ["RR Trent 772B", "GE CF6-80E1", "PW4168"],
+    "Airbus A330-300": ["RR Trent 700", "GE CF6-80E1"],
+    "Airbus A330-900neo": ["RR Trent 7000"],
+    "Airbus A340-300": ["CFM56-5C"],
+    "Airbus A340-600": ["RR Trent 500"],
+    "Airbus A350-900": ["RR Trent XWB-84"],
+    "Airbus A350-1000": ["RR Trent XWB-97"],
+    
+    // --- BOEING ---
+    "Boeing 727-200": ["P&W JT8D-15"],
+    "Boeing 737-200": ["P&W JT8D-9/15/17"],
+    "Boeing 737-300": ["CFM56-3B1", "CFM56-3C1"],
+    "Boeing 737-400": ["CFM56-3C1"],
+    "Boeing 737-500": ["CFM56-3B1"],
+    "Boeing 737-700": ["CFM56-7B20/22/24"],
+    "Boeing 737-800": ["CFM56-7B26/27"],
+    "Boeing 737-8 MAX": ["CFM LEAP-1B"],
+    "Boeing 737-9 MAX": ["CFM LEAP-1B"],
+    "Boeing 747-400F": ["GE CF6-80C2", "PW4056", "RR RB211"],
+    "Boeing 747-8F": ["GEnx-2B67"],
+    "Boeing 757-200": ["RR RB211-535", "PW2037"],
+    "Boeing 767-200": ["GE CF6-80A", "PW4000"],
+    "Boeing 767-300ER": ["GE CF6-80C2", "PW4060"],
+    "Boeing 777-200LR": ["GE90-110B"],
+    "Boeing 777-300ER": ["GE90-115B"],
+    "Boeing 777F (Cargo)": ["GE90-110B"],
+    "Boeing 787-8 Dreamliner": ["RR Trent 1000", "GEnx-1B"],
+    "Boeing 787-9 Dreamliner": ["RR Trent 1000", "GEnx-1B"],
+
+    // --- EMBRAER ---
+    "Embraer EMB-110 Bandeirante": ["P&WC PT6A-34"],
+    "Embraer EMB-120 Brasilia": ["P&WC PW118"],
+    "Embraer ERJ-135": ["RR AE3007A"],
+    "Embraer ERJ-145": ["RR AE3007A"],
+    "Embraer E170": ["GE CF34-8E"],
+    "Embraer E175": ["GE CF34-8E"],
+    "Embraer E190-E1": ["GE CF34-10E"],
+    "Embraer E195-E1": ["GE CF34-10E"],
+    "Embraer E190-E2": ["PW1919G"],
+    "Embraer E195-E2": ["PW1921G/23G"],
+
+    // --- TURBOPROPS ---
+    "ATR 42-300": ["P&WC PW120/121"],
+    "ATR 42-500": ["P&WC PW127E"],
+    "ATR 72-200": ["P&WC PW124B"],
+    "ATR 72-500": ["P&WC PW127F"],
+    "ATR 72-600": ["P&WC PW127M/N"],
+    "Cessna C208 Caravan": ["P&WC PT6A-114A"],
+    "Cessna C208B Grand Caravan EX": ["P&WC PT6A-140"],
+    "Pilatus PC-12/47E": ["P&WC PT6A-67P"],
+
+    // --- EXECUTIVOS / OUTROS ---
+    "Bombardier Global 6000": ["RR BR710"],
+    "Bombardier Challenger 350": ["Honeywell HTF7350"],
+    "Dassault Falcon 7X": ["P&WC PW307A"],
+    "Dassault Falcon 8X": ["P&WC PW307D"],
+    "Gulfstream G650ER": ["RR BR725"],
+    "Learjet 75": ["Honeywell TFE731-40BR"]
+};
+
+
+    const selectMod = document.getElementById('aero-mod');
+    selectMod.innerHTML = '<option value="">Selecione o Modelo</option>';
+    Object.keys(MOTORES_POR_MODELO).sort().forEach(mod => {
+        let opt = document.createElement('option');
+        opt.value = mod; opt.innerHTML = mod;
+        selectMod.appendChild(opt);
+    });
+
+    // --- FUNÇÕES DE REMARKS DINÂMICOS ---
+    window.addRemarkTag = () => {
+        const prefixo = document.getElementById('remark-prefixo').value;
+        const texto = document.getElementById('remark-complemento').value.trim();
+        if(!texto) return alert("Digite o complemento do detalhe!");
+        currentRemarks.push({ prefixo, texto });
+        renderRemarks();
+        document.getElementById('remark-complemento').value = "";
+    };
+
+    window.renderRemarks = () => {
+        const container = document.getElementById('remark-tags-container');
+        container.innerHTML = currentRemarks.map((item, index) => `
+            <div class="remark-tag">
+                <span><strong>${item.prefixo}</strong> ${item.texto}</span>
+                <i class="fas fa-times" onclick="removeRemarkTag(${index})"></i>
+            </div>
+        `).join('');
+    };
+
+    window.removeRemarkTag = (index) => {
+        currentRemarks.splice(index, 1);
+        renderRemarks();
+    };
+
+    window.atualizarMotores = (motorSalvo = "") => {
+        const mod = document.getElementById('aero-mod').value;
+        const selMotores = document.getElementById('aero-motores');
+        selMotores.innerHTML = "";
+        if(MOTORES_POR_MODELO[mod]) {
+            MOTORES_POR_MODELO[mod].forEach(motor => {
+                let opt = document.createElement('option');
+                opt.value = motor; opt.innerHTML = motor;
+                selMotores.appendChild(opt);
+            });
+            if(motorSalvo) selMotores.value = motorSalvo;
+        }
+    };
+
+    window.toggleCiaText = () => {
+        const cia = document.getElementById('aero-cia').value;
+        document.getElementById('aero-cia-outra').classList.toggle('hidden', cia !== 'Outra');
+    };
+
+    window.togglePintura = () => {
+        const tipo = document.getElementById('aero-tipo-pintura').value;
+        document.getElementById('aero-nome-pintura').classList.toggle('hidden', tipo === 'Padrão');
+    };
+
+    window.toggleOrigem = () => {
+        const usado = document.getElementById('aero-origem').value === 'Usado';
+        document.getElementById('box-reg-antiga').classList.toggle('hidden', !usado);
+        document.getElementById('box-op-antigo').classList.toggle('hidden', !usado);
+    };
+
+    window.togglePendentes = () => {
+        document.getElementById('aero-data-fab').disabled = document.getElementById('check-fab-pendente').checked;
+        document.getElementById('aero-data-ent').disabled = document.getElementById('check-ent-pendente').checked;
+    };
+
+    window.toggleStatusSections = () => {
+        const status = document.getElementById('aero-status').value;
+        document.getElementById('secao-historico').classList.toggle('hidden', status !== 'Historico');
+        document.getElementById('sec-config').classList.toggle('hidden', status === 'Futura');
+        document.getElementById('sec-datas').classList.toggle('hidden', status === 'Futura');
+    };
+
+    window.limparForm = () => {
+        document.getElementById('aero-id').value = "";
+        document.querySelectorAll('input:not([type="button"])').forEach(i => i.value = "");
+        document.querySelectorAll('input[type="number"]').forEach(i => i.value = "0");
+        document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
+        document.getElementById('aero-status').value = "Ativa";
+        document.getElementById('aero-cia').value = "Azul";
+        document.getElementById('aero-origem').value = "Novo";
+        document.getElementById('aero-tipo-pintura').value = "Padrão";
+        currentRemarks = []; // Limpa remarks
+        renderRemarks();
+        toggleStatusSections(); toggleOrigem(); togglePintura(); toggleCiaText(); togglePendentes();
+        document.getElementById('btn-excluir-aero').classList.add('hidden');
+    };
+
+    window.salvarAero = async () => {
+        let id = document.getElementById('aero-id').value || Math.floor(100000 + Math.random() * 900000).toString();
+        const reg = document.getElementById('aero-reg').value.toUpperCase().trim();
+        if(!reg) return alert("Matrícula obrigatória!");
+
+        const aeroData = {
+            id, matricula: reg,
+            msn: document.getElementById('aero-msn').value,
+            cia: document.getElementById('aero-cia').value === 'Outra' ? document.getElementById('aero-cia-outra').value : document.getElementById('aero-cia').value,
+            modelo: document.getElementById('aero-mod').value,
+            motores: document.getElementById('aero-motores').value,
+            status: document.getElementById('aero-status').value,
+            conf_f: document.getElementById('conf-f').value,
+            conf_c: document.getElementById('conf-c').value,
+            conf_w: document.getElementById('conf-w').value,
+            conf_y: document.getElementById('conf-y').value,
+            data_fab: document.getElementById('check-fab-pendente').checked ? "Pendente" : document.getElementById('aero-data-fab').value,
+            data_ent: document.getElementById('check-ent-pendente').checked ? "Pendente" : document.getElementById('aero-data-ent').value,
+            batismo: document.getElementById('aero-batismo').value,
+            remarks: currentRemarks, // Agora salva o array de objetos
+            tipo_pintura: document.getElementById('aero-tipo-pintura').value,
+            nome_pintura: document.getElementById('aero-nome-pintura').value,
+            origem: document.getElementById('aero-origem').value,
+            reg_antiga: document.getElementById('aero-reg-antiga').value,
+            op_antigo: document.getElementById('aero-antigo-op').value,
+            hist_saida: document.getElementById('hist-data-saida').value,
+            hist_situacao: document.getElementById('hist-situacao').value,
+            hist_destino: document.getElementById('hist-destino-atual').value,
+            last_up: new Date().toISOString()
+        };
+
+        try {
+            await setDoc(doc(db, "aeronaves", id), aeroData);
+            alert("Salvo!"); limparForm();
+        } catch(e) { alert("Erro: " + e.message); }
+    };
+
+    window.buscarHibrido = async () => {
+        const termo = document.getElementById('search-input').value.toUpperCase().trim();
+        if(!termo) return;
+        const res = await Promise.all([
+            getDocs(query(collection(db, "aeronaves"), where("matricula", "==", termo))),
+            getDocs(query(collection(db, "aeronaves"), where("msn", "==", termo))),
+            getDocs(query(collection(db, "aeronaves"), where("id", "==", termo)))
+        ]);
+        let snap = null; res.forEach(r => { if(!r.empty) snap = r.docs[0]; });
+
+        if(snap) {
+            const d = snap.data();
+            document.getElementById('aero-id').value = d.id;
+            document.getElementById('aero-reg').value = d.matricula;
+            document.getElementById('aero-msn').value = d.msn;
+            document.getElementById('aero-mod').value = d.modelo;
+            atualizarMotores(d.motores);
+            document.getElementById('aero-status').value = d.status;
+            document.getElementById('conf-f').value = d.conf_f || 0;
+            document.getElementById('conf-c').value = d.conf_c || 0;
+            document.getElementById('conf-w').value = d.conf_w || 0;
+            document.getElementById('conf-y').value = d.conf_y || 0;
+            
+            document.getElementById('check-fab-pendente').checked = d.data_fab === "Pendente";
+            document.getElementById('aero-data-fab').value = d.data_fab === "Pendente" ? "" : d.data_fab;
+            document.getElementById('check-ent-pendente').checked = d.data_ent === "Pendente";
+            document.getElementById('aero-data-ent').value = d.data_ent === "Pendente" ? "" : d.data_ent;
+
+            document.getElementById('aero-batismo').value = d.batismo || "";
+            
+            // Carregar Remarks
+            currentRemarks = Array.isArray(d.remarks) ? d.remarks : [];
+            renderRemarks();
+
+            document.getElementById('aero-tipo-pintura').value = d.tipo_pintura || "Padrão";
+            document.getElementById('aero-nome-pintura').value = d.nome_pintura || "";
+            document.getElementById('aero-origem').value = d.origem || "Novo";
+            document.getElementById('aero-reg-antiga').value = d.reg_antiga || "";
+            document.getElementById('aero-antigo-op').value = d.op_antigo || "";
+            
+            document.getElementById('hist-data-saida').value = d.hist_saida || "";
+            document.getElementById('hist-situacao').value = d.hist_situacao || "Devolvido ao Lessor";
+            document.getElementById('hist-destino-atual').value = d.hist_destino || "";
+
+            const ciasPadrao = ["Azul", "GOL", "LATAM", "Sideral", "Placar", "Avion Express Brasil", "Modern Logistics", "Total Linhas Aéreas"];
+            if(ciasPadrao.includes(d.cia)) {
+                document.getElementById('aero-cia').value = d.cia;
+            } else {
+                document.getElementById('aero-cia').value = "Outra";
+                document.getElementById('aero-cia-outra').value = d.cia;
+            }
+
+            toggleStatusSections(); toggleOrigem(); togglePintura(); toggleCiaText(); togglePendentes();
+            document.getElementById('btn-excluir-aero').classList.remove('hidden');
+            alert("Carregado!");
+        } else { alert("Não encontrado!"); }
+    };
+
+    window.excluirAero = async () => {
+        const id = document.getElementById('aero-id').value;
+        const reg = document.getElementById('aero-reg').value;
+        if(!id) return;
+        if(confirm(`TEM CERTEZA? Isso vai apagar o ${reg} para sempre do BrasilAviation.info!`)) {
+            try {
+                await deleteDoc(doc(db, "aeronaves", id));
+                alert("Apagado com sucesso."); limparForm();
+            } catch(e) { alert("Erro ao excluir: " + e.message); }
+        }
+    };
+
+    window.switchTab = (tab) => {
+        document.getElementById('tab-gestao').classList.toggle('hidden', tab !== 'gestao');
+        document.getElementById('tab-lista').classList.toggle('hidden', tab !== 'lista');
+        document.getElementById('tab-correcoes').classList.toggle('hidden', tab !== 'correcoes');
+        
+        document.getElementById('tab-btn-gestao').classList.toggle('active', tab === 'gestao');
+        document.getElementById('tab-btn-lista').classList.toggle('active', tab === 'lista');
+        document.getElementById('tab-btn-correcoes').classList.toggle('active', tab === 'correcoes');
+
+        if(tab === 'lista') carregarLista();
+        if(tab === 'correcoes') carregarCorrecoes();
+    };
+
+    async function carregarLista() {
+        const snap = await getDocs(collection(db, "aeronaves"));
+        document.getElementById('lista-corpo').innerHTML = snap.docs.map(doc => {
+            const d = doc.data();
+            return `<tr onclick="preencherForm('${d.id}')"><td><span class="badge-id">${d.matricula}</span></td><td>${d.msn}</td><td>${d.modelo}</td><td>${d.cia}</td></tr>`;
+        }).join('');
+    }
+
+    window.preencherForm = (id) => {
+        document.getElementById('search-input').value = id;
+        buscarHibrido();
+        switchTab('gestao');
+    };
+
+    window.filtrarTabela = () => {
+        const termo = document.getElementById('list-search').value.toLowerCase();
+        for (let row of document.getElementById('lista-corpo').rows) {
+            row.style.display = row.innerText.toLowerCase().includes(termo) ? "" : "none";
+        }
+    };
+
+    onSnapshot(query(collection(db, "correcoes"), where("status", "==", "pendente")), (snap) => {
+        const badge = document.getElementById('badge-correcoes');
+        badge.innerText = snap.size;
+        badge.classList.toggle('hidden', snap.size === 0);
+    });
+
+    async function carregarCorrecoes() {
+        const snap = await getDocs(query(collection(db, "correcoes"), orderBy("dataEnvio", "desc")));
+        const container = document.getElementById('lista-correcoes-container');
+        
+        if(snap.empty) {
+            container.innerHTML = "<p>Nenhuma correção enviada ainda.</p>";
+            return;
+        }
+
+        container.innerHTML = snap.docs.map(doc => {
+            const d = doc.data();
+            return `
+                <div class="correction-card" onclick="abrirModalCor('${doc.id}')" style="cursor:pointer">
+                    <div>
+                        <strong style="color:var(--primary)">${d.matricula}</strong><br>
+                        <small>Enviado por: ${d.nome}</small>
+                    </div>
+                    <div class="status-pill status-${d.status}">${d.status}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    let correcaoAtualId = "";
+    window.abrirModalCor = async (id) => {
+        correcaoAtualId = id;
+        const snap = await getDoc(doc(db, "correcoes", id));
+        const d = snap.data();
+        
+        document.getElementById('cor-modal-titulo').innerText = `Correção: ${d.matricula}`;
+        document.getElementById('cor-modal-info').innerHTML = `
+            <p><strong>Usuário:</strong> ${d.nome} (${d.email})</p>
+            <p><strong>Sugestão:</strong><br>${d.detalhes}</p>
+            <p><small>Data: ${new Date(d.dataEnvio).toLocaleString()}</small></p>
+        `;
+        document.getElementById('modal-detalhe-correcao').style.display = 'flex';
+    };
+
+    window.fecharModalCor = () => {
+        document.getElementById('modal-detalhe-correcao').style.display = 'none';
+    };
+
+    document.getElementById('btn-concluir-cor').onclick = async () => {
+        if(!correcaoAtualId) return;
+        try {
+            await updateDoc(doc(db, "correcoes", correcaoAtualId), { status: "concluido" });
+            fecharModalCor();
+            carregarCorrecoes();
+        } catch(e) { alert("Erro ao atualizar status"); }
+    };
+
+    limparForm();
+</script>
+</body>
+</html>

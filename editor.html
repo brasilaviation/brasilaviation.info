@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Brasil Aviation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #00274C; /* Azul Marinho Aviação */
+            --secondary: #00843D; /* Verde Brasil */
+            --accent: #FFCD00; /* Amarelo Ouro */
+            --danger: #e74c3c; 
+            --bg: #f8fafc; 
+            --text: #2d3436;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { display: none; background: var(--bg); color: var(--text); padding-bottom: 60px; line-height: 1.6; }
+
+        /* Header Estilizado */
+        header { 
+            background: var(--primary); 
+            color: white; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--secondary);
+        }
+
+        header span { font-family: 'Montserrat', sans-serif; letter-spacing: 1px; font-size: 1.1rem; }
+
+        .btn-back { 
+            background: rgba(255,255,255,0.1); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            font-size: 13px;
+            transition: 0.3s;
+        }
+        .btn-back:hover { background: var(--accent); color: var(--primary); font-weight: bold; }
+
+        .content { padding: 30px 15px; max-width: 950px; margin: 0 auto; }
+
+        /* Card Principal */
+        .card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            border: 1px solid var(--border);
+        }
+
+        h2 { 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--primary); 
+            margin-bottom: 30px; 
+            font-size: 1.8rem;
+            border-left: 6px solid var(--secondary);
+            padding-left: 15px;
+        }
+
+        /* Labels e Inputs */
+        label { display: block; font-weight: 600; margin: 20px 0 8px; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 10px; 
+            font-size: 15px; 
+            background: #fff; 
+            transition: all 0.3s ease;
+            color: var(--primary);
+        }
+        input:focus, select:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(0, 132, 61, 0.1); }
+
+        .slug-container { display: flex; gap: 10px; }
+        .btn-slug { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .btn-slug:hover { background: var(--secondary); }
+
+        /* Editor de Texto */
+        .toolbar { 
+            background: #f1f5f9; 
+            padding: 12px; 
+            border-radius: 12px 12px 0 0; 
+            display: flex; 
+            gap: 10px; 
+            border: 1.5px solid var(--border); 
+            border-bottom: none; 
+            flex-wrap: wrap; 
+            margin-top: 10px;
+        }
+        .toolbar button { 
+            padding: 10px 14px; 
+            cursor: pointer; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px; 
+            background: white; 
+            color: var(--primary);
+            transition: 0.2s;
+        }
+        .toolbar button:hover { background: var(--primary); color: white; }
+
+        #editor { 
+            min-height: 450px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 0 0 12px 12px; 
+            padding: 25px; 
+            background: white; 
+            overflow-y: auto; 
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        #editor:focus { outline: none; border-color: var(--secondary); }
+
+        /* Estilização de imagens dentro do editor */
+        .noticia-imagem-container { 
+            margin: 30px 0; 
+            background: #fdfdfd;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            position: relative; 
+        }
+        .noticia-imagem-container img { width: 100%; border-radius: 8px; }
+        .noticia-legenda { 
+            display: block; 
+            font-size: 0.85rem; 
+            color: #555; 
+            margin-top: 10px; 
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .btn-remove-img {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--danger); color: white; border: none;
+            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Upload de Capa */
+        .upload-section { 
+            background: #f1f5f9; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 2px dashed #cbd5e1; 
+            margin-top: 10px;
+        }
+
+        /* Botão de Envio */
+        .btn-send { 
+            background: var(--secondary); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            margin-top: 40px; 
+            cursor: pointer; 
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 132, 61, 0.3);
+        }
+        .btn-send:hover { background: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 39, 76, 0.4); }
+
+        /* Loading */
+        #loading { position: fixed; inset: 0; background: rgba(0,39,76,0.95); color: white; display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
+        .tag-hint { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+
+        @media (max-width: 600px) {
+            .grid-mobile { grid-template-columns: 1fr !important; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <i class="fas fa-plane-departure fa-spin fa-3x" style="color: var(--accent);"></i>
+    <br><br>
+    <p style="font-weight: 600; letter-spacing: 2px;">PROCESSANDO DADOS...</p>
+</div>
+
+<header>
+    <a href="admin.html" class="btn-back"><i class="fas fa-arrow-left"></i> Painel Geral</a>
+    <span>BRASIL AVIATION | ADMIN</span>
+    <div style="width: 110px;"></div> </header>
+
+<div class="content">
+    <div class="card">
+        <h2 id="form-title">Redigir Matéria</h2>
+        
+        <label><i class="fas fa-heading"></i> Título da Notícia</label>
+        <input type="text" id="post-titulo" placeholder="Ex: Boeing 737 MAX 8 da GOL entra em operação...">
+
+        <label><i class="fas fa-link"></i> Slug amigável (URL)</label>
+        <div class="slug-container">
+            <input type="text" id="post-slug" placeholder="boeing-737-max-gol">
+            <button class="btn-slug" onclick="gerarSlug()" title="Gerar Slug Automático"><i class="fas fa-bolt"></i></button>
+        </div>
+
+        <div class="grid-mobile" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label><i class="fas fa-calendar-alt"></i> Data de Agendamento</label>
+                <input type="datetime-local" id="post-data">
+            </div>
+            <div>
+                <label><i class="fas fa-user-edit"></i> Autor da Matéria</label>
+                <select id="post-autor">
+                    <option value="Miguel Barbosa">Miguel Barbosa</option>
+                    <option value="Johnny Galvão">Johnny Galvão</option>
+                    <option value="Henrique Saito">Henrique Saito</option>
+                    <option value="Murilo Marinho">Murilo Marinho</option>
+                    <option value="Renan Rocha">Renan Rocha</option>
+                </select>
+            </div>
+        </div>
+
+        <label><i class="fas fa-layer-group"></i> Categoria Principal</label>
+        <select id="post-cat-select"></select>
+
+        <label><i class="fas fa-tags"></i> Tags (Máximo 10)</label>
+        <input type="text" id="post-tags" placeholder="Boeing, GOL, Aviação Comercial...">
+        <p class="tag-hint">Separe as tags por vírgulas. Elas organizam as matérias relacionadas.</p>
+
+        <label><i class="fas fa-camera"></i> Imagem de Capa</label>
+        <div class="upload-section">
+            <p style="font-size: 13px; margin-bottom: 10px; color: var(--primary); font-weight: 600;">Opção A: Upload Local</p>
+            <input type="file" id="post-foto-file" accept="image/*">
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #cbd5e1;">
+            <p style="font-size: 13px; margin-bottom: 10px; color: var(--primary); font-weight: 600;">Opção B: URL Externa (ImgBB)</p>
+            <input type="text" id="post-foto-url" placeholder="https://i.ibb.co/exemplo.jpg">
+        </div>
+        
+        <label><i class="fas fa-copyright"></i> Créditos da Foto de Capa</label>
+        <input type="text" id="post-capa-desc" placeholder="Nome do Fotógrafo / Fonte">
+
+        <label><i class="fas fa-pen-nib"></i> Conteúdo da Matéria</label>
+        <div class="toolbar">
+            <button onclick="execCmd('bold')" title="Negrito"><i class="fas fa-bold"></i></button>
+            <button onclick="execCmd('italic')" title="Itálico"><i class="fas fa-italic"></i></button>
+            <button onclick="addLink()" title="Adicionar Link"><i class="fas fa-link"></i></button>
+            <button onclick="execCmd('insertUnorderedList')" title="Lista"><i class="fas fa-list-ul"></i></button>
+            <button onclick="addImgInterna()" style="background: var(--secondary); color: white; border: none; margin-left: auto;"><i class="fas fa-image"></i> + Inserir Foto no Texto</button>
+        </div>
+        <div id="editor" contenteditable="true"></div>
+
+        <label><i class="fas fa-code"></i> Conteúdo Externo (Iframe/YouTube)</label>
+        <input type="text" id="post-embed" placeholder="Cole o código embed aqui">
+
+        <button class="btn-send" id="btn-salvar" onclick="salvarPost()">Finalizar e Publicar</button>
+    </div>
+</div>
+
+<script type="module">
+    /* A LÓGICA PERMANECE EXATAMENTE A MESMA QUE VOCÊ ENVIOU */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, updateDoc, doc, getDoc, getDocs, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const IMGBB_API = "2ee4c2239a809ffb30ec9c04689ee3ee";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentId = urlParams.get('id');
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            document.body.style.display = "block";
+            await loadCats();
+            if(currentId) loadPostData(currentId);
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    async function loadCats() {
+        const snap = await getDocs(collection(db, "categorias"));
+        const sel = document.getElementById('post-cat-select');
+        sel.innerHTML = "";
+        snap.forEach(ds => {
+            const c = ds.data().nome;
+            sel.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+    }
+
+    async function loadPostData(id) {
+        document.getElementById('loading').style.display = 'flex';
+        try {
+            const ds = await getDoc(doc(db, "noticias", id));
+            if(ds.exists()){
+                const n = ds.data();
+                document.getElementById('post-titulo').value = n.titulo || "";
+                document.getElementById('post-slug').value = n.slug || "";
+                document.getElementById('editor').innerHTML = n.texto || "";
+                document.getElementById('post-capa-desc').value = n.legenda || "";
+                document.getElementById('post-embed').value = n.embed || "";
+                document.getElementById('post-cat-select').value = n.cat || "";
+                document.getElementById('post-autor').value = n.autor || "Miguel Barbosa";
+                document.getElementById('post-tags').value = n.tags || "";
+                if(n.foto) document.getElementById('post-foto-url').value = n.foto;
+                if(n.data) {
+                    const date = n.data.toDate();
+                    document.getElementById('post-data').value = date.toISOString().slice(0, 16);
+                }
+                document.getElementById('form-title').innerText = "Editando Matéria";
+                document.getElementById('btn-salvar').innerText = "Salvar Alterações";
+            }
+        } catch (e) { console.error("Erro ao carregar:", e); }
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    window.execCmd = (cmd) => document.execCommand(cmd, false, null);
+    
+    window.addLink = () => {
+        const url = prompt("Cole ou digite o link (ex: https://google.com):");
+        if (url) document.execCommand("createLink", false, url);
+    };
+
+    window.gerarSlug = function() {
+        const titulo = document.getElementById('post-titulo').value;
+        const slug = titulo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 -]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
+        document.getElementById('post-slug').value = slug;
+    }
+
+    window.removerBlocoImagem = function(btn) {
+        if(confirm("Deseja remover esta imagem do corpo do texto?")) {
+            btn.parentElement.remove();
+        }
+    }
+
+    window.addImgInterna = async function() {
+        const input = document.createElement('input'); 
+        input.type = 'file'; 
+        input.accept = "image/*";
+        input.click();
+        
+        input.onchange = async () => {
+            const legenda = prompt("Digite os créditos da imagem (Ex: Foto: João Silva / Brasil Aviation):");
+            document.getElementById('loading').style.display = 'flex';
+            
+            const formData = new FormData(); 
+            formData.append("image", input.files[0]);
+            
+            try {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API}`, { method: "POST", body: formData });
+                const json = await res.json();
+                const imgUrl = json.data.url;
+                
+                const htmlBloco = `
+                    <div class="noticia-imagem-container" contenteditable="false">
+                        <button class="btn-remove-img" onclick="removerBlocoImagem(this)" title="Remover"><i class="fas fa-times"></i></button>
+                        <img src="${imgUrl}">
+                        <span class="noticia-legenda">${legenda}</span>
+                    </div>
+                    <p><br></p>
+                `;
+                
+                document.getElementById('editor').focus();
+                document.execCommand('insertHTML', false, htmlBloco);
+            } catch (e) { alert("Erro ao subir imagem."); }
+            document.getElementById('loading').style.display = 'none';
+        };
+    }
+
+    window.salvarPost = async function() {
+        const titulo = document.getElementById('post-titulo').value;
+        const slug = document.getElementById('post-slug').value;
+        const textoHtml = document.getElementById('editor').innerHTML;
+        const dataManual = document.getElementById('post-data').value;
+        const tags = document.getElementById('post-tags').value;
+        const urlFotoDireta = document.getElementById('post-foto-url').value;
+
+        if(!titulo || !slug || !textoHtml) return alert("Por favor, preencha os campos obrigatórios (Título, Slug e Texto).");
+
+        document.getElementById('loading').style.display = 'flex';
+        const file = document.getElementById('post-foto-file').files[0];
+        let fotoCapaFinal = "";
+        
+        if(urlFotoDireta) {
+            fotoCapaFinal = urlFotoDireta;
+        } else if(file) {
+            try {
+                const formData = new FormData();
+                formData.append("image", file);
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API}`, { method: "POST", body: formData });
+                const json = await res.json();
+                fotoCapaFinal = json.data.url;
+            } catch (e) { alert("Erro ao subir arquivo de capa."); }
+        }
+
+        const dados = {
+            titulo: titulo, 
+            slug: slug,
+            autor: document.getElementById('post-autor').value,
+            cat: document.getElementById('post-cat-select').value,
+            tags: tags,
+            texto: textoHtml, 
+            legenda: document.getElementById('post-capa-desc').value,
+            embed: document.getElementById('post-embed').value,
+            data: dataManual ? Timestamp.fromDate(new Date(dataManual)) : serverTimestamp()
+        };
+        
+        if(fotoCapaFinal) dados.foto = fotoCapaFinal;
+
+        try {
+            if(currentId) { 
+                await updateDoc(doc(db, "noticias", currentId), dados); 
+            } else { 
+                dados.cliques = 0; 
+                await addDoc(collection(db, "noticias"), dados); 
+            }
+            window.location.href = "admin.html";
+        } catch(e) { 
+            console.error(e);
+            alert("Erro ao salvar no banco de dados."); 
+            document.getElementById('loading').style.display = 'none'; 
+        }
+    }
+</script>
+</body>
+</html>

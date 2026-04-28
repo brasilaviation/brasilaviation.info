@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frota | BrasilAviation.info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #1a237e; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --radius: 16px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        
+        /* Header & Search */
+        .search-wrapper { max-width: 800px; margin: 30px auto; padding: 0 20px; position: relative; }
+        .search-box { 
+            width: 100%; padding: 18px 20px 18px 55px; border-radius: 50px; 
+            border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem;
+            transition: 0.3s; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .search-box:focus { outline: none; border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .search-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: #64748b; }
+
+        /* Home - Cards de Companhias */
+        .hub-container { padding: 20px; max-width: 1100px; margin: 0 auto; }
+        .grid-cias { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .card-cia-horizontal { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 40px; border-radius: var(--radius); color: white;
+            text-decoration: none; transition: 0.3s; position: relative; overflow: hidden;
+            background: linear-gradient(90deg, var(--c1), var(--c2));
+        }
+        .card-cia-horizontal:hover { transform: scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .cia-info-main { display: flex; align-items: center; gap: 25px; }
+        .cia-logo-white { height: 35px; width: 120px; object-fit: contain; }
+        .cia-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+        .cia-fleet-count { background: rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; min-width: 100px; text-align: center; }
+
+        /* Painel de Detalhes */
+        .details-panel { 
+            background: white; border-radius: 12px; border: 1px solid #e2e8f0; 
+            margin-bottom: 25px; overflow: hidden; display: grid; grid-template-columns: 1fr 2fr;
+        }
+        .panel-logo-area { background: #f8fafc; display: flex; align-items: center; justify-content: center; padding: 40px; border-right: 1px solid #e2e8f0; }
+        .panel-logo-area img { max-width: 180px; height: auto; object-fit: contain; }
+        .panel-info-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .panel-info-table td { padding: 12px 20px; border-bottom: 1px solid #f1f5f9; }
+        .label-cell { font-weight: 600; color: #64748b; width: 35%; text-transform: uppercase; font-size: 0.7rem; }
+        .value-cell { font-weight: 700; color: #1e293b; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .stat-card { 
+            background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; 
+            text-align: center; cursor: pointer; transition: 0.2s; 
+        }
+        .stat-card:hover { border-color: var(--cor-hero-1); background: #fcfdfe; }
+        .stat-card.active-filter { border: 2px solid var(--cor-hero-1); background: #f0f4ff; }
+        .stat-card b { display: block; font-size: 1.2rem; color: var(--cor-hero-1); }
+        .stat-card span { font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
+
+        .hero-frota { padding: 40px 20px; background: linear-gradient(135deg, var(--cor-hero-1), var(--cor-hero-2)); color: white; text-align: center; }
+        .tabs { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
+        .tab-btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; background: #e2e8f0; color: #475569; font-size: 0.9rem; transition: 0.2s; }
+        .tab-btn.active { background: var(--cor-hero-1) !important; color: white !important; }
+
+        .table-container { max-width: 1100px; margin: 0 auto; padding: 0 20px 50px; overflow-x: auto; }
+        table.main-fleet-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .main-fleet-table th { background: #f8fafc; padding: 15px; text-align: left; font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .main-fleet-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        
+        .badge-model { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; color: #475569; }
+        .remark-tag-mini { display: inline-block; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 4px; border: 1px solid #cbd5e1; }
+        
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .details-panel { grid-template-columns: 1fr; }
+            .panel-logo-area { border-right: none; border-bottom: 1px solid #e2e8f0; padding: 20px; }
+            .cia-name { font-size: 1.1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="global-search" class="search-box" placeholder="Buscar matrícula ou MSN..." oninput="executarBusca(this.value)">
+    </div>
+
+    <section id="home-hub" class="hub-container">
+        <h2 style="font-weight: 800; margin-bottom: 25px; color: var(--primary);">Operadores Brasileiros</h2>
+        <div id="grid-cias" class="grid-cias"></div>
+    </section>
+
+    <div id="frota-dinamica" class="hidden">
+        <section class="hero-frota">
+            <h1 id="nome-cia" style="margin:0; letter-spacing: -1px; font-weight: 800;">NOME DA CIA</h1>
+        </section>
+
+        <div class="overview-section" style="max-width: 1100px; margin: 30px auto; padding: 0 20px;">
+            <div id="painel-info-detalhado" class="details-panel"></div>
+            <div id="stats-grid" class="stats-grid"></div>
+
+            <div class="tabs">
+                <button id="btn-Ativa" class="tab-btn" onclick="mudarStatus('Ativa')">Em Serviço</button>
+                <button id="btn-Futura" class="tab-btn" onclick="mudarStatus('Futura')">Pedidos</button>
+                <button id="btn-Historico" class="tab-btn" onclick="mudarStatus('Historico')">Histórico</button>
+            </div>
+
+            <div class="table-container">
+                <table class="main-fleet-table">
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>MSN</th>
+                            <th>Modelo</th>
+                            <th id="data-label">Entrega</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+            authDomain: "braviation3.firebaseapp.com",
+            projectId: "braviation3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const operadoras = {
+            'GOL': { nome: 'GOL Linhas Aéreas', c1: '#ff671f', c2: '#cc5219', logo: 'gol-logo.png', iata: 'G3', icao: 'GLO', callsign: 'GOL', fundacao: '2001', grupo: 'Abra Group', hub: 'São Paulo (GRU)' },
+            'LATAM': { nome: 'LATAM Airlines Brasil', c1: '#950054', c2: '#6b003d', logo: 'latam-logo.png', iata: 'LA/JJ', icao: 'TAM', callsign: 'TAM', fundacao: '1961', grupo: 'LATAM Group', hub: 'São Paulo (GRU)' },
+            'Azul': { nome: 'Azul Linhas Aéreas', c1: '#003399', c2: '#002673', logo: 'azul-logo.png', iata: 'AD', icao: 'AZU', callsign: 'AZUL', fundacao: '2008', grupo: 'Independente', hub: 'Campinas (VCP)' },
+            'Sideral': { nome: 'Sideral Air Cargo', c1: '#1e144d', c2: '#120c2e', logo: 'sideral-logo.png', iata: '--', icao: 'SID', callsign: 'SIDERAL', fundacao: '2010', grupo: 'Sideral', hub: 'Curitiba (CWB)' },
+            'Total': { nome: 'Total Linhas Aéreas', c1: '#004a99', c2: '#003166', logo: 'total-logo.png', iata: 'L1', icao: 'TTL', callsign: 'TOTAL', fundacao: '1988', grupo: 'Independente', hub: 'Vix / GIG' },
+            'Avion': { nome: 'Avion Express Brasil', c1: '#e30613', c2: '#a5040e', logo: 'avionbrasil-logo.png', iata: '--', icao: 'AVB', callsign: 'AVION BRASIL', fundacao: '2024', grupo: 'Avion Express', hub: 'A definir' },
+            'Placar': { nome: 'Placar Linhas Aéreas', c1: '#00418c', c2: '#002b5c', logo: 'placar-logo.png', iata: '--', icao: 'PNC', callsign: 'PLACAR', fundacao: '2022', grupo: 'Grupo Crefisa', hub: 'Sorocaba (SOD)' },
+            'Modern': { nome: 'Modern Logistics', c1: '#1a1a1a', c2: '#000000', logo: 'modern-logo.png', iata: 'WD', icao: 'MWM', callsign: 'MODERN', fundacao: '2017', grupo: 'Independente', hub: 'Campinas (VCP)' },
+            'Levu': { nome: 'Levu Air Cargo', c1: '#2b2b2b', c2: '#000000', logo: 'levu-logo.png', iata: '--', icao: 'LVU', callsign: 'LEVU', fundacao: '2024', grupo: 'Independente', hub: 'Viracopos (VCP)' }
+        };
+
+        let frotaData = [];
+        let statusFiltro = 'Ativa';
+        let modeloFiltro = 'Todos';
+
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            const ciaID = params.get('cia');
+            if (ciaID && operadoras[ciaID]) { 
+                carregarPaginaCia(ciaID); 
+            } else { 
+                renderizarHome();
+                await atualizarContagemFrota(); 
+            }
+        }
+
+        function renderizarHome() {
+            const container = document.getElementById('grid-cias');
+            container.innerHTML = Object.keys(operadoras).map(key => {
+                const cia = operadoras[key];
+                // Inserção do degradê dinâmico via variáveis CSS injetadas no style do card
+                return `
+                    <a href="?cia=${key}" class="card-cia-horizontal" style="--c1: ${cia.c1}; --c2: ${cia.c2}">
+                        <div class="cia-info-main">
+                            <img src="${cia.logo}" class="cia-logo-white" alt="${cia.nome}">
+                            <div class="cia-name">${cia.nome}</div>
+                        </div>
+                        <div class="cia-fleet-count" id="count-${key}">... Aeronaves</div>
+                    </a>`;
+            }).join('');
+        }
+
+        async function atualizarContagemFrota() {
+            const q = query(collection(db, "aeronaves"), where("status", "==", "Ativa"));
+            const snap = await getDocs(q);
+            
+            const contagemGlobal = {};
+            snap.forEach(doc => {
+                const data = doc.data();
+                contagemGlobal[data.cia] = (contagemGlobal[data.cia] || 0) + 1;
+            });
+
+            Object.keys(operadoras).forEach(key => {
+                const countEl = document.getElementById(`count-${key}`);
+                if(countEl) {
+                    countEl.innerText = `${contagemGlobal[key] || 0} Aeronaves`;
+                }
+            });
+        }
+
+        async function carregarPaginaCia(id) {
+            const cia = operadoras[id];
+            document.getElementById('home-hub').classList.add('hidden');
+            document.getElementById('frota-dinamica').classList.remove('hidden');
+            
+            document.documentElement.style.setProperty('--cor-hero-1', cia.c1);
+            document.documentElement.style.setProperty('--cor-hero-2', cia.c2);
+            document.getElementById('nome-cia').innerText = cia.nome;
+
+            document.getElementById('painel-info-detalhado').innerHTML = `
+                <div class="panel-logo-area"><img src="${cia.logo}" alt="${cia.nome}"></div>
+                <table class="panel-info-table">
+                    <tr><td class="label-cell">Código IATA/ICAO</td><td class="value-cell">${cia.iata} / ${cia.icao}</td></tr>
+                    <tr><td class="label-cell">Callsign</td><td class="value-cell">${cia.callsign}</td></tr>
+                    <tr><td class="label-cell">Fundação / Grupo</td><td class="value-cell">${cia.fundacao} / ${cia.grupo}</td></tr>
+                    <tr><td class="label-cell">Base Operacional</td><td class="value-cell">${cia.hub}</td></tr>
+                </table>`;
+
+            const q = query(collection(db, "aeronaves"), where("cia", "==", id));
+            const snap = await getDocs(q);
+            frotaData = snap.docs.map(doc => doc.data());
+            renderTabela();
+        }
+
+        function formatarDataExtenso(dataStr) {
+            if (!dataStr || dataStr === '---' || dataStr === 'Pendente') return 'A informar';
+            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            const partes = dataStr.split('-');
+            if (partes.length === 3) return `${parseInt(partes[2])} de ${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
+            if (partes.length === 2) return `${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
+            return dataStr;
+        }
+
+        window.mudarStatus = (s) => {
+            statusFiltro = s;
+            modeloFiltro = 'Todos';
+            document.getElementById('data-label').innerText = s === 'Historico' ? 'Saída' : 'Entrega';
+            renderTabela();
+        };
+
+        window.filtrarModelo = (m) => {
+            modeloFiltro = m;
+            renderTabela();
+        };
+
+        function renderTabela() {
+            const corpo = document.getElementById('corpo-tabela');
+            const stats = document.getElementById('stats-grid');
+            const baseStatus = frotaData.filter(a => a.status === statusFiltro);
+            const contagem = {};
+            baseStatus.forEach(a => contagem[a.modelo] = (contagem[a.modelo] || 0) + 1);
+            
+            let htmlStats = `<div class="stat-card ${modeloFiltro === 'Todos' ? 'active-filter' : ''}" onclick="filtrarModelo('Todos')"><b>${baseStatus.length}</b><span>FROTA TOTAL</span></div>`;
+            Object.keys(contagem).sort().forEach(mod => {
+                htmlStats += `<div class="stat-card ${modeloFiltro === mod ? 'active-filter' : ''}" onclick="filtrarModelo('${mod}')"><b>${contagem[mod]}</b><span>${mod}</span></div>`;
+            });
+            stats.innerHTML = htmlStats;
+
+            const listaFinal = modeloFiltro === 'Todos' ? baseStatus : baseStatus.filter(a => a.modelo === modeloFiltro);
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if(document.getElementById(`btn-${statusFiltro}`)) document.getElementById(`btn-${statusFiltro}`).classList.add('active');
+
+            corpo.innerHTML = listaFinal.sort((a,b) => a.matricula.localeCompare(b.matricula)).map(a => {
+                const dataPura = statusFiltro === 'Historico' ? (a.hist_saida || '---') : (a.data_ent || '---');
+                let tagsHtml = Array.isArray(a.remarks) ? a.remarks.map(r => `<span class="remark-tag-mini"><b>${r.prefixo}</b> ${r.texto}</span>`).join('') : "";
+                return `
+                <tr class="clickable-row" style="cursor:pointer" onclick="window.location='aeronave.html?msn=${a.msn}'">
+                    <td><b style="color:var(--cor-hero-1)">${a.matricula}</b></td>
+                    <td style="font-family:monospace; color:#64748b">${a.msn}</td>
+                    <td><span class="badge-model">${a.modelo}</span></td>
+                    <td style="text-transform: capitalize;">${formatarDataExtenso(dataPura)}</td>
+                    <td>
+                        ${a.batismo ? `<b style="font-size:0.8rem; display:block; margin-bottom:5px;">"${a.batismo}"</b>` : ''}
+                        <div class="tags-container">${tagsHtml}</div>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:40px; color:#94a3b8;">Nenhum registro encontrado.</td></tr>';
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,20 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://brasilaviation.info/</loc>
+    <loc>https://www.brasilaviation.info/</loc>
     <lastmod>2026-04-24</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
   <url>
-    <loc>https://brasilaviation.info/noticia</loc>
+    <loc>https://www.brasilaviation.info/sobre</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.brasilaviation.info/contato</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.brasilaviation.info/politica-de-privacidade</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://www.brasilaviation.info/categoria.html?cat=Azul</loc>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://brasilaviation.info/sobre</loc>
-    <priority>0.5</priority>
+    <loc>https://www.brasilaviation.info/categoria.html?cat=GOL</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://brasilaviation.info/contato</loc>
-    <priority>0.5</priority>
+    <loc>https://www.brasilaviation.info/categoria.html?cat=LATAM</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.brasilaviation.info/categoria.html?cat=Movimentação%20de%20Frota</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.brasilaviation.info/noticia/avion-express-brasil-devolve-airbus-a320</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.brasilaviation.info/noticia/azul-manda-embora-mais-um-e195-e1</loc>
+    <lastmod>2026-04-21</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>

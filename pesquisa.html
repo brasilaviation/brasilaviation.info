@@ -7,7 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
     
     <style>
         .pesquisa-container { max-width: 800px; margin: 30px auto; padding: 0 20px; min-height: 80vh; }
@@ -29,7 +29,7 @@
         .no-results i { font-size: 40px; margin-bottom: 15px; display: block; opacity: 0.5; }
     </style>
 </head>
-<body class="loading-state">
+<body>
 
 <div id="header-container"></div>
 <div id="menu-container"></div>
@@ -45,7 +45,7 @@
 
 <div id="footer-container"></div>
 
-<script type="module" src="loader.js"></script>
+<script src="/loader.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -62,11 +62,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    // Função para aplicar o Dark Mode imediatamente ao carregar a página
-    if (localStorage.getItem('dark-mode') === 'active') {
-        document.body.classList.add('dark-mode');
-    }
 
     async function realizarBusca() {
         const params = new URLSearchParams(window.location.search);
@@ -86,11 +81,17 @@
 
             snap.forEach(docSnap => {
                 const n = docSnap.data();
-                if (n.titulo?.toLowerCase().includes(termo) || n.tags?.toLowerCase().includes(termo) || n.cat?.toLowerCase().includes(termo)) {
+                // Busca no título, tags ou categoria (cat)
+                if (n.titulo?.toLowerCase().includes(termo) || 
+                    n.tags?.toLowerCase().includes(termo) || 
+                    n.cat?.toLowerCase().includes(termo)) {
+                    
                     encontrados++;
                     const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR') : "";
+                    const linkUrl = n.slug ? `/noticia/${n.slug}` : `/noticia.html?id=${docSnap.id}`;
+
                     html += `
-                        <div class="resultado-item" onclick="location.href='noticia.html?id=${n.slug || docSnap.id}'">
+                        <div class="resultado-item" onclick="location.href='${linkUrl}'">
                             <img src="${n.foto || 'placeholder.jpg'}">
                             <div class="resultado-info">
                                 <h3>${n.titulo}</h3>
@@ -100,16 +101,16 @@
                 }
             });
 
-            document.getElementById('lista-resultados').innerHTML = encontrados > 0 ? html : `<div class="no-results"><i class="fas fa-plane-slash"></i><p>Nenhum voo encontrado para "${termo}".</p></div>`;
+            document.getElementById('lista-resultados').innerHTML = encontrados > 0 
+                ? html 
+                : `<div class="no-results"><i class="fas fa-plane-slash"></i><p>Nenhum voo encontrado para "${termo}".</p></div>`;
         } catch (e) {
             console.error(e);
-            document.getElementById('lista-resultados').innerHTML = "<p>Erro na conexão.</p>";
+            document.getElementById('lista-resultados').innerHTML = "<p>Erro na conexão com o radar.</p>";
         }
     }
 
-    // Dispara a busca
     realizarBusca();
 </script>
-
 </body>
 </html>

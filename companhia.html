@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/style.css"> 
     <style>
-        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575; --radius: 18px; --cor-cia: #1a237e; }
+        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575; --radius: 18px; --cor-cia: #1a237e; --border: rgba(0,0,0,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.4; transition: 0.3s; }
-        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; }
+        
+        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; --border: rgba(255,255,255,0.1); }
 
         .hero-cia {
             padding: 60px 20px;
@@ -31,11 +32,11 @@
         .cia-nome { font-size: 1.8rem; font-weight: 800; }
         .cia-sub { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 5px; }
 
-        main { max-width: 900px; margin: 0 auto; padding-bottom: 60px; }
+        main { max-width: 900px; margin: 0 auto; padding-bottom: 60px; min-height: 50vh; }
         .feed-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 0 15px; }
         @media (min-width: 768px) { .feed-container { grid-template-columns: 1fr 1fr; } }
         
-        .news-card { display: flex; background: var(--card); padding: 10px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; border: 1px solid transparent; transition: 0.2s; align-items: center; }
+        .news-card { display: flex; background: var(--card); padding: 10px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; border: 1px solid var(--border); transition: 0.2s; align-items: center; }
         .news-card:hover { border-color: var(--secondary); transform: translateY(-2px); }
         .news-card img { width: 95px; height: 65px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
         .news-content { margin-left: 12px; }
@@ -43,7 +44,7 @@
         .news-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
         .news-meta .author { font-weight: 600; color: var(--secondary); }
 
-        .loader { text-align: center; padding: 50px; font-weight: 700; color: var(--cor-cia); }
+        .loader { text-align: center; padding: 50px; font-weight: 700; color: var(--cor-cia); grid-column: 1/-1; }
     </style>
 </head>
 <body>
@@ -55,8 +56,8 @@
     <div class="logo-container">
         <img id="cia-logo" src="" alt="Logo">
     </div>
-    <h1 class="cia-nome" id="cia-titulo">Sintonizando...</h1>
-    <p class="cia-sub">Ultimas notícias</p></p>
+    <h1 class="cia-nome" id="cia-titulo">Carregando...</h1>
+   <a href="/frotas?" class="cia-titulo"><i class="fas fa-list-circle"></i> Ver frota</a></li>
 </section>
 
 <main>
@@ -66,6 +67,8 @@
 </main>
 
 <div id="footer-container"></div>
+
+<script type="module" src="/loader.js"></script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -89,45 +92,17 @@
         'LATAM': { cor: '#950054', logo: '/latam-logo.png', nome: 'LATAM Airlines' }
     };
 
-    async function loadComp(id, path) {
-        try {
-            const r = await fetch('/' + path + "?v=" + Date.now());
-            if(r.ok) {
-                const htmlContent = await r.text();
-                document.getElementById(id).innerHTML = htmlContent;
-                ativarInteracoesUI();
-            }
-        } catch (e) { console.error("Erro ao carregar componente:", path); }
-    }
-
-    function ativarInteracoesUI() {
-        const btnMenu = document.getElementById('open-menu');
-        const sideMenu = document.getElementById('side-menu');
-        const btnClose = document.getElementById('close-menu');
-        const btnDark = document.getElementById('dark-toggle-header');
-        
-        if (btnMenu && sideMenu) btnMenu.onclick = () => sideMenu.style.left = "0";
-        if (btnClose && sideMenu) btnClose.onclick = () => sideMenu.style.left = "-100%";
-        if (btnDark) {
-            btnDark.onclick = () => {
-                document.body.classList.toggle('dark-mode');
-                localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode') ? 'active' : 'inactive');
-            };
-        }
-        if (localStorage.getItem('dark-mode') === 'active') document.body.classList.add('dark-mode');
-    }
-
     async function carregarCia() {
         const params = new URLSearchParams(window.location.search);
         const urlKey = params.get('c') || params.get('comp') || 'GOL';
+        
         const ciaKey = Object.keys(temas).find(k => k.toLowerCase() === urlKey.toLowerCase()) || 'GOL';
         const config = temas[ciaKey];
 
-        document.title = `${config.nome} | Brasil Aviation`;
+        document.title = `${config.nome} | BrasilAviation.info`;
         document.getElementById('cia-titulo').innerText = config.nome;
         document.getElementById('cia-logo').src = config.logo;
         document.getElementById('hero-bg').style.setProperty('--cor-cia', config.cor);
-        document.documentElement.style.setProperty('--cor-cia', config.cor);
 
         try {
             const q = query(collection(db, "noticias"), where("cat", "==", ciaKey), orderBy("data", "desc"));
@@ -136,7 +111,7 @@
             feed.innerHTML = "";
 
             if(snap.empty) {
-                feed.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding:40px;'>Nenhuma notícia encontrada.</p>";
+                feed.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding:40px;'>Nenhuma notícia encontrada para esta companhia.</p>";
                 return;
             }
 
@@ -152,23 +127,19 @@
                     <div class="news-content">
                         <h4>${n.titulo}</h4>
                         <div class="news-meta">
-                            <span class="author">${n.autor}</span>
+                            <span class="author">${n.autor || 'Redação'}</span>
                             <span>${dataFmt}</span>
                         </div>
                     </div>
                 </article>`;
             });
         } catch (e) { 
-            console.error(e);
-            document.getElementById('news-feed').innerHTML = "<p style='text-align:center;'>Erro ao carregar notícias.</p>";
+            console.error("Erro no radar:", e);
+            document.getElementById('news-feed').innerHTML = "<p style='text-align:center; grid-column: 1/-1;'>Erro ao carregar notícias.</p>";
         }
     }
 
-    loadComp('header-container', 'cabecalho.html');
-    loadComp('footer-container', 'rodape.html');
-    loadComp('menu-container', 'menu.html');
     carregarCia();
-
 </script>
 
 </body>

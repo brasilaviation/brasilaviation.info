@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeronave | BrasilAviation.info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #003399; 
+            --secondary: #050a1a; 
+            --bg: #f8f9fb; 
+            --card-bg: #ffffff;
+            --border: #eef0f2;
+            --text-main: #1a1d23;
+            --text-muted: #64748b;
+            --header-gradient: linear-gradient(135deg, #050a1a 0%, #003399 100%);
+        }
+        
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--text-main); -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+
+        .info-card-main {
+            background: var(--header-gradient);
+            border-radius: 20px; padding: 30px; display: flex; flex-wrap: wrap;
+            gap: 30px; align-items: center; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: background 0.5s ease;
+            position: relative;
+        }
+        .info-group { flex: 1; min-width: 150px; }
+        .info-group label { display: block; font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .info-group span { display: block; font-size: 1.1rem; font-weight: 700; }
+
+        .status-badge {
+            background: #22c55e; color: white; padding: 6px 14px; border-radius: 8px;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px;
+        }
+
+        .btn-correction {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 8px 12px; border-radius: 8px;
+            font-size: 0.65rem; font-weight: 700; cursor: pointer;
+            transition: 0.3s; backdrop-filter: blur(5px);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-correction:hover { background: white; color: var(--primary); }
+
+        .tech-data-bar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px; margin-top: 15px;
+        }
+        .tech-item {
+            background: var(--card-bg); border: 1px solid var(--border); padding: 15px 20px;
+            border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .tech-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .tech-value { font-size: 0.85rem; font-weight: 700; color: var(--primary); }
+
+        .section-title { font-weight: 800; font-size: 0.9rem; color: var(--secondary); text-transform: uppercase; margin: 40px 0 15px; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .timeline-container { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        th { background: #fafbfc; padding: 14px 20px; text-align: left; font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 18px 20px; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+
+        .row-active { background: #f0f4ff !important; }
+        .row-active td:first-child { border-left: 4px solid var(--primary); }
+        
+        .row-foreign { filter: grayscale(1); opacity: 0.7; background: #f8f9fa; }
+        .tag-estrang { font-size: 0.6rem; font-weight: 800; color: #64748b; margin-left: 5px; text-transform: lowercase; }
+
+        .remark-container { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+        .remark-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+        
+        .remark-tag-badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .remark-text { font-weight: 500; color: var(--text-main); }
+
+        .news-btn { border: 1.5px solid var(--border); color: var(--text-main); padding: 7px 14px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; text-decoration: none; }
+        .news-btn:hover { background: var(--primary); color: white; }
+
+        .btn-enviar-foto { background: var(--primary); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.7rem; font-weight: 700; transition: 0.3s; }
+
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 15px; margin-top: 15px; }
+        .photo-item { border-radius: 15px; overflow: hidden; background: #eee; aspect-ratio: 16/9; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); padding: 20px; box-sizing: border-box;
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 500px; border-radius: 20px;
+            padding: 30px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 { margin: 0 0 10px 0; color: var(--secondary); font-size: 1.2rem; font-weight: 800; }
+        .close-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.65rem; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px;
+            font-family: 'Inter'; font-size: 0.9rem; box-sizing: border-box; outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .btn-submit-fix {
+            width: 100%; background: var(--primary); color: white; border: none;
+            padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+        .btn-submit-fix:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+        @media (max-width: 768px) {
+            .container { margin: 15px auto; padding: 0 12px; }
+            .info-card-main { padding: 20px; gap: 15px; display: grid; grid-template-columns: 1fr 1fr; }
+            .info-group { min-width: auto; }
+            .info-group span { font-size: 0.95rem; }
+            .status-badge { grid-column: span 2; text-align: center; }
+            .btn-correction { grid-column: span 2; justify-content: center; }
+            .tech-data-bar { grid-template-columns: 1fr; }
+            .tech-item { padding: 12px 15px; }
+            .section-title { margin: 25px 0 10px; font-size: 0.8rem; }
+            .photo-grid { grid-template-columns: 1fr; }
+            .modal-content { padding: 20px; width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="info-card-main" id="main-header">
+            <div class="info-group">
+                <label>Matrícula</label>
+                <span id="label-reg">---</span>
+            </div>
+            <div class="info-group">
+                <label>Modelo</label>
+                <span id="ac-model">---</span>
+            </div>
+            <div class="info-group">
+                <label>Série (MSN)</label>
+                <span id="ac-msn">---</span>
+            </div>
+            <div class="info-group">
+                <label>Idade Total</label>
+                <span id="ac-age-top">---</span>
+            </div>
+            <div id="status-tag" class="status-badge">---</div>
+            
+            <button class="btn-correction" id="openModal">
+                <i class="fas fa-edit"></i> Sugerir Correção
+            </button>
+        </div>
+
+        <div class="tech-data-bar">
+            <div class="tech-item">
+                <span class="tech-label">Motores</span>
+                <span id="ac-engine" class="tech-value">---</span>
+            </div>
+            <div class="tech-item">
+                <span class="tech-label">Configuração</span>
+                <span id="ac-config" class="tech-value">---</span>
+            </div>
+            <div class="tech-item">
+                <span class="tech-label">Operador Atual</span>
+                <span id="ac-operator" class="tech-value">---</span>
+            </div>
+        </div>
+
+        <h2 class="section-title">Histórico por MSN (<span id="msn-title">---</span>)</h2>
+        <div class="timeline-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Operadora</th>
+                        <th>Tempo na Frota</th>
+                        <th>Batismo / Detalhes</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body">
+                    <tr><td colspan="5" style="text-align:center; padding:30px;">Buscando histórico...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-title">
+            <span>Galeria de Fotos</span>
+            <a href="https://aeronaves.info" target="_blank" class="btn-enviar-foto"><i class="fas fa-camera"></i> Enviar Foto</a>
+        </div>
+        <div class="photo-grid" id="aircraft-photos">
+            <div class="photo-item"><img src="https://via.placeholder.com/800x450?text=Carregando+Imagem..."></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalFix">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal" id="closeModal"></i>
+            <h3>Sugerir Correção</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">Relate erros técnicos ou envie informações atualizadas.</p>
+            
+            <form id="formCorrecao">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" id="fix-nome" placeholder="Seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="fix-email" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>MSN</label>
+                        <input type="text" id="fix-msn" readonly style="background: #f1f5f9;">
+                    </div>
+                    <div class="form-group">
+                        <label>Matrícula</label>
+                        <input type="text" id="fix-reg" readonly style="background: #f1f5f9;">
+                    </div>
+                    <div class="form-group">
+                        <label>Cia</label>
+                        <input type="text" id="fix-cia" readonly style="background: #f1f5f9;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descreva a correção</label>
+                    <textarea id="fix-info" rows="4" placeholder="Ex: O motor correto é o CF6-80..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit-fix" id="btnEnviar">Enviar para o Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+            authDomain: "braviation3.firebaseapp.com",
+            projectId: "braviation3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const ciasNacionais = ["Azul", "GOL", "LATAM", "Sideral", "Placar", "Total", "Avion Express", "Modern Logistics", "Passaredo", "VoePass"];
+
+        const brandColors = {
+            "Azul": { primary: "#003399", grad: "linear-gradient(135deg, #001a4d 0%, #003399 100%)" },
+            "LATAM": { primary: "#950054", grad: "linear-gradient(135deg, #5e0035 0%, #950054 100%)" },
+            "GOL": { primary: "#ff671f", grad: "linear-gradient(135deg, #4d1f09 0%, #ff671f 100%)" },
+            "Sideral": { primary: "#1e293b", grad: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" }
+        };
+
+        const modal = document.getElementById('modalFix');
+        document.getElementById('openModal').onclick = () => modal.style.display = 'flex';
+        document.getElementById('closeModal').onclick = () => modal.style.display = 'none';
+        window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; }
+
+        function calcularTempo(dataIni, dataFim = null) {
+            if(!dataIni || dataIni === "Pendente") return "N/I";
+            try {
+                const parts = dataIni.split('-');
+                const inicio = new Date(parts[0], (parts[1] || 1) - 1);
+                const fim = dataFim ? new Date(dataFim) : new Date();
+                let anos = fim.getFullYear() - inicio.getFullYear();
+                let meses = fim.getMonth() - inicio.getMonth();
+                if (meses < 0) { anos--; meses += 12; }
+                return anos > 0 ? `${anos}a ${meses}m` : `${meses} meses`;
+            } catch(e) { return "---"; }
+        }
+
+        async function carregar() {
+            const params = new URLSearchParams(window.location.search);
+            const idUrl = params.get('id');
+            const msnUrl = params.get('msn');
+
+            let d = null;
+
+            if (idUrl) {
+                const snap = await getDoc(doc(db, "aeronaves", idUrl));
+                if (snap.exists()) d = snap.data();
+            } else if (msnUrl) {
+                const q = query(collection(db, "aeronaves"), where("msn", "==", msnUrl), where("status", "==", "Ativa"));
+                const snap = await getDocs(q);
+                if (!snap.empty) { 
+                    d = snap.docs[0].data(); 
+                } else {
+                    const qAlt = query(collection(db, "aeronaves"), where("msn", "==", msnUrl));
+                    const snapAlt = await getDocs(qAlt);
+                    if(!snapAlt.empty) d = snapAlt.docs[0].data();
+                }
+            }
+
+            if (d) {
+                const brand = brandColors[d.cia] || { primary: "#1e293b", grad: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" };
+                document.documentElement.style.setProperty('--primary', brand.primary);
+                document.documentElement.style.setProperty('--header-gradient', brand.grad);
+
+                document.getElementById('label-reg').innerText = d.matricula || "---";
+                document.getElementById('ac-model').innerText = d.modelo || "---";
+                document.getElementById('ac-msn').innerText = d.msn || "---";
+                document.getElementById('msn-title').innerText = d.msn || "---";
+                document.getElementById('ac-age-top').innerText = calcularTempo(d.data_fab);
+                document.getElementById('status-tag').innerText = (d.status || 'Ativa').toUpperCase();
+                document.getElementById('ac-engine').innerText = d.motores || d.motor || "---";
+                document.getElementById('ac-operator').innerText = d.cia || "---";
+
+                const configArray = [];
+                if (Number(d.conf_f) > 0) configArray.push(`${d.conf_f}F`);
+                if (Number(d.conf_c) > 0) configArray.push(`${d.conf_c}C`);
+                if (Number(d.conf_w) > 0) configArray.push(`${d.conf_w}W`);
+                if (Number(d.conf_y) > 0) configArray.push(`${d.conf_y}Y`);
+                document.getElementById('ac-config').innerText = configArray.length > 0 ? configArray.join(' / ') : (d.configuracao || d.config || "N/I");
+
+                document.getElementById('fix-msn').value = d.msn || "";
+                document.getElementById('fix-reg').value = d.matricula || "";
+                document.getElementById('fix-cia').value = d.cia || "";
+
+                const qHist = query(collection(db, "aeronaves"), where("msn", "==", d.msn));
+                const snapHist = await getDocs(qHist);
+                const regs = snapHist.docs.map(doc => ({...doc.data(), id: doc.id}));
+                
+                const body = document.getElementById('history-body');
+
+                // ORDENAÇÃO: O mais recente (maior data) fica no topo
+                const regsOrdenados = regs.sort((a, b) => {
+                    const dataA = a.data_ent || "0000-00-00";
+                    const dataB = b.data_ent || "0000-00-00";
+                    return dataB.localeCompare(dataA);
+                });
+
+                body.innerHTML = regsOrdenados.map(a => {
+                    const isAtiva = a.status === 'Ativa';
+                    const isNacional = ciasNacionais.some(nome => a.cia && a.cia.includes(nome));
+                    
+                    let rowClasses = [];
+                    if (isAtiva) rowClasses.push('row-active');
+                    if (!isNacional) rowClasses.push('row-foreign');
+
+                    let tempoFrota = isAtiva ? calcularTempo(a.data_ent) : (a.hist_saida ? `Saiu em ${a.hist_saida}` : 'Encerrado');
+
+                    let detalhesHtml = '';
+                    if (a.batismo) {
+                        detalhesHtml += `<div style="font-weight:700; margin-bottom:4px;">"${a.batismo}"</div>`;
+                    }
+
+                    if (Array.isArray(a.remarks) && a.remarks.length > 0) {
+                        detalhesHtml += `<div class="remark-container">`;
+                        a.remarks.forEach(r => {
+                            detalhesHtml += `
+                                <div class="remark-item">
+                                    <span class="remark-tag-badge">${r.prefixo}</span>
+                                    <span class="remark-text">${r.texto}</span>
+                                </div>`;
+                        });
+                        detalhesHtml += `</div>`;
+                    } else if (a.remarks && typeof a.remarks === 'string') {
+                        detalhesHtml += `<small style="color:var(--text-muted)">${a.remarks}</small>`;
+                    }
+
+                    if (!detalhesHtml) detalhesHtml = '---';
+
+                    return `
+                    <tr class="${rowClasses.join(' ')}">
+                        <td><b style="color:var(--primary)">${a.matricula}</b></td>
+                        <td><b>${a.cia}</b>${!isNacional ? '<span class="tag-estrang">(estrang.)</span>' : ''}</td>
+                        <td>${tempoFrota}</td>
+                        <td>${detalhesHtml}</td>
+                        <td><a href="?id=${a.id}" class="news-btn">Ficha</a></td>
+                    </tr>`;
+                }).join('');
+
+                document.getElementById('aircraft-photos').innerHTML = `
+                    <div class="photo-item">
+                        <img src="https://aeronaves.info/foto/${d.matricula}.jpg" 
+                             onerror="this.src='https://via.placeholder.com/800x450?text=Foto+indisponível+para+${d.matricula}'"
+                             alt="${d.matricula} Spotting">
+                    </div>
+                `;
+            } else {
+                document.getElementById('main-header').innerHTML = "<h1 style='padding:20px'>Aeronave não encontrada.</h1>";
+            }
+        }
+
+        document.getElementById('formCorrecao').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnEnviar');
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "correcoes"), {
+                    nome: document.getElementById('fix-nome').value,
+                    email: document.getElementById('fix-email').value,
+                    msn: document.getElementById('fix-msn').value,
+                    matricula: document.getElementById('fix-reg').value,
+                    cia: document.getElementById('fix-cia').value,
+                    detalhes: document.getElementById('fix-info').value,
+                    status: "pendente",
+                    dataEnvio: new Date().toISOString()
+                });
+                alert("Sucesso! Analisaremos sua sugestão.");
+                modal.style.display = 'none';
+            } catch (err) {
+                alert("Erro ao enviar.");
+            } finally {
+                btn.innerText = "Enviar para o Admin";
+                btn.disabled = false;
+            }
+        };
+
+        carregar();
+    </script>
+</body>
+</html>

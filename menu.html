@@ -2,101 +2,98 @@
 
 <nav class="side-menu" id="side-menu">
     <div class="menu-close-area">
-        <button class="btn-icon" id="close-menu"><i class="fas fa-times"></i></button>
+        <button class="btn-close-menu" id="close-menu">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
     
     <ul style="list-style: none; padding: 0;">
         <li class="menu-section-title">PÁGINAS</li>
-        <li><a href="index.html" class="menu-link"><i class="fas fa-home menu-main-icon"></i> Início</a></li>
-        <li><a href="sobre.html" class="menu-link"><i class="fas fa-info-circle menu-main-icon"></i> Sobre Nós</a></li>
+        <li><a href="/" class="menu-link"><i class="fas fa-home"></i> Início</a></li>
+        <li><a href="/frotas" class="menu-link"><i class="fas fa-list-ul"></i> Frotas</a></li>
+        <li><a href="/sobre" class="menu-link"><i class="fas fa-info-circle"></i> Sobre Nós</a></li>
+        <li><a href="/contato" class="menu-link"><i class="fas fa-envelope"></i> Contato</a></li>
         
         <hr class="menu-divider">
         <li class="menu-section-title">COMPANHIAS</li>
         <div class="cias-container">
-            <a href="companhia.html?c=AZUL" class="cia-card card-azul">
+            <a href="/companhia?c=AZUL" class="cia-card card-azul">
                 <img src="azul-logo.png" alt="Azul">
                 <span>Azul</span>
             </a>
-            <a href="companhia.html?c=GOL" class="cia-card card-gol">
+            <a href="/companhia?c=GOL" class="cia-card card-gol">
                 <img src="gol-logo.png" alt="GOL">
                 <span>GOL</span>
             </a>
-            <a href="companhia.html?c=LATAM" class="cia-card card-latam">
+            <a href="/companhia?c=LATAM" class="cia-card card-latam">
                 <img src="latam-logo.png" alt="LATAM">
                 <span>LATAM</span>
             </a>
         </div>
 
         <hr class="menu-divider">
-        <li>
-            <a href="javascript:void(0)" id="btn-toggle-cat" class="menu-link" style="justify-content:space-between;">
-                <span><i class="fas fa-list-ul menu-main-icon"></i> Categorias</span>
-                <i class="fas fa-chevron-down menu-arrow" id="seta-cat"></i>
-            </a>
-            <div class="submenu" id="lista-cat">
-                <div id="dinamic-cats-menu"><small style="padding-left: 50px; color: var(--text-muted);">Carregando...</small></div>
-            </div>
-        </li>
-
+        <li class="menu-section-title">CATEGORIAS</li>
+        <li><a href="/pesquisa?q=FROTA" class="menu-link"><i class="fas fa-plane-arrival"></i> Movimentação</a></li>
+        <li><a href="/pesquisa?q=PINTURA" class="menu-link"><i class="fas fa-paint-roller"></i> Pinturas Especiais</a></li>
+        <li><a href="/pesquisa?q=RELATOS" class="menu-link"><i class="fas fa-plane"></i> Flight Review</a></li>
+        
         <hr class="menu-divider">
         <li class="menu-section-title">LEGAL</li>
-        <li><a href="termos.html" class="menu-link"><i class="fas fa-file-contract menu-main-icon"></i> Termos de Uso</a></li>
-        <li><a href="privacidade.html" class="menu-link"><i class="fas fa-shield-alt menu-main-icon"></i> Privacidade</a></li>
+        <li><a href="/disclaimer" class="menu-link"><i class="fas fa-exclamation-triangle"></i> Disclaimer</a></li>
+        <li><a href="/termos" class="menu-link"><i class="fas fa-file-contract"></i> Termos</a></li>
+        <li><a href="/privacidade" class="menu-link"><i class="fas fa-shield-alt"></i> Privacidade</a></li>
     </ul>
 </nav>
 
 <style>
-    .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card, #fff); z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto; font-family: sans-serif; }
+    .side-menu { position: fixed; top: 0; left: -300px; width: 280px; height: 100%; background: var(--card, #fff); z-index: 2000; transition: 0.4s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); overflow-y: auto; }
     body.menu-active .side-menu { left: 0; }
     body.menu-active #menu-overlay { display: block; }
     
-    .menu-close-area { padding: 15px; text-align: right; }
-    .btn-icon { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-main, #333); }
+    .menu-close-area { padding: 20px; text-align: right; }
     
-    .menu-link { padding: 12px 20px; text-decoration: none; color: var(--text-main, #333); display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; font-size: 14px; }
-    .menu-link:hover { background: rgba(0,0,0,0.05); color: var(--secondary, #003399); }
+    .btn-close-menu {
+        background: var(--bg, #f4f4f4);
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        color: var(--text-main, #333);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn-close-menu:hover { background: var(--secondary, #2e7d32); color: white; transform: rotate(90deg); }
+
+    .menu-link { padding: 12px 20px; text-decoration: none; color: var(--text-main, #333); display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 14px; transition: 0.2s; }
+    .menu-link:hover { background: rgba(46, 125, 50, 0.05); color: var(--secondary, #2e7d32); }
+    .menu-link i { color: var(--secondary, #2e7d32); width: 18px; font-size: 16px; }
     
     .cias-container { padding: 5px 20px; display: flex; flex-direction: column; gap: 8px; }
+    .cia-card { display: flex; align-items: center; padding: 10px 15px; border-radius: 12px; text-decoration: none; color: white; font-weight: 700; font-size: 13px; gap: 12px; transition: 0.3s; }
+    .cia-card:hover { transform: scale(1.02); filter: brightness(1.1); }
+    .cia-card img { height: 16px; width: auto; filter: brightness(0) invert(1); }
     
-    .cia-card { 
-        display: flex; 
-        align-items: center; 
-        padding: 8px 12px; 
-        border-radius: 8px; 
-        text-decoration: none; 
-        color: white; 
-        font-weight: 600; 
-        font-size: 13px; 
-        height: 38px; 
-        gap: 12px;
-    }
-
-    /* CORREÇÃO DO TAMANHO DAS LOGOS */
-    .cia-card img {
-        height: 22px;       /* Altura fixa para não estourarem */
-        width: auto;        /* Mantém a proporção da largura */
-        max-width: 60px;    /* Limite para logos compridas */
-        object-fit: contain;
-    }
-
     .card-azul { background: linear-gradient(135deg, #003399 0%, #00a3e0 100%); }
     .card-gol { background: linear-gradient(135deg, #FF6600 0%, #cc5200 100%); }
     .card-latam { background: linear-gradient(135deg, #950054 0%, #1a237e 100%); }
     
-    .submenu { max-height: 0; overflow: hidden; transition: 0.4s; background: rgba(0,0,0,0.03); }
-    .submenu.active { max-height: 500px; }
-    .menu-arrow { transition: 0.3s; }
-    .menu-arrow.rotate { transform: rotate(180deg); }
-    .menu-section-title { padding: 12px 20px 4px; font-size: 10px; font-weight: 700; color: var(--secondary, #003399); text-transform: uppercase; }
-    .menu-divider { opacity: 0.1; margin: 10px 20px; border: 0; border-top: 1px solid #000; }
+    .menu-section-title { padding: 15px 20px 5px; font-size: 11px; font-weight: 800; color: var(--secondary, #2e7d32); text-transform: uppercase; letter-spacing: 1px; }
+    .menu-divider { opacity: 0.1; margin: 15px 20px; border: 0; border-top: 1px solid var(--text-main, #333); }
 </style>
 
 <script>
-    document.getElementById('close-menu').addEventListener('click', () => document.body.classList.remove('menu-active'));
-    document.getElementById('menu-overlay').addEventListener('click', () => document.body.classList.remove('menu-active'));
-    
-    document.getElementById('btn-toggle-cat').addEventListener('click', function() {
-        document.getElementById('lista-cat').classList.toggle('active');
-        document.getElementById('seta-cat').classList.toggle('rotate');
+    const fecharMenu = () => {
+        document.body.classList.remove('menu-active');
+    };
+
+    document.getElementById('close-menu').addEventListener('click', fecharMenu);
+    document.getElementById('menu-overlay').addEventListener('click', fecharMenu);
+
+    document.querySelectorAll('.menu-link, .cia-card').forEach(link => {
+        link.addEventListener('click', fecharMenu);
     });
 </script>

@@ -3,28 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Administrativo | BrasilAviation</title>
+    <title>401 | BrasilAviation.info</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        .login-box { max-width: 350px; margin: 100px auto; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .login-box img { width: 150px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        .btn-login { width: 100%; padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        :root { --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+
+        /* A CAPA DE TROLLAGEM - Carrega por cima de tudo */
+        #troll-overlay {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10000; text-align: center; padding: 20px; transition: 0.5s;
+        }
+        #troll-overlay i { font-size: 80px; color: var(--primary); margin-bottom: 25px; opacity: 0.8; }
+        #troll-overlay h1 { font-size: 20px; color: #333; margin-bottom: 10px; font-weight: 700; }
+        #troll-overlay p { font-size: 14px; color: #666; max-width: 300px; line-height: 1.5; }
+        
+        /* O rodapé com o Copyright clicável */
+        .troll-footer { position: absolute; bottom: 20px; font-size: 11px; color: #999; user-select: none; }
+        .secure-gate { cursor: default; padding: 5px; font-size: 14px; font-weight: bold; color: #ccc; transition: 0.2s; }
+        
+        /* BOX DE LOGIN - Escondido por padrão */
+        .login-box { 
+            max-width: 350px; width: 90%; padding: 30px; background: white; 
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            text-align: center; display: none; /* ESCONDIDO */
+            z-index: 100;
+        }
+        .login-box img { max-width: 160px; margin-bottom: 25px; }
+        .login-box h3 { font-size: 18px; color: var(--primary); margin-bottom: 20px; font-weight: 700; }
+        input { 
+            width: 100%; padding: 14px; margin: 8px 0; border: 1.5px solid #eee; 
+            border-radius: 10px; background: #fafafa; font-size: 14px; transition: 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--secondary); background: white; }
+        .btn-login { 
+            width: 100%; padding: 14px; background: var(--secondary); color: white; 
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; 
+            margin-top: 15px; font-size: 15px; transition: 0.3s;
+        }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-2px); }
+        #erro { color: #d32f2f; font-size: 12px; margin-top: 12px; font-weight: 500; }
     </style>
 </head>
-<body style="background: #f4f7f6;">
+<body>
 
-<div class="login-box">
-    <img src="3_20250925_005418_0002.png" alt="Logo">
-    <h3>Acesso Restrito</h3>
-    <input type="email" id="email" placeholder="E-mail do Administrador">
-    <input type="password" id="senha" placeholder="Senha">
-    <button class="btn-login" id="btn-entrar">Entrar no Painel</button>
-    <p id="erro" style="color:red; font-size:12px; margin-top:10px; display:none;">Acesso negado!</p>
+<div id="troll-overlay">
+    <i class="fas fa-plane-slash"></i>
+    <h1>401 - Não tem nada aqui, bobão.</h1>
+    <p>Vai caçar um avião para você pilotar ou um flagra para spottear!</p>
+    
+    <div class="troll-footer">
+        <span id="secure-gate" class="secure-gate">&copy;</span> 2023 - 2026 BrasilAviation.info - Todos os direitos reservados.
+    </div>
 </div>
 
+<div class="login-box" id="login-form">
+    <img src="/logobrasilaviation.info.png" alt="BrasilAviation.info">
+    <h3>Acesso ao Painel</h3>
+    <input type="email" id="email" placeholder="Insira seu email" required>
+    <input type="password" id="senha" placeholder="Insira sua senha" required>
+    <button class="btn-login" id="btn-entrar">Acessar painel</button>
+    <p id="erro" style="display:none;">Autenticação falhou. Plano de voo cancelado.</p>
+</div>
+
+<script>
+    (function() {
+        let count = 0;
+        let lastClick = 0;
+        const gate = document.getElementById('secure-gate');
+        const overlay = document.getElementById('troll-overlay');
+        const form = document.getElementById('login-form');
+
+        if (gate && overlay && form) {
+            gate.addEventListener('click', function(e) {
+                const now = Date.now();
+                
+                // Se demorar mais de 1.5s entre cliques, reseta
+                if (now - lastClick > 1500) {
+                    count = 0;
+                }
+                
+                count++;
+                lastClick = now;
+
+                // Feedback visual sutil (opcional, remova se quiser 100% invisível)
+                // gate.style.color = `rgba(46, 125, 50, ${count * 0.25})`;
+
+                if (count === 4) {
+                    // Executa a transição
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none'; // Some com a capa
+                        form.style.display = 'block'; // Mostra o login
+                    }, 500); // Tempo da transição de opacidade
+                    count = 0; // Reseta o contador
+                }
+            });
+        }
+    })();
+</script>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
@@ -38,19 +126,38 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.getElementById('btn-entrar').onclick = async () => {
-        const email = document.getElementById('email').value;
-        const senha = document.getElementById('senha').value;
-        const erroMsg = document.getElementById('erro');
+    const btnEntrar = document.getElementById('btn-entrar');
+    if (btnEntrar) {
+        btnEntrar.onclick = async () => {
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            const erroMsg = document.getElementById('erro');
 
-        try {
-            await setPersistence(auth, browserLocalPersistence);
-            await signInWithEmailAndPassword(auth, email, senha);
-            window.location.href = "admin.html";
-        } catch (error) {
-            erroMsg.style.display = 'block';
+            if (!email || !senha) {
+                erroMsg.innerText = "Preencha todos os campos da malha.";
+                erroMsg.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Mantém logado mesmo se fechar o navegador
+                await setPersistence(auth, browserLocalPersistence);
+                await signInWithEmailAndPassword(auth, email, senha);
+                window.location.href = "admin.html"; // Redireciona para o painel
+            } catch (error) {
+                console.error("Erro de login:", error);
+                erroMsg.innerText = "Acesso negado. Credenciais inválidas.";
+                erroMsg.style.display = 'block';
+            }
+        };
+    }
+
+    // Permite dar Enter no campo de senha para logar
+    document.getElementById('senha').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            document.getElementById('btn-entrar').click();
         }
-    };
+    });
 </script>
 </body>
 </html>

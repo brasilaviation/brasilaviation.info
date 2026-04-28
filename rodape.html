@@ -1,79 +1,65 @@
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-column branding">
-            <a href="index.html">
-                <img src="logonomeBrasilaviation.info.png" alt="BrasilAviation.info" class="footer-logo">
+            <a href="/index.html">
+                <img src="/logonomeBrasilaviation.info.png" alt="BrasilAviation.info" class="footer-logo">
             </a>
-            <p>Sua fonte principal de notícias sobre a aviação comercial e spotting no Brasil.</p>
+            <p>-------------------</p>
             <div class="footer-social">
-                <a href="https://instagram.com/miguel_spotter" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://youtube.com/@MiguelSpotter" target="_blank"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://instagram.com/brasilaviation.info" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/brasil_aviation" target="_blank"><i class="fab fa-twitter.com"></i></a>
             </div>
         </div>
 
         <div class="footer-column">
             <h3>Navegação</h3>
             <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="sobre.html">Sobre Nós</a></li>
-                <li><a href="contato.html">Contato</a></li>
+                <li><a href="/index">Início</a></li>
+                <li><a href="/sobre">Sobre Nós</a></li>
+                <li><a href="/contato">Contato</a></li>
             </ul>
         </div>
 
         <div class="footer-column">
             <h3>Destaques</h3>
             <ul>
-                <li><a href="categoria.html?cat=FROTA">Movimentação de Frota</a></li>
-                <li><a href="categoria.html?cat=PINTURA">Pinturas Especiais</a></li>
-                <li><a href="categoria.html?cat=PEDIDOS">Entregas de Aeronaves</a></li>
+                <li><a href="/pesquisa?q=FROTA">Frota</a></li>
+                <li><a href="/pesquisa?q=PINTURA">Pinturas</a></li>
             </ul>
         </div>
 
         <div class="footer-column">
             <h3>Legal</h3>
             <ul>
-                <li><a href="termos.html">Termos de Uso</a></li>
-                <li><a href="privacidade.html">Privacidade</a></li>
+                <li><a href="/termos.html">Termos</a></li>
+                <li><a href="/privacidade.html">Privacidade</a></li>
             </ul>
         </div>
     </div>
 
     <div class="footer-bottom">
-        <p style="user-select: none;">
-            <span id="admin-gate" style="cursor: default; padding: 5px;">&copy;</span> 2026 BrasilAviation.info - Todos os direitos reservados.
-        </p>
+        <p>&copy; 2023 - 2026 BrasilAviation.info - <span id="admin-gate">Todos</span> os direitos reservados.</p>
     </div>
 </footer>
 
 <style>
-    .main-footer { background-color: var(--card); padding: 40px 20px 20px; border-top: 3px solid var(--secondary); margin-top: 50px; color: var(--text-main); transition: 0.3s; }
+    .main-footer { background-color: var(--card); padding: 40px 20px 20px; border-top: 3px solid var(--secondary); margin-top: 50px; }
     .footer-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
-    .footer-logo { max-height: 45px; width: auto; margin-bottom: 15px; display: block; }
-    .footer-column h3 { font-size: 14px; color: var(--secondary); margin-bottom: 15px; text-transform: uppercase; font-weight: 800; }
-    .footer-column ul { list-style: none; padding: 0; }
-    .footer-column ul li a { text-decoration: none; color: var(--text-muted); font-size: 14px; transition: 0.3s; }
-    .footer-column ul li a:hover { color: var(--secondary); padding-left: 5px; }
-    .footer-social a { color: #fff; background-color: var(--secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.3s; }
-    .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 11px; }
-    body.dark-mode .main-footer { background-color: #1a1a1a; }
+    .footer-logo { max-height: 40px; margin-bottom: 15px; }
+    .footer-column h3 { font-size: 13px; color: var(--secondary); margin-bottom: 15px; text-transform: uppercase; font-weight: 800; }
+    .footer-column ul li { list-style: none; margin-bottom: 8px; }
+    .footer-column ul li a { color: var(--text-muted); font-size: 14px; }
+    .footer-social { display: flex; gap: 10px; margin-top: 15px; }
+    .footer-social a { color: white; background: var(--secondary); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .footer-bottom { text-align: center; margin-top: 40px; font-size: 11px; color: var(--text-muted); }
 </style>
 
 <script>
     (function() {
         let count = 0;
-        let last = 0;
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.id === 'admin-gate') {
-                const now = Date.now();
-                if (now - last > 1500) count = 0;
-                count++;
-                last = now;
-                if (count === 4) {
-                    window.location.href = 'admin.html';
-                    count = 0;
-                }
-            }
-        });
+        document.getElementById('admin-gate').onclick = () => {
+            count++;
+            if (count === 4) window.location.href = '/admin';
+        };
     })();
 </script>

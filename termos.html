@@ -4,41 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termos de Uso | BrasilAviation.info</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { 
-            --primary: #1a237e; 
-            --secondary: #2e7d32; 
-            --bg: #f4f4f9; 
-            --text: #333; 
-            --card: #ffffff; 
-        }
-        body.dark-mode { 
-            --bg: #121212; 
-            --text: #eee; 
-            --primary: #fff; 
-            --card: #1e1e1e; 
-        }
-        body { 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            transition: 0.3s; 
-            min-height: 100vh; 
-        }
         .container { 
             max-width: 850px; 
             margin: 40px auto; 
             padding: 0 20px; 
             line-height: 1.8; 
+            min-height: 100vh;
         }
         .legal-card { 
             background: var(--card); 
             padding: 40px; 
-            border-radius: 20px; 
+            border-radius: var(--radius); 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border: 1px solid var(--border);
         }
         h1 { 
             color: var(--primary); 
@@ -48,15 +32,19 @@
             font-size: 28px; 
             text-transform: uppercase; 
             letter-spacing: 1px;
+            font-weight: 800;
         }
+        body.dark-mode h1 { color: #fff; }
+
         h2 { 
             color: var(--secondary); 
             margin-top: 35px; 
             font-size: 20px; 
-            border-bottom: 1px solid rgba(0,0,0,0.1); 
+            border-bottom: 1px solid var(--border); 
             padding-bottom: 10px; 
             display: flex;
             align-items: center;
+            font-weight: 700;
         }
         h2::before {
             content: "\f05a";
@@ -65,25 +53,39 @@
             margin-right: 10px;
             font-size: 18px;
         }
-        p { margin-bottom: 15px; }
-        ul { margin-bottom: 20px; padding-left: 20px; }
+        p { margin-bottom: 15px; color: var(--text-main); }
+        ul { margin-bottom: 20px; padding-left: 20px; color: var(--text-main); }
         ul li { margin-bottom: 8px; }
         strong { color: var(--primary); }
+        body.dark-mode strong { color: var(--secondary); }
+
         .update-date { 
             font-size: 13px; 
             color: var(--secondary); 
             font-weight: bold; 
             margin-top: 50px; 
             text-align: center; 
-            border-top: 1px dashed #ccc; 
+            border-top: 1px dashed var(--border); 
             padding-top: 20px; 
         }
-        hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 30px 0; }
+
+        @media (max-width: 600px) {
+            .legal-card { padding: 20px; }
+            h1 { font-size: 22px; }
+        }
     </style>
 </head>
 <body>
 
+<script>
+    // Aplica o tema imediatamente para evitar flash branco
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+</script>
+
 <div id="header-container"></div>
+<div id="menu-container"></div>
 
 <main class="container">
     <article class="legal-card">
@@ -104,7 +106,7 @@
         <h2>3. PROPRIEDADE INTELECTUAL E DIREITOS AUTORAIS</h2>
         <p>O respeito aos direitos autorais é um valor fundamental da nossa comunidade:</p>
         <ul>
-            <li><strong>Fotografias (Spotting):</strong> Todas as imagens publicadas no site que ostentam a marca d'água do BrasilAviation.info ou créditos de nossos fotógrafos são protegidas pela Lei de Direitos Autorais. É terminantemente proibida a reprodução, cópia, edição ou uso comercial sem autorização expressa.</li>
+            <li><strong>Fotografias (Spotting):</strong> Todas as imagens publicadas no site que ostentam a marca d'água do BrasilAviation.info or créditos de nossos fotógrafos são protegidas pela Lei de Direitos Autorais. É terminantemente proibida a reprodução, cópia, edição ou uso comercial sem autorização expressa.</li>
             <li><strong>Textos:</strong> A reprodução parcial de notícias é permitida, desde que acompanhada de crédito obrigatório com link ativo para a página original do BrasilAviation.info. A reprodução integral sem autorização é considerada plágio.</li>
         </ul>
 

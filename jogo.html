@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroX Extreme Ecosystem | Next-Gen Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --slate-950: #020617;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --cyan-500: #06b6d4;
+            --amber-500: #f59e0b;
+            --rose-500: #f43f5e;
+            --indigo-500: #6366f1;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--slate-950);
+            color: #f8fafc;
+            font-family: var(--font-sans);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Estrutura Principal Interconectada */
+        #app-viewport {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Topbar Global */
+        header {
+            grid-column: 1 / -1;
+            background: var(--slate-900);
+            border-bottom: 1px solid var(--slate-800);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .brand-space {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            background: linear-gradient(135deg, var(--cyan-500), var(--indigo-500));
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--slate-950);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .global-metrics {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .metric-pill {
+            background: var(--slate-800);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-pill span { font-weight: 700; color: var(--cyan-500); }
+
+        /* Sidebar de Navegação Dinâmica */
+        aside {
+            background: var(--slate-900);
+            border-right: 1px solid var(--slate-800);
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.02);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), transparent);
+            border-left: 3px solid var(--cyan-500);
+            color: var(--cyan-500);
+        }
+
+        /* Container de Telas Centrais */
+        main {
+            background: #0b0f19;
+            position: relative;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .view-panel {
+            display: none;
+            animation: viewFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .view-panel.active { display: block; }
+
+        @keyframes viewFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Geral / Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-system {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--slate-800);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-system::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
+        }
+
+        .card-header-sys {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title-sys {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            font-weight: 800;
+        }
+
+        /* Central de Controle de Voo (Radar Físico Ativo) */
+        #radar-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #020617;
+            border-radius: 16px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        #radar-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .radar-overlay-ui {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--slate-800);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .radar-controls {
+            position: absolute;
+            bottom: 20px; right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .atc-btn {
+            background: var(--slate-900);
+            border: 1px solid var(--slate-700);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .atc-btn:hover {
+            border-color: var(--cyan-500);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.2);
+        }
+
+        /* Sistema de Manutenção e Engenharia Preditiva */
+        .hanger-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .component-gauge {
+            background: rgba(2, 6, 23, 0.4);
+            border: 1px solid var(--slate-800);
+            padding: 14px;
+            border-radius: 10px;
+        }
+
+        .gauge-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .gauge-track {
+            background: var(--slate-900);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: var(--emerald-500);
+            width: 100%;
+            transition: width 0.4s ease;
+        }
+
+        /* Logs em tempo real de comunicação de rádio */
+        .radio-logs-box {
+            background: #020617;
+            border: 1px solid var(--slate-800);
+            border-radius: 10px;
+            height: 180px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 15px;
+            overflow-y: auto;
+            color: #a7f3d0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .log-line {
+            display: flex;
+            gap: 10px;
+        }
+        .log-time { color: var(--cyan-500); }
+
+        /* Elementos Gerais de Tabelas Operacionais */
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .market-table th {
+            padding: 12px;
+            color: #64748b;
+            border-bottom: 1px solid var(--slate-800);
+            font-weight: 700;
+        }
+
+        .market-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+
+        .btn-action-sys {
+            background: var(--cyan-500);
+            color: var(--slate-950);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-action-sys:hover { opacity: 0.9; }
+
+        /* Notificações flutuantes em tempo real */
+        #notification-center {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.95);
+            border-left: 4px solid var(--cyan-500);
+            padding: 12px 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-viewport">
+        
+        <!-- Global Header -->
+        <header>
+            <div class="brand-space">
+                <div class="brand-logo"><i class="fas fa-microchip"></i></div>
+                <div class="brand-text">AeroX Pro Ecosystem</div>
+            </div>
+            <div class="global-metrics">
+                <div class="metric-pill"><i class="fas fa-vault"></i> Caixa: <span id="lbl-cash">R$ 12.500.000</span></div>
+                <div class="metric-pill"><i class="fas fa-plane-departure"></i> Frota Ativa: <span id="lbl-fleet-count">0 Acft</span></div>
+                <div class="metric-pill"><i class="fas fa-clock"></i> Tempo CCO: <span id="lbl-time">08:00:00</span></div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <aside>
+            <div class="nav-group">
+                <div class="nav-item active" onclick="switchView('view-dash', this)"><i class="fas fa-chart-pie"></i> Painel Geral</div>
+                <div class="nav-item" onclick="switchView('view-radar', this)"><i class="fas fa-satellite-dish"></i> Vetorização ATC</div>
+                <div class="nav-item" onclick="switchView('view-hangar', this)"><i class="fas fa-warehouse"></i> Engenharia & Hangar</div>
+                <div class="nav-item" onclick="switchView('view-market', this)"><i class="fas fa-shopping-cart"></i> Hub de Aquisições</div>
+            </div>
+            <div style="padding: 10px; font-size: 0.65rem; color: #475569; font-family: var(--font-mono);">
+                ENGINE VERSION 4.12.0 // MONOLITHIC_BUILD
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main>
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dash" class="view-panel active">
+                <div class="dashboard-grid">
+                    <div class="card-system">
+                        <div class="card-header-sys"><div class="card-title-sys">Eficiência de Malha</div><i class="fas fa-gauge-high text-cyan"></i></div>
+                        <h2 style="font-size: 2rem; font-weight: 800;" id="lbl-efficiency">100.0%</h2>
+                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 5px;">Média ponderada do estado de fadiga de frotas e atrasos ATC.</p>
+                    </div>
+                    <div class="card-system">
+                        <div class="card-header-sys"><div class="card-title-sys">Combustível Global (QAV)</div><i class="fas fa-gas-pump"></i></div>
+                        <h2 style="font-size: 2rem; font-weight: 800;" id="lbl-fuel-price">R$ 4.20 <span style="font-size:0.8rem; font-weight:400; color:#64748b;">/L</span></h2>
+                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 5px;">Flutuação cambial em tempo real baseada no mercado internacional.</p>
+                    </div>
+                </div>
+
+                <div class="card-system" style="margin-bottom: 20px;">
+                    <div class="card-header-sys"><div class="card-title-sys">Frequência VHF de Operações (Feed CCO)</div></div>
+                    <div class="radio-logs-box" id="radio-logs">
+                        <!-- Logs gerados em tempo real pela engine -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: RADAR VECTORING -->
+            <div id="view-radar" class="view-panel">
+                <div style="margin-bottom: 15px;">
+                    <h2 style="font-weight: 800;">Tela de Vetorização de Aproximação</h2>
+                    <p style="font-size: 0.85rem; color:#64748b;">Controle fisicamente o vetor das aeronaves inserindo proas e altitudes para alinhar na pista.</p>
+                </div>
+                <div id="radar-canvas-container">
+                    <div class="radar-overlay-ui">
+                        <div>RWY IN USE: <b>16L (HDG 162°)</b></div>
+                        <div>WIND: <b id="atc-wind">140° @ 08KT</b></div>
+                        <div>TRAFFIC IN SECTOR: <b id="atc-count">0</b></div>
+                    </div>
+                    <div class="radar-controls">
+                        <button class="atc-btn" onclick="sendATCCommand('HDG_LEFT')"><i class="fas fa-arrow-left"></i> HDG ESQ 10°</button>
+                        <button class="atc-btn" onclick="sendATCCommand('HDG_RIGHT')">HDG DIR 10° <i class="fas fa-arrow-right"></i></button>
+                        <button class="atc-btn" onclick="sendATCCommand('DESCENT')"><i class="fas fa-arrow-down"></i> DESCER 1000ft</button>
+                        <button class="atc-btn" onclick="sendATCCommand('CLEARED_ILS')"><i class="fas fa-crosshairs"></i> AUTORIZAR ILS</button>
+                    </div>
+                    <canvas id="radar-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- VIEW: HANGAR & MECHANICAL ENGINEERING -->
+            <div id="view-hangar" class="view-panel">
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-weight: 800;">Monitor de Engenharia Estrutural e Metalurgia</h2>
+                    <p style="font-size: 0.85rem; color:#64748b;">Cada ciclo de pressurização degrada os componentes. Efetue revisões preditivas para evitar falhas catastróficas.</p>
+                </div>
+                <div id="hangar-workspace">
+                    <!-- Gerado dinamicamente com base nas frotas compradas -->
+                    <p style="color: #64748b; font-size: 0.9rem;">Nenhuma aeronave necessitando de intervenção técnica ou em solo.</p>
+                </div>
+            </div>
+
+            <!-- VIEW: MARKETPLACE -->
+            <div id="view-market" class="view-panel">
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-weight: 800;">Lessor Global & Concessionária de Ativos</h2>
+                </div>
+                <div class="card-system">
+                    <table class="market-table">
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Categoria</th>
+                                <th>Custo de Aquisição</th>
+                                <th>Consumo Médio</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="market-tbody">
+                            <!-- Injetado dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Floating Toast Center -->
+    <div id="notification-center"></div>
+
+    <!-- MAIN KERNEL SIMULATOR SYSTEM -->
+    <script>
+        // --- NUCLEO DE CONFIGURAÇÃO GLOBAL ---
+        const CONFIG = {
+            initialCash: 15000000,
+            updateInterval: 1000, // Tempo do relógio lógico do jogo
+            canvasFPS: 30
+        };
+
+        // --- INSTANCIAÇÃO DO ESTADO GLOBAL DO SIMULADOR (STATE KERNEL) ---
+        const SIM = {
+            cash: CONFIG.initialCash,
+            fleet: [],
+            airports: {
+                destination: { x: 0, y: 0, rwyHdg: 162, name: "SBSP / CGH" }
+            },
+            atcTraffic: [],
+            selectedTrafficId: null,
+            time: { h: 8, m: 0, s: 0 },
+            fuelPrice: 4.20,
+            efficiency: 100.0,
+            market: [
+                { id: "e195", name: "Embraer E195-E2", type: "Regional", cost: 4500000, fuelBurn: 42, maxPax: 136 },
+                { id: "a320", name: "Airbus A320neo", type: "Narrowbody", cost: 7800000, fuelBurn: 55, maxPax: 174 },
+                { id: "a330", name: "Airbus A330-900neo", type: "Widebody", cost: 14500000, fuelBurn: 98, maxPax: 298 }
+            ]
+        };
+
+        // --- CORE ENGINE MOTOR ---
+        function initSystemKernel() {
+            setupNavigation();
+            buildMarketplace();
+            
+            // Inicia Loops Concorrentes (Relógio Lógico e Rendering de Vetores)
+            setInterval(logicCoreLoop, CONFIG.updateInterval);
+            setInterval(canvasRenderLoop, 1000 / CONFIG.canvasFPS);
+            
+            setupCanvasInteraction();
+            triggerNotification("Sistema AeroX inicializado. CCO Operacional.", "cyan");
+        }
+
+        // --- LOGIC LOOP (Processamento de Regras de Negócio e Física de Fundo) ---
+        function logicCoreLoop() {
+            // 1. Atualização do Relógio do Sistema
+            SIM.time.s++;
+            if(SIM.time.s >= 60) { SIM.time.s = 0; SIM.time.m++; }
+            if(SIM.time.m >= 60) { SIM.time.m = 0; SIM.time.h++; }
+            document.getElementById('lbl-time').innerText = 
+                `${String(SIM.time.h).padStart(2,'0')}:${String(SIM.time.m).padStart(2,'0')}:${String(SIM.time.s).padStart(2,'0')}`;
+
+            // 2. Flutuação de Mercado de Combustível (Random Walk de Ativo)
+            SIM.fuelPrice += (Math.random() - 0.5) * 0.04;
+            if(SIM.fuelPrice < 3.10) SIM.fuelPrice = 3.10;
+            document.getElementById('lbl-fuel-price').innerHTML = `R$ ${SIM.fuelPrice.toFixed(2)} <span style="font-size:0.8rem; font-weight:400; color:#64748b;">/L</span>`;
+
+            // 3. Atualização Física das Aeronaves no Vetor ATC
+            processATCTrafficPhysics();
+
+            // 4. Gerador randômico de tráfego de entrada no Radar (Inbound Traffic Generator)
+            if(Math.random() > 0.85 && SIM.fleet.length > 0) {
+                injectInboundTraffic();
+            }
+
+            // 5. Ciclo de Desgaste de Engenharia das Máquinas Ativas
+            processEngineeringDecay();
+
+            // Refresh UI
+            document.getElementById('lbl-cash').innerText = `R$ ${Math.floor(SIM.cash).toLocaleString('pt-BR')}`;
+            document.getElementById('lbl-fleet-count').innerText = `${SIM.fleet.length} Acft`;
+            updateHangarUI();
+        }
+
+        // --- CORE DE VETORIZAÇÃO FÍSICA E RADAR (CINEMÁTICA VETORIAL 2D) ---
+        const canvas = document.getElementById('radar-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeRadarCanvas() {
+            const container = document.getElementById('radar-canvas-container');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resizeRadarCanvas);
+        setTimeout(resizeRadarCanvas, 100);
+
+        function processATCTrafficPhysics() {
+            const center = { x: canvas.width / 2, y: canvas.height / 2 };
+            
+            SIM.atcTraffic.forEach((ac, idx) => {
+                // Conversão de Proa (Heading) para Radianos Matemáticos de Tela
+                let rad = (ac.hdg - 90) * Math.PI / 180;
+                
+                // Vetor de Velocidade Real ($v_x = v \cdot \cos(\theta)$, $v_y = v \cdot \sin(\theta)$)
+                let speedScale = ac.speed / 4000; 
+                ac.x += Math.cos(rad) * speedScale;
+                ac.y += Math.sin(rad) * speedScale;
+
+                // Modulador de Altitude Suave (Taxa de Descida Regulada)
+                if(ac.altitude > ac.targetAltitude) {
+                    ac.altitude -= 150; // Descida de 150 pés por segundo lógico
+                    if(ac.altitude < ac.targetAltitude) ac.altitude = ac.targetAltitude;
+                }
+
+                // Cálculo de Vetor de Pista (Alinhamento de Aproximação Final Localizer)
+                let distanceToThreshold = Math.hypot(ac.x - center.x, ac.y - center.y);
+                
+                // Critério de Pouso Bem Sucedido
+                if(distanceToThreshold < 15) {
+                    if(ac.altitude <= 3000 && Math.abs(ac.hdg - SIM.airports.destination.rwyHdg) < 10 && ac.ilsCleared) {
+                        executeSafeLanding(ac, idx);
+                    } else {
+                        executeGoAround(ac, idx);
+                    }
+                }
+            });
+        }
+
+        function canvasRenderLoop() {
+            if (!canvas.width) return;
+            
+            // Limpeza de buffer com rastro fosfórico clássico (Efeito Radar de Tubo de Raios Catódicos)
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const center = { x: canvas.width / 2, y: canvas.height / 2 };
+
+            // Desenha Pista de Pouso (Runway Descriptor Vector)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y - 10);
+            ctx.lineTo(center.x, center.y + 10);
+            ctx.stroke();
+
+            // Desenha Círculos Concentricos de Distância Náutica (Anéis DMEs)
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.05)';
+            ctx.lineWidth = 1;
+            for(let r = 50; r < canvas.width; r += 60) {
+                ctx.beginPath();
+                ctx.arc(center.x, center.y, r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Renderiza Alvos de Tráfego Aéreo (Blips de Radar)
+            SIM.atcTraffic.forEach(ac => {
+                let isSelected = (ac.id === SIM.selectedTrafficId);
+                
+                // Blip
+                ctx.fillStyle = isSelected ? varColor('--cyan-500') : varColor('--emerald-500');
+                ctx.fillRect(ac.x - 3, ac.y - 3, 6, 6);
+
+                // Linha de Tendência Vetorial (Vetor de Velocidade Futura)
+                let rad = (ac.hdg - 90) * Math.PI / 180;
+                ctx.strokeStyle = isSelected ? 'rgba(6, 182, 212, 0.4)' : 'rgba(16, 185, 129, 0.2)';
+                ctx.beginPath();
+                ctx.moveTo(ac.x, ac.y);
+                ctx.lineTo(ac.x + Math.cos(rad)*20, ac.y + Math.sin(rad)*20);
+                ctx.stroke();
+
+                // Bloco de Dados Alpha-Numérico do Alvo (DataBlock ATC)
+                ctx.fillStyle = isSelected ? '#fff' : '#94a3b8';
+                ctx.font = '10px "JetBrains Mono"';
+                ctx.fillText(ac.callsign, ac.x + 10, ac.y - 5);
+                ctx.fillText(`${Math.round(ac.altitude/100)} / ${ac.speed}KT`, ac.x + 10, ac.y + 7);
+                if(ac.ilsCleared) {
+                    ctx.fillStyle = varColor('--cyan-500');
+                    ctx.fillText("APP ILS", ac.x + 10, ac.y + 18);
+                }
+            });
+        }
+
+        // Helper para capturar cores do CSS Root de forma limpa
+        function varColor(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // --- SISTEMA INTERATIVO DE SELEÇÃO NO RADAR ---
+        function setupCanvasInteraction() {
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                let clickedAc = null;
+                SIM.atcTraffic.forEach(ac => {
+                    if(Math.hypot(ac.x - mouseX, ac.y - mouseY) < 15) {
+                        clickedAc = ac;
+                    }
+                });
+
+                if(clickedAc) {
+                    SIM.selectedTrafficId = clickedAc.id;
+                    logRadioCommunication(clickedAc.callsign, "Radar CCO, Proa e Controle na Escuta.");
+                } else {
+                    SIM.selectedTrafficId = null;
+                }
+            });
+        }
+
+        function sendATCCommand(type) {
+            if(!SIM.selectedTrafficId) {
+                triggerNotification("Nenhuma aeronave selecionada no radar.", "amber");
+                return;
+            }
+            let ac = SIM.atcTraffic.find(t => t.id === SIM.selectedTrafficId);
+            if(!ac) return;
+
+            switch(type) {
+                case 'HDG_LEFT':
+                    ac.hdg = (ac.hdg - 10 + 360) % 360;
+                    logRadioCommunication("TORRE", `${ac.callsign}, curve à esquerda proa ${ac.hdg}°`);
+                    break;
+                case 'HDG_RIGHT':
+                    ac.hdg = (ac.hdg + 10) % 360;
+                    logRadioCommunication("TORRE", `${ac.callsign}, curve à direita proa ${ac.hdg}°`);
+                    break;
+                case 'DESCENT':
+                    if(ac.targetAltitude > 3000) {
+                        ac.targetAltitude -= 1000;
+                        logRadioCommunication("TORRE", `${ac.callsign}, desça e mantenha altitude ${ac.targetAltitude} pés.`);
+                    }
+                    break;
+                case 'CLEARED_ILS':
+                    ac.ilsCleared = true;
+                    logRadioCommunication("TORRE", `${ac.callsign}, autorizado aproximação localizador ILS pista 16L.`);
+                    break;
+            }
+        }
+
+        // --- BUSINESS LOGIC: GESTÃO DE ATIVOS E COMPRAS ---
+        function buildMarketplace() {
+            const tbody = document.getElementById('market-tbody');
+            tbody.innerHTML = '';
+            SIM.market.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:700;">${item.name}</td>
+                        <td><span class="metric-pill" style="background:#1e293b;">${item.type}</span></td>
+                        <td style="font-family:var(--font-mono); font-weight:700; color:var(--emerald-500)">R$ ${item.cost.toLocaleString('pt-BR')}</td>
+                        <td style="font-family:var(--font-mono);">${item.fuelBurn} L/nm</td>
+                        <td><button class="btn-action-sys" onclick="purchaseAircraft('${item.id}')">Adquirir Ativo</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.purchaseAircraft = function(marketId) {
+            const spec = SIM.market.find(m => m.id === marketId);
+            if(SIM.cash >= spec.cost) {
+                SIM.cash -= spec.cost;
+                
+                // Criação do objeto estrutural da aeronave física real
+                let suffix = Math.floor(Math.random() * 900 + 100);
+                let newAircraft = {
+                    uid: 'ACFT-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                    model: spec.name,
+                    tail: `PR-X${suffix}`,
+                    paxCapacity: spec.maxPax,
+                    components: {
+                        turbines: 100.0,
+                        avionics: 100.0,
+                        fuselage: 100.0,
+                        landingGear: 100.0
+                    },
+                    status: "AVAILABLE"
+                };
+
+                SIM.fleet.push(newAircraft);
+                triggerNotification(`Ativo ${newAircraft.tail} integrado à frota.`, "emerald");
+                logRadioCommunication("CCO", `Aeronave matriculada ${newAircraft.tail} deu entrada no hangar de operações.`);
+                buildMarketplace();
+            } else {
+                triggerNotification("Fundos insuficientes para transação de leasing/aquisição.", "rose");
+            }
+        };
+
+        // --- SISTEMA DE LOGS E EVENTOS DE RÁDIO INTERNOS ---
+        function logRadioCommunication(emitter, message) {
+            const box = document.getElementById('radio-logs');
+            let timestamp = `${String(SIM.time.h).padStart(2,'0')}:${String(SIM.time.m).padStart(2,'0')}`;
+            box.innerHTML += `
+                <div class="log-line">
+                    <span class="log-time">[${timestamp}]</span>
+                    <span style="color:var(--cyan-500); font-weight:700;">${emitter}:</span>
+                    <span>"${message}"</span>
+                </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function injectInboundTraffic() {
+            // Escolhe um avião disponível da frota para realizar o voo de entrada
+            let targetAc = SIM.fleet.find(a => a.status === "AVAILABLE");
+            if(!targetAc) return;
+
+            // Verifica se o avião está quebrado demais para decolar
+            let avgHealth = (targetAc.components.turbines + targetAc.components.avionics + targetAc.components.fuselage) / 3;
+            if(avgHealth < 40) {
+                logRadioCommunication("MANUTENÇÃO", `Voo cancelado para o ${targetAc.tail} devido a pendências de engenharia de segurança de solo.`);
+                return;
+            }
+
+            targetAc.status = "AIRBORNE";
+
+            // Posiciona a aeronave na borda aleatória do radar vetorial
+            let angle = Math.random() * Math.PI * 2;
+            let radius = Math.min(canvas.width, canvas.height) * 0.45;
+            
+            let newTraffic = {
+                id: targetAc.uid,
+                callsign: targetAc.tail,
+                model: targetAc.model,
+                x: (canvas.width / 2) + Math.cos(angle) * radius,
+                y: (canvas.height / 2) + Math.sin(angle) * radius,
+                hdg: Math.floor(Math.random() * 360),
+                altitude: 7000,
+                targetAltitude: 7000,
+                speed: 240,
+                ilsCleared: false
+            };
+
+            SIM.atcTraffic.push(newTraffic);
+            document.getElementById('atc-count').innerText = SIM.atcTraffic.length;
+            logRadioCommunication(newTraffic.callsign, `Aproximação Controle São Paulo, mantendo nível de voo 070, proa ${newTraffic.hdg}°.`);
+        }
+
+        // --- ENGENHARIA DE POUSO E ARREMETIDA ---
+        function executeSafeLanding(ac, index) {
+            SIM.atcTraffic.splice(index, 1);
+            document.getElementById('atc-count').innerText = SIM.atcTraffic.length;
+            if(SIM.selectedTrafficId === ac.id) SIM.selectedTrafficId = null;
+
+            // Retorna o ativo para o solo e calcula receita operacional líquida
+            let realAc = SIM.fleet.find(a => a.uid === ac.id);
+            if(realAc) {
+                realAc.status = "AVAILABLE";
+                
+                // Aplica estresse metalúrgico severo do pouso
+                realAc.components.landingGear -= (Math.random() * 5 + 3);
+                realAc.components.fuselage -= (Math.random() * 2 + 1);
+                realAc.components.turbines -= (Math.random() * 3 + 1);
+
+                let payout = realAc.paxCapacity * 380; // Ticket médio real
+                SIM.cash += payout;
+                triggerNotification(`Pouso seguro: ${ac.callsign}. Receita: +R$ ${payout.toLocaleString('pt-BR')}`, "emerald");
+                logRadioCommunication(ac.callsign, "Pouso completado, livrando pista na próxima taxiway. Câmbio.");
+            }
+        }
+
+        function executeGoAround(ac, index) {
+            logRadioCommunication(ac.callsign, "🚨 Arremetendo! Perda de parâmetros mínimos ou desalinhamento com a pista localizer.");
+            triggerNotification(`Arremetida forçada: ${ac.callsign}`, "rose");
+            
+            // Reposiciona o vetor para órbita de espera
+            ac.x = canvas.width / 2 + (Math.random() - 0.5) * 100;
+            ac.y = canvas.height / 2 - 150;
+            ac.hdg = 342; // Proa contrária para reinserção na perna do vento
+            ac.altitude = 4000;
+            ac.targetAltitude = 4000;
+            ac.ilsCleared = false;
+        }
+
+        // --- SISTEMA DE ENGENHARIA E REVISÃO PREVENTIVA EM SOLO ---
+        function processEngineeringDecay() {
+            // Reduz passivamente componentes em pleno voo simulado
+            SIM.fleet.forEach(ac => {
+                if(ac.status === "AIRBORNE") {
+                    ac.components.turbines -= 0.05;
+                    ac.components.avionics -= 0.03;
+                }
+            });
+        }
+
+        function updateHangarUI() {
+            const container = document.getElementById('hangar-workspace');
+            if(SIM.fleet.length === 0) return;
+
+            container.innerHTML = '';
+            SIM.fleet.forEach(ac => {
+                let isEngineCritical = ac.components.turbines < 50;
+                container.innerHTML += `
+                    <div class="card-system" style="margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <div><b>${ac.tail}</b> <span style="font-size:0.75rem; color:#64748b;">(${ac.model})</span></div>
+                            <span class="metric-pill" style="background:#020617; color:${ac.status === 'AVAILABLE'?'var(--emerald-500)':'var(--amber-500)'}">${ac.status}</span>
+                        </div>
+                        <div class="hanger-grid">
+                            ${buildComponentGauge("Turbinas/Motores", ac.components.turbines)}
+                            ${buildComponentGauge("Aviônicos/Sistemas", ac.components.avionics)}
+                            ${buildComponentGauge("Trem de Pouso", ac.components.landingGear)}
+                            ${buildComponentGauge("Célula/Fuselagem", ac.components.fuselage)}
+                        </div>
+                        ${ac.status === 'AVAILABLE' ? `
+                            <button class="atc-btn" style="margin-top:14px; border-color:var(--cyan-500)" onclick="performHangarOverhaul('${ac.uid}')">
+                                <i class="fas fa-wrench"></i> Efetuar Revisão Geral (R$ 450.000)
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function buildComponentGauge(name, value) {
+            let color = 'var(--emerald-500)';
+            if(value < 65) color = 'var(--amber-500)';
+            if(value < 45) color = 'var(--rose-500)';
+            return `
+                <div class="component-gauge">
+                    <div class="gauge-meta"><span>${name}</span><b style="color:${color}">${Math.max(0, value).toFixed(1)}%</b></div>
+                    <div class="gauge-track"><div class="gauge-fill" style="width:${Math.max(0, value)}%; background:${color}"></div></div>
+                </div>
+            `;
+        }
+
+        window.performHangarOverhaul = function(uid) {
+            let ac = SIM.fleet.find(a => a.uid === uid);
+            if(ac && SIM.cash >= 450000) {
+                SIM.cash -= 450000;
+                ac.components.turbines = 100.0;
+                ac.components.avionics = 100.0;
+                ac.components.landingGear = 100.0;
+                ac.components.fuselage = 100.0;
+                triggerNotification(`Revisão Pesada (Check-C) concluída para o ${ac.tail}`, "cyan");
+                updateHangarUI();
+            } else {
+                triggerNotification("Sem caixa disponível para manutenção corretiva.", "rose");
+            }
+        };
+
+        // --- INTERFACE GLOBAL DE CONTROLE DE TELAS (VIEW ROUTER) ---
+        window.switchView = function(viewId, element) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            
+            document.getElementById(viewId).classList.add('active');
+            element.classList.add('active');
+
+            if(viewId === 'view-radar') {
+                setTimeout(resizeRadarCanvas, 50); // Recalcula proporções vetoriais
+            }
+        };
+
+        function triggerNotification(msg, typeColor) {
+            const center = document.getElementById('notification-center');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderColor = `var(--${typeColor}-500)`;
+            toast.innerHTML = `<i class="fas fa-info-circle" style="color:var(--${typeColor}-500)"></i> <span>${msg}</span>`;
+            center.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // DISPARO MANUAL DOS MOTORES DO KERNEL
+        window.onload = initSystemKernel;
+    </script>
+</body>
+</html>

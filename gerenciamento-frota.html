@@ -52,11 +52,13 @@
         .status-pill { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
         .status-pendente { background: #fef3c7; color: #92400e; }
         .status-concluido { background: #dcfce7; color: #166534; }
+        .status-rejeitado { background: #fee2e2; color: #991b1b; }
+        
         .modal-cor {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;
         }
-        .modal-cor-content { background: white; padding: 30px; border-radius: 16px; max-width: 500px; width: 90%; }
+        .modal-cor-content { background: white; padding: 30px; border-radius: 16px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
 
         .card { 
             background: var(--card); 
@@ -65,99 +67,62 @@
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
             margin-bottom: 24px;
             border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
         }
+
+        .card.is-foreign { border-top: 5px solid #000; }
+        .foreign-badge {
+            position: absolute; top: 15px; right: 15px; background: #000; color: #fff;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800;
+            display: none;
+        }
+        .card.is-foreign .foreign-badge { display: block; }
 
         h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
         h2 { margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 12px; }
 
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 16px; 
-        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
         .full { grid-column: 1 / -1; }
 
-        .search-box { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 24px; 
-            background: var(--primary); 
-            padding: 20px; 
-            border-radius: 16px;
-        }
-        
-        .search-box input { 
-            flex: 1; border: none; border-radius: 10px; padding: 14px; font-weight: 600;
-        }
+        .search-box { display: flex; gap: 10px; margin-bottom: 24px; background: var(--primary); padding: 20px; border-radius: 16px; }
+        .search-box input { flex: 1; border: none; border-radius: 10px; padding: 14px; font-weight: 600; }
 
         label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); text-transform: uppercase; }
-        
-        input, select { 
-            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; 
-            box-sizing: border-box; background: #fcfcfc; font-size: 0.95rem;
-        }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; background: #fcfcfc; font-size: 0.95rem; font-family: inherit; }
 
-        button { 
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 14px 20px; border: none; border-radius: 10px; 
-            font-weight: 700; cursor: pointer; transition: 0.2s; 
-        }
+        button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 20px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-save { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
         .btn-search { background: white; color: var(--primary); }
         .btn-logout { background: var(--danger); color: white; padding: 8px 16px; font-size: 0.8rem; }
         .btn-delete { background: #fee2e2; color: var(--danger); border: 1px solid var(--danger); width: 100%; margin-top: 10px; }
+        .btn-view-file { background: var(--primary-light); color: white; margin-top: 5px; font-size: 0.8rem; padding: 8px; }
 
         .list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .list-table th, .list-table td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
         .list-table tr:hover { background: #f1f5f9; cursor: pointer; }
         .badge-id { background: #e2e8f0; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; }
 
-        #login-area { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
         .hidden { display: none !important; }
-        .status-msg { margin-top: 15px; font-size: 0.9rem; text-align: center; font-weight: 600; padding: 10px; border-radius: 8px; transition: 0.3s; }
 
-        .historico-section {
-            background: #fff1f2; padding: 15px; border-radius: 12px;
-            border-left: 5px solid var(--danger); margin-top: 15px;
-        }
-        
-        .config-box {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-            background: #f1f5f9; padding: 15px; border-radius: 10px;
-        }
-
-        .checkbox-label {
-            display: flex; flex-direction: row; align-items: center; gap: 5px; 
-            text-transform: none; font-size: 0.8rem; font-weight: 500; cursor: pointer;
-            margin-top: 5px;
-        }
+        .historico-section { background: #fff1f2; padding: 15px; border-radius: 12px; border-left: 5px solid var(--danger); margin-top: 15px; }
+        .config-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #f1f5f9; padding: 15px; border-radius: 10px; }
+        .checkbox-label { display: flex; flex-direction: row; align-items: center; gap: 5px; text-transform: none; font-size: 0.8rem; font-weight: 500; cursor: pointer; margin-top: 5px; }
         .checkbox-label input { width: auto; }
 
-        #loader-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
-        }
-
-        /* Estilo para as Tags de Remark */
-        .remark-tag {
-            background: var(--primary); color: white; padding: 6px 12px; 
-            border-radius: 8px; font-size: 0.85rem; display: flex; 
-            align-items: center; gap: 10px; font-weight: 500;
-        }
+        .remark-tag { background: var(--primary); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; font-weight: 500; }
         .remark-tag i { cursor: pointer; color: #cbd5e1; transition: 0.2s; }
         .remark-tag i:hover { color: white; }
     </style>
 </head>
 <body>
 
-<div id="loader-overlay" class="hidden">
+<div id="loader-overlay" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
     <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--primary);"></i>
     <p style="margin-top: 15px; font-weight: 700;">Processando...</p>
 </div>
 
 <div id="login-area">
-    <div class="card" style="max-width: 350px; width: 100%;">
+    <div class="card" style="max-width: 350px; margin: 100px auto;">
         <div style="text-align:center; margin-bottom: 20px;">
             <i class="fas fa-plane-departure" style="font-size: 2.5rem; color: var(--primary);"></i>
             <h2 style="border:none; justify-content:center; margin-top:10px">Admin Login</h2>
@@ -172,17 +137,19 @@
     <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
         <div>
             <h1>BrasilAviation.info</h1>
-            <small style="color: var(--text-muted)">Painel Dinâmico de Frota</small>
+            <small style="color: var(--text-muted)">Painel de Frota Dinâmico</small>
         </div>
         <button onclick="logout()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sair</button>
     </header>
 
     <div class="tabs">
         <button class="tab-btn active" id="tab-btn-gestao" onclick="switchTab('gestao')"><i class="fas fa-edit"></i> Gestão</button>
+        <button class="tab-btn" id="tab-btn-operacoes" onclick="switchTab('operacoes')">
+    <i class="fas fa-shuttle-van"></i> Entregas/RTS
+</button>
         <button class="tab-btn" id="tab-btn-lista" onclick="switchTab('lista')"><i class="fas fa-list"></i> Lista de Matrículas</button>
         <button class="tab-btn" id="tab-btn-correcoes" onclick="switchTab('correcoes')">
-            <i class="fas fa-tools"></i> Correções 
-            <span id="badge-correcoes" class="badge-notif hidden">0</span>
+            <i class="fas fa-tools"></i> Correções <span id="badge-correcoes" class="badge-notif hidden">0</span>
         </button>
     </div>
 
@@ -192,198 +159,257 @@
             <button class="btn-search" onclick="buscarHibrido()"><i class="fas fa-search"></i> Buscar</button>
         </div>
 
-        <div class="card">
+        <div class="card" id="aero-card">
+            <div class="foreign-badge">CIA ESTRANGEIRA / ANTIGA</div>
             <h2><i class="fas fa-plane"></i> Gestão de Aeronave</h2>
             <div class="form-grid">
                 <div>
                     <label>ID Único (Fixo)</label>
-                    <input type="text" id="aero-id" readonly placeholder="Gerado automaticamente" style="background:#f1f5f9; font-weight:bold; color:var(--primary)">
+                    <input type="text" id="aero-id" readonly placeholder="Automático" style="background:#f1f5f9; font-weight:bold; color:var(--primary)">
                 </div>
-                
+
                 <div>
+                    <label>Tipo de Operação</label>
+                    <select id="aero-tipo-op" onchange="toggleCiaText()">
+                        <option value="nacional">Brasileira (Atual)</option>
+                        <option value="estrangeira">Estrangeira / Antiga</option>
+                    </select>
+                </div>
+
+                <div id="box-cia-nacional">
                     <label>Companhia</label>
-                    <select id="aero-cia" onchange="toggleCiaText()">
+                    <select id="aero-cia">
                         <option value="Azul">Azul</option>
                         <option value="GOL">GOL</option>
-                        <option value="LATAM">LATAM</option>
+                        <option value="LATAM Brasil">LATAM</option>
                         <option value="Sideral">Sideral</option>
                         <option value="Placar">Placar</option>
                         <option value="Avion Express Brasil">Avion Express Brasil</option>
                         <option value="Modern Logistics">Modern Logistics</option>
                         <option value="Total Linhas Aéreas">Total Linhas Aéreas</option>
-                        <option value="Outra">Outra (Internacional)...</option>
+                        <option value="Braspress">Braspress</option>
+                        <option value="Levu">Levu</option>
                     </select>
-                    <input type="text" id="aero-cia-outra" class="hidden" placeholder="Nome da Cia Internacional" style="margin-top:8px;">
+                </div>
+                
+                <div id="box-subfrota">
+    <label>Sub-Frota (Para o site)</label>
+    <select id="aero-subfrota">
+        <option value="Principal">Principal</option>
+        <option value="Azul Logística">Azul Logística</option>
+        <option value="Azul Conecta">Azul Conecta</option>
+        <option value="GOLLOG">GOLLOG</option>
+        <option value="LATAM Cargo">LATAM Cargo</option>
+    </select>
+</div>
+
+
+                <div id="box-cia-estrangeira" class="hidden">
+                    <label>Nome da Cia Estrangeira</label>
+                    <input type="text" id="aero-cia-ext" placeholder="Ex: American Airlines">
+                    <label class="checkbox-label"><input type="checkbox" id="aero-exibir-contexto"> Exibir "(estrang./antiga)" no site?</label>
                 </div>
 
                 <div><label>Matrícula *</label><input type="text" id="aero-reg" placeholder="Ex: PR-XMR" style="text-transform: uppercase;"></div>
-                <div><label>MSN (Série) *</label><input type="text" id="aero-msn" placeholder="Ex: 60234"></div>
+                <div><label>MSN (Série) *</label><input type="text" id="aero-msn" placeholder="Ex: 60234" onblur="autoBuscaMSN()"></div>
                 
-                <div>
-                    <label>Modelo da Aeronave *</label>
-                    <select id="aero-mod" onchange="atualizarMotores()"></select>
-                </div>
+                <div id="box-modelo"><label>Modelo da Aeronave *</label><select id="aero-mod" onchange="atualizarMotores()"></select></div>
+                <div id="box-motores"><label>Motores</label><select id="aero-motores"><option value="">Selecione o Modelo</option></select></div>
 
-                <div>
-                    <label>Motores</label>
-                    <select id="aero-motores">
-                        <option value="">Selecione o Modelo Primeiro</option>
-                    </select>
-                </div>
+<!-- Dentro da aba Gestão -->
+<div id="box-status-container" class="full form-grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div>
+        <label>Status da Aeronave (Macro)</label>
+        <select id="aero-status" onchange="toggleStatusHierarchy()">
+            <option value="Ativa">Frota Atual (Ativa)</option>
+            <option value="Futura">Aeronave Futura</option>
+            <option value="Historico">Fora da Frota (Histórico)</option>
+        </select>
+    </div>
 
-                <div>
-                    <label>Status Operacional</label>
-                    <select id="aero-status" onchange="toggleStatusSections()">
-                        <option value="Ativa">Ativa</option>
-                        <option value="Futura">Futura</option>
-                        <option value="Estocada">Estocada / Manutenção</option>
-                        <option value="Historico">Histórico (Fora da frota)</option>
+    <div id="sub-box-ativa">
+        <label>Condição Operacional</label>
+        <select id="aero-sub-status-ativa" onchange="toggleLocalEstocagem()">
+            <option value="Em Operação">Em Operação (Normal)</option>
+            <option value="Manutenção">Em Manutenção</option>
+            <option value="Estocada">Estocada</option>
+        </select>
+    </div>
+
+    <!-- Sub-Status para Histórico (Fica oculto se for Ativa) -->
+    <div id="sub-box-historico" class="hidden">
+        <label>Situação de Saída</label>
+        <select id="aero-sub-status-hist" onchange="toggleLocalEstocagem()">
+            <option value="Devolvido">Devolvido ao Lessor</option>
+            <option value="Vendido">Vendido</option>
+            <option value="SCR">Scrapped (Desmanchada)</option>
+            <option value="Estocada">Estocada (Aguardando Destino)</option>
+        </select>
+    </div>
+
+    <!-- Campo IATA - Essencial para o site saber ONDE o avião está -->
+    <div id="box-local-iata" class="hidden">
+        <label>Localização (IATA do Aeroporto)</label>
+        <input type="text" id="aero-local-iata" placeholder="Ex: CNF, SJK, MIA" maxlength="3" style="text-transform: uppercase; font-weight: bold; color: var(--danger);">
+    </div>
+</div>
+
+<!-- NOVO CAMPO: REGIME DE OPERAÇÃO (PROPRIEDADE) -->
+<div class="full form-grid" style="grid-template-columns: 1fr; gap: 16px; margin-bottom: 10px;">
+    <div>
+        <label>Regime de Propriedade / Operação</label>
+        <select id="aero-regime-prop" onchange="toggleRegimePropriedade()">
+            <option value="Proprio">Próprio / Arrendamento Padrão</option>
+            <option value="Dry Lease">Dry Lease (D-Lease)</option>
+            <option value="Wet Lease">Wet Lease (W-Lease)</option>
+        </select>
+    </div>
+</div>
+
+<div id="box-regime-detalhes" class="full form-grid hidden" style="background: #f1f5f9; padding: 15px; border-radius: 12px; border-left: 5px solid var(--primary-light); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+    <div>
+        <label>Companhia Proprietária / Cedente</label>
+        <select id="aero-regime-cia">
+            <option value="">Selecione a Cia...</option>
+            <option value="Azul">Azul</option>
+            <option value="GOL">GOL</option>
+            <option value="LATAM Brasil">LATAM</option>
+            <option value="Sideral">Sideral</option>
+            <option value="Placar">Placar</option>
+            <option value="Avion Express Brasil">Avion Express Brasil</option>
+            <option value="Modern Logistics">Modern Logistics</option>
+            <option value="Total Linhas Aéreas">Total Linhas Aéreas</option>
+            <option value="Braspress">Braspress</option>
+            <option value="Levu">Levu</option>
+            <option value="Euro Atlantic">Euro Atlantic</option>
+            <option value="Outra Ext">Outra (Estrangeira)</option>
+        </select>
+    </div>
+    <div>
+        <label>Início do Contrato / Operação</label>
+        <input type="month" id="aero-regime-data">
+    </div>
+    <div>
+        <label>Estado da Pintura no Contrato</label>
+        <select id="aero-regime-pintura-estado">
+            <option value="Pintura Total do Operador">Pintura Total da Cia Atual</option>
+            <option value="Pintura Híbrida">Pintura Híbrida</option>
+            <option value="Pintura do Proprietário">Pintura do Proprietário / Cedente</option>
+        </select>
+    </div>
+</div>
+
+
+                <div class="full">
+                    <label>Configuração de Uso</label>
+                    <select id="aero-config-uso" onchange="toggleConfigAcentos()">
+                        <option value="Passageiros">Passageiros</option>
+                        <option value="Cargueiro">Cargueiro</option>
+                        <option value="QC">QC (Quick Change)</option>
+                        <option value="VIP">VIP</option>
                     </select>
                 </div>
 
                 <div class="full" id="sec-config">
-                    <label>Configuração (Insira a quantidade)</label>
+                    <label id="label-acentos">Configuração de Assentos</label>
                     <div class="config-box">
-                        <div><label>First (F)</label><input type="number" id="conf-f" value="0" min="0"></div>
-                        <div><label>Business (C)</label><input type="number" id="conf-c" value="0" min="0"></div>
-                        <div><label>Prem. Eco (W)</label><input type="number" id="conf-w" value="0" min="0"></div>
-                        <div><label>Economy (Y)</label><input type="number" id="conf-y" value="0" min="0"></div>
+                        <div><label>First</label><input type="number" id="conf-f" value="0"></div>
+                        <div><label>Business</label><input type="number" id="conf-c" value="0"></div>
+                        <div><label>Prem. Eco</label><input type="number" id="conf-w" value="0"></div>
+                        <div><label>Economy</label><input type="number" id="conf-y" value="0"></div>
                     </div>
                 </div>
 
                 <div id="sec-datas" class="form-grid full">
                     <div>
-                        <label>Mês e Ano de Fabricação</label>
+                        <label>Mês/Ano de Fabricação</label>
                         <input type="month" id="aero-data-fab">
                         <label class="checkbox-label"><input type="checkbox" id="check-fab-pendente" onchange="togglePendentes()"> Não informado</label>
                     </div>
                     <div>
-                        <label>Mês e Ano de Entrega</label>
+                        <label>Mês/Ano de Entrega</label>
                         <input type="month" id="aero-data-ent">
                         <label class="checkbox-label"><input type="checkbox" id="check-ent-pendente" onchange="togglePendentes()"> Não informado</label>
                     </div>
                 </div>
                 
-                <div><label>Nome de Batismo</label><input type="text" id="aero-batismo"></div>
-                
-                <div class="full">
-                    <label>Detalhes e Remarks (Abreviações)</label>
+                <div id="box-batismo"><label>Nome de Batismo</label><input type="text" id="aero-batismo"></div>
+
+                <div class="full" id="box-remarks">
+                    <label>Detalhes e Remarks (Interligado ao Glossário)</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
                         <select id="remark-prefixo" style="flex: 1;">
-                            <optgroup label="Leasing / Operação">
-                                <option value="WL">WL - Wet Lease</option>
-                                <option value="DL">DL - Damp Lease</option>
-                                <option value="Dry">DL - Dry Lease</option>
-                                <option value="SLB">SLB - Sale-Leaseback</option>
-                                <option value="SUC">SUC - Sub-charter</option>
-                            </optgroup>
-                            <optgroup label="Fabricação / Entrega">
-                                <option value="NE">NE - Não Entregue</option>
-                                <option value="RD">RD - Redelivery (devolução) (adicionar data) ex: 12 de maio</option>
-                                <option value="VE">VE - Delivered(rota de entrega)</option>
-                                <option value="NED">NED - Não informado</option>
-                            </optgroup>
-                            <optgroup label="Equipamento / Tech">
-                                <option value="NLW">NLW - Sem Winglets</option>
-                                <option value="SSW">SSW - Scimitar Winglets</option>
-                                <option value="TM">TM - Transferência de matrícula</option>
-                                <option value="RT">RT - Retrofit</option>
-                            </optgroup>
-                            <optgroup label="Status / Saída">
-                                <option value="EST">EST - Estocado</option>
-                                <option value="MTC">MTC - Manutenção</option>
-                                <option value="PWX">PWX - Preservado</option>
-                                <option value="SCR">SCR - Scrapped</option>
-                                <option value="FDF">FDF - Fora da Frota (WFU)</option>
-                                <option value="BX">BX - Baixa (Acidente/Perda)</option>
-                            </optgroup>
-                            <optgroup label="Pintura / Visual">
-                                <option value="HYB">HYB - Híbrido</option>
-                                <option value="NC">NC - Novas Cores</option>
-                                <option value="OX">OX - Cores Antigas</option>
-                                <option value="ALB">ALB - Albino</option>
-                            </optgroup>
+                            <option value="">(NENHUMA)</option>
+                            <option value="EST">EST - Estocado</option>
+                            <option value="FOR">FOR - Fora de Uso</option>
+                            <option value="DEV">DEV - Devolvido</option>
+                            <option value="ACO">ACO - Acidentado</option>
+                            <option value="PT">PT - Perda Total</option>
+                            <option value="RTS">RTS - Retorno ao Serviço</option>
+                            <option value="TRF">TRF - Transferido</option>
+                            <option value="MAN">MAN - Manutenção</option>
+                            <option value="EXP">EXP - Exportado</option>
+                            <option value="ALF">ALF - Alfândega / Nacionalização</option>
+                            <option value="PRC">PRC - Em Pintura</option>
+                            <option value="HYB">HYB - Pintura Híbrida</option>
+                            <option value="WHT">WHT - White (Todo Branco)</option>
+                            <option value="STR">STR - Striped (Marcas Removidas)</option>
+                            <option value="ICA">ICA - Intercâmbio de Aeronaves</option>
+                            <option value="OPP">OPP - Operado por</option>
+                            <option value="WTL">WTL - Wet lease</option>
                         </select>
-                        <input type="text" id="remark-complemento" placeholder="Complemento (Ex: EuroAtlantic, VCV...)" style="flex: 2;">
-                        <button type="button" onclick="addRemarkTag()" style="background: var(--primary); color: white; padding: 0 20px; width: auto;">+</button>
+                        <input type="text" id="remark-complemento" placeholder="Complemento (Ex: Webjet)..." style="flex: 2;">
+                        <button type="button" onclick="addRemarkTag()" style="background: var(--primary); color: white;">+</button>
                     </div>
                     <div id="remark-tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; min-height: 45px; padding: 12px; background: #f1f5f9; border-radius: 12px; border: 1px dashed #cbd5e1;"></div>
                 </div>
 
-                <div class="full">
+                <div class="full" id="box-pintura">
                     <label>Tipo de Pintura</label>
                     <select id="aero-tipo-pintura" onchange="togglePintura()">
                         <option value="Padrão">Padrão</option>
                         <option value="Pintura Especial">Pintura Especial</option>
                         <option value="Adesivo">Adesivo</option>
                     </select>
-                    <input type="text" id="aero-nome-pintura" class="hidden" placeholder="Qual o nome da pintura/adesivo?" style="margin-top:8px;">
+                    <input type="text" id="aero-nome-pintura" class="hidden" placeholder="Nome da pintura" style="margin-top:8px;">
                 </div>
 
-                <div>
-                    <label>Origem *</label>
+                <div id="box-origem">
+                    <label>Origem</label>
                     <select id="aero-origem" onchange="toggleOrigem()">
                         <option value="Novo">Novo de Fábrica</option>
-                        <option value="Usado">Usado (Ex-outro Operador)</option>
+                        <option value="Usado">Usado</option>
                     </select>
                 </div>
                 <div id="box-reg-antiga" class="hidden"><label>Matrícula Anterior</label><input type="text" id="aero-reg-antiga"></div>
-                <div id="box-op-antigo" class="hidden full"><label>Operador Anterior / Arrendador</label><input type="text" id="aero-antigo-op"></div>
+                <div id="box-op-antigo" class="hidden full"><label>Operador Anterior</label><input type="text" id="aero-antigo-op"></div>
 
                 <div id="secao-historico" class="full hidden historico-section">
-                    <h3 style="margin-top:0; color:var(--danger); font-size: 0.9rem;"><i class="fas fa-history"></i> DETALHES DA SAÍDA / HISTÓRICO</h3>
+                    <h3 style="margin-top:0; color:var(--danger); font-size: 0.9rem;">DETALHES DA SAÍDA</h3>
                     <div class="form-grid">
-                        <div>
-                            <label>Quando parou de voar?</label>
-                            <input type="date" id="hist-data-saida">
-                        </div>
-                        <div>
-                            <label>Situação Final</label>
-                            <select id="hist-situacao">
-                                <option value="Devolvido ao Lessor">Devolvido ao Lessor</option>
-                                <option value="Vendido">Vendido</option>
-                                <option value="Estocado / Preservado">Estocado / Preservado</option>
-                                <option value="Desmontado / Scrapped">Desmontado / Scrapped</option>
-                                <option value="Acidente / Perda Total">Acidente / Perda Total</option>
-                            </select>
-                        </div>
-                        <div class="full">
-                            <label>Destino / Operador Atual</label>
-                            <input type="text" id="hist-destino-atual" placeholder="Ex: Operando pela Avianca como N980AV">
-                        </div>
+                        <div><label>Data de Saída</label><input type="date" id="hist-data-saida"></div>
+                        <div><label>Situação</label><select id="hist-situacao"><option value="Devolvido">Devolvido ao Lessor</option><option value="Vendido">Vendido</option><option value="SCR">Scrapped</option></select></div>
+                        <div class="full"><label>Destino Atual</label><input type="text" id="hist-destino-atual"></div>
                     </div>
                 </div>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px;">
-                <button class="btn-save" style="background:var(--secondary);" onclick="salvarAero()">
-                    <i class="fas fa-save"></i> Salvar Registro
-                </button>
-                <button class="btn-save" style="background:#64748b" onclick="limparForm()">
-                    <i class="fas fa-eraser"></i> Limpar / Novo
-                </button>
-                <button class="btn-delete full" id="btn-excluir-aero" onclick="excluirAero()">
-                    <i class="fas fa-trash-alt"></i> Excluir Aeronave permanentemente
-                </button>
+                <button class="btn-save" style="background:var(--secondary);" onclick="salvarAero()"><i class="fas fa-save"></i> Salvar</button>
+                <button class="btn-save" style="background:#64748b" onclick="limparForm()"><i class="fas fa-eraser"></i> Novo</button>
+                <button class="btn-delete full hidden" id="btn-excluir-aero" onclick="excluirAero()"><i class="fas fa-trash-alt"></i> Excluir</button>
             </div>
-
-            <div id="status-aero" class="status-msg"></div>
         </div>
     </div>
 
     <div id="tab-lista" class="hidden">
         <div class="card">
-            <h2><i class="fas fa-search"></i> Pesquisa Rápida na Tabela</h2>
-            <input type="text" id="list-search" placeholder="Filtrar por matrícula, MSN ou modelo..." onkeyup="filtrarTabela()">
-            <div style="overflow-x: auto; margin-top: 20px;">
-                <table class="list-table" id="tabela-frota">
+            <h2>Lista de Matrículas</h2>
+            <input type="text" id="list-search" placeholder="Filtrar por matrícula, cia..." onkeyup="filtrarTabela()">
+            <div style="overflow-x: auto;">
+                <table class="list-table">
                     <thead>
-                        <tr>
-                            <th>Matrícula</th>
-                            <th>MSN</th>
-                            <th>Modelo</th>
-                            <th>Companhia</th>
-                        </tr>
+                        <tr><th>Reg</th><th>MSN</th><th>Modelo</th><th>Cia</th></tr>
                     </thead>
                     <tbody id="lista-corpo"></tbody>
                 </table>
@@ -393,19 +419,96 @@
 
     <div id="tab-correcoes" class="hidden">
         <div class="card">
-            <h2><i class="fas fa-tools"></i> Sugestões de Correção</h2>
-            <div id="lista-correcoes-container" style="margin-top:20px"></div>
+            <h2>Correções Pendentes</h2>
+            <div id="lista-correcoes-container"></div>
         </div>
     </div>
 </div>
 
+<div id="tab-operacoes" class="hidden">
+    <div class="card">
+        <h2><i class="fas fa-shipping-fast"></i> Atualização de Status (Entregas / RTS)</h2>
+        
+        <!-- Pesquisa Manual -->
+        <div style="display:flex; gap:10px; margin-bottom: 25px; background: #f1f5f9; padding: 15px; border-radius: 12px;">
+            <input type="text" id="rts-search-input" placeholder="Digite a Matrícula (Ex: PR-XMR)" style="flex: 2; text-transform: uppercase;">
+            <button onclick="verificarAeroRTS()" style="background:var(--primary); color:white; flex: 1;">
+                <i class="fas fa-search"></i> Verificar
+            </button>
+        </div>
+
+        <div style="overflow-x: auto; margin-top: 20px;">
+            <table class="list-table">
+                <thead>
+                    <tr>
+                        <th>Reg</th>
+                        <th>Modelo</th>
+                        <th>Status</th>
+                        <th>Local</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-operacoes-corpo"></tbody>
+            </table>
+        </div>
+
+        <!-- PAINEL DE AÇÃO ÚNICO -->
+        <div id="rts-action-panel" class="hidden" style="border-top: 2px solid #e2e8f0; padding-top: 20px; margin-top: 20px;">
+            <div id="rts-aero-info" style="margin-bottom: 20px; padding: 10px; background: #dcfce7; border-radius: 8px; font-weight: 600;"></div>
+
+            <div class="form-grid">
+                <div id="rts-motivo-container">
+                    <label>Ação / Novo Status</label>
+                    <select id="rts-motivo-select">
+                        <option value="Em Operação">Retorno ao Serviço (RTS)</option>
+                        <option value="Manutenção">Entrada em Manutenção</option>
+                        <option value="Estocada">Estocada (Storage)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Data da Operação</label>
+                    <input type="month" id="rts-data-evento">
+                </div>
+
+                <div>
+                    <label>Aeroporto (IATA)</label>
+                    <input type="text" id="rts-iata-input" placeholder="Ex: CNF" maxlength="3" style="text-transform: uppercase;">
+                </div>
+            </div>
+
+            <button id="rts-btn-confirmar" onclick="processarMudancaRTS()" class="btn-save" style="background:var(--secondary); margin-top: 20px;">
+                <i class="fas fa-sync-alt"></i> Atualizar Status
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Procure a linha do modal de correção e substitua por isso: -->
 <div id="modal-detalhe-correcao" class="modal-cor">
     <div class="modal-cor-content">
-        <h2 id="cor-modal-titulo" style="border:none"></h2>
-        <div id="cor-modal-info" style="margin:20px 0; line-height:1.6"></div>
-        <div style="display:flex; gap:10px">
-            <button class="btn-save" style="background:var(--secondary)" id="btn-concluir-cor">Concluído</button>
-            <button class="btn-save" style="background:#64748b" onclick="fecharModalCor()">Fechar</button>
+        <h2 id="cor-modal-titulo" style="border-bottom: 2px solid var(--primary); padding-bottom:10px"></h2>
+        
+        <div id="cor-modal-info" style="margin-top:20px; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0;">
+            <!-- Os dados aparecem aqui via JS -->
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button class="btn-save" style="background:var(--primary-light)" id="btn-ir-editar">
+                <i class="fas fa-external-link-alt"></i> IR PARA EDITAR
+            </button>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+            <label>Parecer / Observações do Admin</label>
+            <textarea id="cor-admin-obs" rows="3" placeholder="Descreva o motivo..."></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:20px">
+            <button class="btn-save" style="background:var(--secondary)" onclick="atualizarStatusCorrecao('concluido')">Aprovar</button>
+            <button class="btn-save" style="background:var(--danger)" onclick="atualizarStatusCorrecao('rejeitado')">Recusar</button>
+            <button class="btn-save" style="background:#64748b; grid-column: 1 / -1;" onclick="fecharModalCor()">Fechar</button>
         </div>
     </div>
 </div>
@@ -415,161 +518,353 @@
     import { getFirestore, doc, setDoc, getDoc, deleteDoc, collection, query, where, getDocs, orderBy, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-        authDomain: "braviation3.firebaseapp.com",
-        projectId: "braviation3"
-    };
-
+    const firebaseConfig = { apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g", authDomain: "braviation3.firebaseapp.com", projectId: "braviation3" };
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Variável para armazenar os Remarks dinâmicos
     let currentRemarks = [];
-
-    // --- LOGIN ---
-    document.getElementById('btn-login').addEventListener('click', async () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('pass').value;
-        if (!email || !password) return alert("Preencha tudo!");
-        try { await signInWithEmailAndPassword(auth, email, password); } 
-        catch (error) { alert("Erro: " + error.message); }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-        document.getElementById('login-area').classList.toggle('hidden', user);
-        document.getElementById('admin-content').classList.toggle('hidden', !user);
-    });
-
-    window.logout = () => signOut(auth);
-
-    const MOTORES_POR_MODELO = {
-    // --- AIRBUS ---
-    "Airbus A300-600RF": ["GE CF6-80C2", "PW4158"],
-    "Airbus A318-100": ["CFM56-5B", "PW6000"],
-    "Airbus A319-100": ["CFM56-5B", "IAE V2500"],
-    "Airbus A320-200": ["CFM56-5B", "IAE V2500"],
-    "Airbus A320neo": ["CFM LEAP-1A", "PW1127G"],
-    "Airbus A321-200": ["CFM56-5B", "IAE V2500"],
-    "Airbus A321neo": ["CFM LEAP-1A", "PW1133G"],
-    "Airbus A330-200": ["RR Trent 772B", "GE CF6-80E1", "PW4168"],
-    "Airbus A330-300": ["RR Trent 700", "GE CF6-80E1"],
-    "Airbus A330-900neo": ["RR Trent 7000"],
-    "Airbus A340-300": ["CFM56-5C"],
-    "Airbus A340-600": ["RR Trent 500"],
-    "Airbus A350-900": ["RR Trent XWB-84"],
-    "Airbus A350-1000": ["RR Trent XWB-97"],
     
-    // --- BOEING ---
-    "Boeing 727-200": ["P&W JT8D-15"],
-    "Boeing 737-200": ["P&W JT8D-9/15/17"],
-    "Boeing 737-300": ["CFM56-3B1", "CFM56-3C1"],
-    "Boeing 737-400": ["CFM56-3C1"],
-    "Boeing 737-500": ["CFM56-3B1"],
-    "Boeing 737-700": ["CFM56-7B20/22/24"],
-    "Boeing 737-800": ["CFM56-7B26/27"],
-    "Boeing 737-8 MAX": ["CFM LEAP-1B"],
-    "Boeing 737-9 MAX": ["CFM LEAP-1B"],
-    "Boeing 747-400F": ["GE CF6-80C2", "PW4056", "RR RB211"],
-    "Boeing 747-8F": ["GEnx-2B67"],
-    "Boeing 757-200": ["RR RB211-535", "PW2037"],
-    "Boeing 767-200": ["GE CF6-80A", "PW4000"],
-    "Boeing 767-300ER": ["GE CF6-80C2", "PW4060"],
-    "Boeing 777-200LR": ["GE90-110B"],
+    let frotaRaw = [];
+let modeloFiltro = 'Todos';
+let modeloRealFiltro = null;
+let statusFiltro = 'Ativa';
+let subFiltro = 'Principal';
+let paginaAtual = 1;
+const itensPorPagina = 20;
+
+const MOTORES_POR_MODELO = {
+    "Escolher": ["Motor"],
+    
+    // --- FAMÍLIA AZUL CONECTA / CESSNA ---
+    "Cessna 208 Caravan": ["PT6A-114"],
+    "Cessna 208B Grand Caravan": ["PT6A-114A"],
+    "Cessna 208B Grand Caravan EX": ["PT6A-140"],
+    "Cessna 208B CargoMaster": ["PT6A-114A"],
+    "Cessna 408 SkyCourier": ["PT6A-65SC"],
+
+    // --- AIRBUS CARGUEIROS (P2F / PRECISION) ---
+    "Airbus A321-200(P2F)": ["CFM56", "IAE V2500"],
+    "Airbus A321-200(PCF)": ["CFM56", "IAE V2500"],
+    "Airbus A320-200(P2F)": ["CFM56", "IAE V2500"],
+    "Airbus A330-200F": ["RR Trent 700", "PW4000"],
+    "Airbus A330-300(P2F)": ["RR Trent 700", "GE CF6"],
+
+    // --- BOEING CARGUEIROS (BCF / SF / BDSF) ---
+    "Boeing 737-300(F)": ["CFM56-3"],
+    "Boeing 737-300(SF)": ["CFM56-3"],
+    "Boeing 737-400(SF)": ["CFM56-3"],
+    "Boeing 737-400(BDSF)": ["CFM56-3"],
+    "Boeing 737-800(BCF)": ["CFM56-7"],
+    "Boeing 737-800(SF)": ["CFM56-7"],
+    "Boeing 757-200(PCF)": ["RR RB211", "PW2000"],
+    "Boeing 767-300F": ["GE CF6"],
+    "Boeing 767-300(ER)": ["GE CF6"],
+    "Boeing 767-300(BCF)": ["GE CF6"],
+    "Boeing 767-300(BDSF)": ["GE CF6"],
+    "Boeing 777F": ["GE90-110B"],
+    "Boeing 777-300(ERSF)": ["GE90-115B"],
+    "Boeing 747-400F": ["GE CF6", "PW4000", "RR RB211"],
+    "Boeing 747-8F": ["GEnx-2B"],
+
+    // --- AIRBUS PASSAGEIROS ---
+    "Airbus A319-100": ["CFM56", "IAE V2500"],
+    "Airbus A319neo": ["CFM LEAP-1A", "PW1100G"],
+    "Airbus A320-200": ["CFM56", "IAE V2500"],
+    "Airbus A320neo": ["CFM LEAP-1A", "PW1100G"],
+    "Airbus A321-200": ["CFM56", "IAE V2500"],
+    "Airbus A321neo": ["CFM LEAP-1A", "PW1100G"],
+    "Airbus A321neo(LR)": ["CFM LEAP-1A", "PW1100G"],
+    "Airbus A321neo(XLR)": ["CFM LEAP-1A", "PW1100G"],
+    "Airbus A330-200": ["RR Trent 700", "GE CF6", "PW4000"],
+    "Airbus A330-900neo": ["RR Trent 7000"],
+    "Airbus A350-900": ["RR Trent XWB"],
+    "Airbus A350-1000": ["RR Trent XWB"],
+    "Airbus A380-800": ["RR Trent 900", "Engine Alliance GP7200"],
+
+    // --- BOEING PASSAGEIROS ---
+    "Boeing 737-700": ["CFM56-7"],
+    "Boeing 737-800": ["CFM56-7"],
+    "Boeing 737 MAX 8": ["CFM LEAP-1B"],
+    "Boeing 737 MAX 9": ["CFM LEAP-1B"],
+    "Boeing 737 MAX 10": ["CFM LEAP-1B"],
+    "Boeing 777-200ER": ["GE90", "PW4000", "RR Trent 800"],
     "Boeing 777-300ER": ["GE90-115B"],
-    "Boeing 777F (Cargo)": ["GE90-110B"],
-    "Boeing 787-8 Dreamliner": ["RR Trent 1000", "GEnx-1B"],
-    "Boeing 787-9 Dreamliner": ["RR Trent 1000", "GEnx-1B"],
+    "Boeing 787-8 Dreamliner": ["GEnx", "RR Trent 1000"],
+    "Boeing 787-9 Dreamliner": ["GEnx", "RR Trent 1000"],
+    "Boeing 787-10 Dreamliner": ["GEnx", "RR Trent 1000"],
 
     // --- EMBRAER ---
-    "Embraer EMB-110 Bandeirante": ["P&WC PT6A-34"],
-    "Embraer EMB-120 Brasilia": ["P&WC PW118"],
-    "Embraer ERJ-135": ["RR AE3007A"],
-    "Embraer ERJ-145": ["RR AE3007A"],
-    "Embraer E170": ["GE CF34-8E"],
-    "Embraer E175": ["GE CF34-8E"],
-    "Embraer E190-E1": ["GE CF34-10E"],
-    "Embraer E195-E1": ["GE CF34-10E"],
-    "Embraer E190-E2": ["PW1919G"],
-    "Embraer E195-E2": ["PW1921G/23G"],
+    "Embraer E175": ["GE CF34"],
+    "Embraer E190-E1": ["GE CF34"],
+    "Embraer E195-E1": ["GE CF34"],
+    "Embraer E190-E2": ["PW1900G"],
+    "Embraer E195-E2": ["PW1900G"],
+    "Embraer E190(P2F)": ["GE CF34"],
+    "Embraer E195(P2F)": ["GE CF34"],
 
-    // --- TURBOPROPS ---
-    "ATR 42-300": ["P&WC PW120/121"],
-    "ATR 42-500": ["P&WC PW127E"],
-    "ATR 72-200": ["P&WC PW124B"],
-    "ATR 72-500": ["P&WC PW127F"],
-    "ATR 72-600": ["P&WC PW127M/N"],
-    "Cessna C208 Caravan": ["P&WC PT6A-114A"],
-    "Cessna C208B Grand Caravan EX": ["P&WC PT6A-140"],
-    "Pilatus PC-12/47E": ["P&WC PT6A-67P"],
+    // --- ATR ---
+    "ATR 42-500": ["PW127"],
+    "ATR 72-500": ["PW127"],
+    "ATR 72-600": ["PW127M"],
+    "ATR 72-600(F)": ["PW127M"],
 
-    // --- EXECUTIVOS / OUTROS ---
-    "Bombardier Global 6000": ["RR BR710"],
-    "Bombardier Challenger 350": ["Honeywell HTF7350"],
-    "Dassault Falcon 7X": ["P&WC PW307A"],
-    "Dassault Falcon 8X": ["P&WC PW307D"],
+    // --- EXECUTIVOS DE ALTA PERFORMANCE ---
+    "Pilatus PC-12": ["PT6A-67P"],
+    "Pilatus PC-24": ["Williams FJ44-4A"],
     "Gulfstream G650ER": ["RR BR725"],
-    "Learjet 75": ["Honeywell TFE731-40BR"]
+    "Bombardier Global 7500": ["GE Passport"]
+};
+
+window.toggleRegimePropriedade = () => {
+    const regime = document.getElementById('aero-regime-prop').value;
+    const boxDetalhes = document.getElementById('box-regime-detalhes');
+    
+    if (regime === 'Dry Lease' || regime === 'Wet Lease') {
+        boxDetalhes.classList.remove('hidden');
+    } else {
+        boxDetalhes.classList.add('hidden');
+        // Limpa os campos internos se voltar para "Próprio"
+        document.getElementById('aero-regime-cia').value = "";
+        document.getElementById('aero-regime-data').value = "";
+        document.getElementById('aero-regime-pintura-estado').value = "Pintura Total do Operador";
+    }
 };
 
 
-    const selectMod = document.getElementById('aero-mod');
-    selectMod.innerHTML = '<option value="">Selecione o Modelo</option>';
-    Object.keys(MOTORES_POR_MODELO).sort().forEach(mod => {
-        let opt = document.createElement('option');
-        opt.value = mod; opt.innerHTML = mod;
-        selectMod.appendChild(opt);
-    });
-
-    // --- FUNÇÕES DE REMARKS DINÂMICOS ---
-    window.addRemarkTag = () => {
-        const prefixo = document.getElementById('remark-prefixo').value;
-        const texto = document.getElementById('remark-complemento').value.trim();
-        if(!texto) return alert("Digite o complemento do detalhe!");
-        currentRemarks.push({ prefixo, texto });
-        renderRemarks();
-        document.getElementById('remark-complemento').value = "";
+    window.toggleConfigAcentos = () => {
+        const uso = document.getElementById('aero-config-uso').value;
+        const secConfig = document.getElementById('sec-config');
+        const labelAcentos = document.getElementById('label-acentos');
+        if(!secConfig) return;
+        if(uso === 'Cargueiro') {
+            secConfig.classList.add('hidden');
+        } else if (uso === 'QC') {
+            secConfig.classList.remove('hidden');
+            labelAcentos.innerText = "Configuração de Assentos (Quando Passageiro)";
+        } else {
+            secConfig.classList.remove('hidden');
+            labelAcentos.innerText = "Configuração de Assentos";
+        }
     };
 
-    window.renderRemarks = () => {
-        const container = document.getElementById('remark-tags-container');
-        container.innerHTML = currentRemarks.map((item, index) => `
-            <div class="remark-tag">
-                <span><strong>${item.prefixo}</strong> ${item.texto}</span>
-                <i class="fas fa-times" onclick="removeRemarkTag(${index})"></i>
-            </div>
-        `).join('');
+    window.autoBuscaMSN = async () => {
+        const msn = document.getElementById('aero-msn').value.trim();
+        if(!msn) return;
+        const q = query(collection(db, "aeronaves"), where("msn", "==", msn));
+        const snap = await getDocs(q);
+        if(!snap.empty) {
+            const d = snap.docs[0].data();
+            document.getElementById('aero-mod').value = d.modelo;
+            atualizarMotores(d.motores);
+            document.getElementById('aero-data-fab').value = (d.data_fab && d.data_fab !== "Pendente") ? d.data_fab : "";
+        }
     };
-
-    window.removeRemarkTag = (index) => {
-        currentRemarks.splice(index, 1);
-        renderRemarks();
-    };
-
-    window.atualizarMotores = (motorSalvo = "") => {
-        const mod = document.getElementById('aero-mod').value;
-        const selMotores = document.getElementById('aero-motores');
-        selMotores.innerHTML = "";
-        if(MOTORES_POR_MODELO[mod]) {
-            MOTORES_POR_MODELO[mod].forEach(motor => {
-                let opt = document.createElement('option');
-                opt.value = motor; opt.innerHTML = motor;
-                selMotores.appendChild(opt);
-            });
-            if(motorSalvo) selMotores.value = motorSalvo;
+    
+    window.filtrarTabela = () => {
+        const input = document.getElementById('list-search').value.toUpperCase();
+        const rows = document.getElementById('lista-corpo').getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            const text = rows[i].textContent.toUpperCase();
+            rows[i].style.display = text.includes(input) ? "" : "none";
         }
     };
 
     window.toggleCiaText = () => {
-        const cia = document.getElementById('aero-cia').value;
-        document.getElementById('aero-cia-outra').classList.toggle('hidden', cia !== 'Outra');
-    };
+        const tipo = document.getElementById('aero-tipo-op').value;
+        const isExt = tipo === 'estrangeira';
+        const fieldsToHide = ['box-cia-nacional', 'box-subfrota', 'box-modelo', 'box-motores', 'box-status-container', 'sec-config', 'box-batismo', 'box-remarks', 'box-pintura'];
+        
+        fieldsToHide.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden', isExt);
+        });
 
-    window.togglePintura = () => {
-        const tipo = document.getElementById('aero-tipo-pintura').value;
-        document.getElementById('aero-nome-pintura').classList.toggle('hidden', tipo === 'Padrão');
+        if(isExt) {
+            document.getElementById('sec-datas').classList.remove('hidden');
+            document.getElementById('secao-historico').classList.remove('hidden');
+            document.getElementById('box-origem').classList.remove('hidden');
+        } else {
+            toggleStatusHierarchy(); 
+        }
+
+        document.getElementById('box-cia-estrangeira').classList.toggle('hidden', !isExt);
+        document.getElementById('aero-card').classList.toggle('is-foreign', isExt);
     };
+    
+window.toggleDataInput = () => {
+    const select = document.getElementById('rts-motivo-select');
+    const dataContainer = document.getElementById('rts-data-container');
+    
+    if (select.value) {
+        dataContainer.classList.remove('hidden');
+    } else {
+        dataContainer.classList.add('hidden');
+    }
+};
+
+// 1. Função de busca e decisão de interface
+window.verificarAeroRTS = async () => {
+    const termo = document.getElementById('rts-search-input').value.toUpperCase().trim();
+    if(!termo) return alert("Digite uma matrícula ou ID válido.");
+
+    document.getElementById('loader-overlay').classList.remove('hidden');
+    const panel = document.getElementById('rts-action-panel');
+    const info = document.getElementById('rts-aero-info');
+    
+    try {
+        const qMatricula = query(collection(db, "aeronaves"), where("matricula", "==", termo));
+        const snapMat = await getDocs(qMatricula);
+        
+        let resultados = [];
+        snapMat.forEach(doc => resultados.push({id: doc.id, ...doc.data()}));
+
+        if(resultados.length === 0) {
+            alert("Nenhuma aeronave encontrada.");
+            panel.classList.add('hidden');
+            return;
+        }
+
+        let aero = resultados[0]; // Pega o primeiro encontrado
+
+        // Guarda os dados originais no painel para não perdê-los
+        panel.dataset.currentId = aero.id;
+        panel.dataset.currentStatus = aero.status;
+        panel.dataset.dataEntOriginal = aero.data_ent || ""; // SALVA A DATA ORIGINAL AQUI
+
+        const isFutura = aero.status === "Futura";
+
+        info.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span><b>${aero.matricula}</b> | ${aero.cia}</span>
+                <span class="status-pill ${isFutura ? 'status-pendente' : 'status-rejeitado'}">
+                    ${isFutura ? 'AERONAVE FUTURA' : 'JÁ NA FROTA (' + aero.sub_status + ')'}
+                </span>
+            </div>
+        `;
+
+        const btnAcao = document.getElementById('rts-btn-confirmar');
+        const campoData = document.getElementById('rts-data-evento').parentElement;
+
+        if (isFutura) {
+            btnAcao.innerHTML = `<i class="fas fa-check"></i> EFETIVAR ENTREGA (NOVO AVIÃO)`;
+            btnAcao.style.background = "var(--primary)";
+            campoData.classList.remove('hidden'); // Precisa da data de entrega
+        } else {
+            btnAcao.innerHTML = `<i class="fas fa-play"></i> VOLTAR PARA A MALHA (MANTER DADOS)`;
+            btnAcao.style.background = "var(--secondary)";
+            campoData.classList.add('hidden'); // Não precisa mexer na data se já é da frota
+        }
+
+        panel.classList.remove('hidden');
+        
+        // AUTO-SCROLL: Faz a tela descer suavemente até o painel
+        panel.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (e) {
+        alert("Erro: " + e.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+window.processarMudancaRTS = async () => {
+    const panel = document.getElementById('rts-action-panel');
+    const idDoc = panel.dataset.currentId;
+    const statusAtual = panel.dataset.currentStatus;
+    const dataOriginal = panel.dataset.dataEntOriginal;
+    const dataDigitada = document.getElementById('rts-data-evento').value;
+
+    document.getElementById('loader-overlay').classList.remove('hidden');
+
+    try {
+        const ref = doc(db, "aeronaves", idDoc);
+        
+        // Dados que SEMPRE mudam
+        let updateData = { 
+            status: "Ativa",
+            sub_status: "Em Operação",
+            local_iata: "", // Limpa o aeroporto de estocagem
+            last_up: new Date().toISOString()
+        };
+
+        // LÓGICA DE DATA PROTEGIDA:
+        if (statusAtual === "Futura") {
+            // Se era futuro, precisamos definir a data de entrega agora
+            if(!dataDigitada) {
+                alert("Por favor, informe o mês de entrega para este novo avião.");
+                document.getElementById('loader-overlay').classList.add('hidden');
+                return;
+            }
+            updateData.data_ent = dataDigitada;
+        } else {
+            // SE JÁ ERA ATIVA: Não enviamos o campo data_ent no objeto updateData.
+            // O Firebase vai manter o valor que já existe lá (ex: 2012) sem tocar nele.
+            console.log("Mantendo data original: " + dataOriginal);
+        }
+
+        await updateDoc(ref, updateData);
+        alert("Aeronave atualizada com sucesso!");
+        
+        panel.classList.add('hidden');
+        document.getElementById('rts-search-input').value = "";
+        if(window.carregarOperacoesRTS) carregarOperacoesRTS();
+
+    } catch (e) {
+        alert("Erro ao salvar: " + e.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+window.toggleStatusHierarchy = () => {
+    const status = document.getElementById('aero-status').value;
+    const boxAtiva = document.getElementById('sub-box-ativa');
+    const boxHist = document.getElementById('sub-box-historico');
+    const secaoHistoricoFull = document.getElementById('secao-historico');
+    const secConfig = document.getElementById('sec-config');
+    const secDatas = document.getElementById('sec-datas');
+
+    // Reset total
+    boxAtiva.classList.add('hidden');
+    boxHist.classList.add('hidden');
+    secaoHistoricoFull.classList.add('hidden');
+
+    if (status === 'Ativa') {
+        boxAtiva.classList.remove('hidden');
+        if(secConfig) secConfig.classList.remove('hidden');
+        secDatas.classList.remove('hidden');
+    } 
+    else if (status === 'Futura') {
+        if(secConfig) secConfig.classList.add('hidden');
+        secDatas.classList.remove('hidden');
+    } 
+    else if (status === 'Historico') {
+        boxHist.classList.remove('hidden');
+        secaoHistoricoFull.classList.remove('hidden');
+        if(secConfig) secConfig.classList.add('hidden');
+        secDatas.classList.remove('hidden'); // Mantém datas visíveis para registrar saída
+    }
+    toggleLocalEstocagem();
+};
+
+window.toggleLocalEstocagem = () => {
+    const status = document.getElementById('aero-status').value;
+    const subAtiva = document.getElementById('aero-sub-status-ativa').value;
+    const subHist = document.getElementById('aero-sub-status-hist').value;
+    const boxIata = document.getElementById('box-local-iata');
+    
+    let mostrarIata = false;
+
+    // Se estiver estocado ou em manutenção (Ativa ou Histórico), mostra o campo do aeroporto
+    if (status === 'Ativa' && (subAtiva === 'Estocada' || subAtiva === 'Manutenção')) {
+        mostrarIata = true;
+    } else if (status === 'Historico' && subHist === 'Estocada') {
+        mostrarIata = true;
+    }
+
+    if(boxIata) boxIata.classList.toggle('hidden', !mostrarIata);
+};
 
     window.toggleOrigem = () => {
         const usado = document.getElementById('aero-origem').value === 'Usado';
@@ -577,232 +872,720 @@
         document.getElementById('box-op-antigo').classList.toggle('hidden', !usado);
     };
 
+    window.togglePintura = () => {
+        const tipo = document.getElementById('aero-tipo-pintura').value;
+        document.getElementById('aero-nome-pintura').classList.toggle('hidden', tipo === 'Padrão');
+    };
+
     window.togglePendentes = () => {
         document.getElementById('aero-data-fab').disabled = document.getElementById('check-fab-pendente').checked;
         document.getElementById('aero-data-ent').disabled = document.getElementById('check-ent-pendente').checked;
     };
 
-    window.toggleStatusSections = () => {
-        const status = document.getElementById('aero-status').value;
-        document.getElementById('secao-historico').classList.toggle('hidden', status !== 'Historico');
-        document.getElementById('sec-config').classList.toggle('hidden', status === 'Futura');
-        document.getElementById('sec-datas').classList.toggle('hidden', status === 'Futura');
-    };
-
-    window.limparForm = () => {
-        document.getElementById('aero-id').value = "";
-        document.querySelectorAll('input:not([type="button"])').forEach(i => i.value = "");
-        document.querySelectorAll('input[type="number"]').forEach(i => i.value = "0");
-        document.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
-        document.getElementById('aero-status').value = "Ativa";
-        document.getElementById('aero-cia').value = "Azul";
-        document.getElementById('aero-origem').value = "Novo";
-        document.getElementById('aero-tipo-pintura').value = "Padrão";
-        currentRemarks = []; // Limpa remarks
+    window.addRemarkTag = () => {
+        const p = document.getElementById('remark-prefixo').value;
+        const t = document.getElementById('remark-complemento').value.trim();
+        if(!t) return;
+        currentRemarks.push({ prefixo: p, texto: t });
         renderRemarks();
-        toggleStatusSections(); toggleOrigem(); togglePintura(); toggleCiaText(); togglePendentes();
-        document.getElementById('btn-excluir-aero').classList.add('hidden');
+        document.getElementById('remark-complemento').value = "";
     };
 
-    window.salvarAero = async () => {
-        let id = document.getElementById('aero-id').value || Math.floor(100000 + Math.random() * 900000).toString();
-        const reg = document.getElementById('aero-reg').value.toUpperCase().trim();
-        if(!reg) return alert("Matrícula obrigatória!");
-
-        const aeroData = {
-            id, matricula: reg,
-            msn: document.getElementById('aero-msn').value,
-            cia: document.getElementById('aero-cia').value === 'Outra' ? document.getElementById('aero-cia-outra').value : document.getElementById('aero-cia').value,
-            modelo: document.getElementById('aero-mod').value,
-            motores: document.getElementById('aero-motores').value,
-            status: document.getElementById('aero-status').value,
-            conf_f: document.getElementById('conf-f').value,
-            conf_c: document.getElementById('conf-c').value,
-            conf_w: document.getElementById('conf-w').value,
-            conf_y: document.getElementById('conf-y').value,
-            data_fab: document.getElementById('check-fab-pendente').checked ? "Pendente" : document.getElementById('aero-data-fab').value,
-            data_ent: document.getElementById('check-ent-pendente').checked ? "Pendente" : document.getElementById('aero-data-ent').value,
-            batismo: document.getElementById('aero-batismo').value,
-            remarks: currentRemarks, // Agora salva o array de objetos
-            tipo_pintura: document.getElementById('aero-tipo-pintura').value,
-            nome_pintura: document.getElementById('aero-nome-pintura').value,
-            origem: document.getElementById('aero-origem').value,
-            reg_antiga: document.getElementById('aero-reg-antiga').value,
-            op_antigo: document.getElementById('aero-antigo-op').value,
-            hist_saida: document.getElementById('hist-data-saida').value,
-            hist_situacao: document.getElementById('hist-situacao').value,
-            hist_destino: document.getElementById('hist-destino-atual').value,
-            last_up: new Date().toISOString()
-        };
-
-        try {
-            await setDoc(doc(db, "aeronaves", id), aeroData);
-            alert("Salvo!"); limparForm();
-        } catch(e) { alert("Erro: " + e.message); }
-    };
-
-    window.buscarHibrido = async () => {
-        const termo = document.getElementById('search-input').value.toUpperCase().trim();
-        if(!termo) return;
-        const res = await Promise.all([
-            getDocs(query(collection(db, "aeronaves"), where("matricula", "==", termo))),
-            getDocs(query(collection(db, "aeronaves"), where("msn", "==", termo))),
-            getDocs(query(collection(db, "aeronaves"), where("id", "==", termo)))
-        ]);
-        let snap = null; res.forEach(r => { if(!r.empty) snap = r.docs[0]; });
-
-        if(snap) {
-            const d = snap.data();
-            document.getElementById('aero-id').value = d.id;
-            document.getElementById('aero-reg').value = d.matricula;
-            document.getElementById('aero-msn').value = d.msn;
-            document.getElementById('aero-mod').value = d.modelo;
-            atualizarMotores(d.motores);
-            document.getElementById('aero-status').value = d.status;
-            document.getElementById('conf-f').value = d.conf_f || 0;
-            document.getElementById('conf-c').value = d.conf_c || 0;
-            document.getElementById('conf-w').value = d.conf_w || 0;
-            document.getElementById('conf-y').value = d.conf_y || 0;
-            
-            document.getElementById('check-fab-pendente').checked = d.data_fab === "Pendente";
-            document.getElementById('aero-data-fab').value = d.data_fab === "Pendente" ? "" : d.data_fab;
-            document.getElementById('check-ent-pendente').checked = d.data_ent === "Pendente";
-            document.getElementById('aero-data-ent').value = d.data_ent === "Pendente" ? "" : d.data_ent;
-
-            document.getElementById('aero-batismo').value = d.batismo || "";
-            
-            // Carregar Remarks
-            currentRemarks = Array.isArray(d.remarks) ? d.remarks : [];
-            renderRemarks();
-
-            document.getElementById('aero-tipo-pintura').value = d.tipo_pintura || "Padrão";
-            document.getElementById('aero-nome-pintura').value = d.nome_pintura || "";
-            document.getElementById('aero-origem').value = d.origem || "Novo";
-            document.getElementById('aero-reg-antiga').value = d.reg_antiga || "";
-            document.getElementById('aero-antigo-op').value = d.op_antigo || "";
-            
-            document.getElementById('hist-data-saida').value = d.hist_saida || "";
-            document.getElementById('hist-situacao').value = d.hist_situacao || "Devolvido ao Lessor";
-            document.getElementById('hist-destino-atual').value = d.hist_destino || "";
-
-            const ciasPadrao = ["Azul", "GOL", "LATAM", "Sideral", "Placar", "Avion Express Brasil", "Modern Logistics", "Total Linhas Aéreas"];
-            if(ciasPadrao.includes(d.cia)) {
-                document.getElementById('aero-cia').value = d.cia;
-            } else {
-                document.getElementById('aero-cia').value = "Outra";
-                document.getElementById('aero-cia-outra').value = d.cia;
-            }
-
-            toggleStatusSections(); toggleOrigem(); togglePintura(); toggleCiaText(); togglePendentes();
-            document.getElementById('btn-excluir-aero').classList.remove('hidden');
-            alert("Carregado!");
-        } else { alert("Não encontrado!"); }
-    };
-
-    window.excluirAero = async () => {
-        const id = document.getElementById('aero-id').value;
-        const reg = document.getElementById('aero-reg').value;
-        if(!id) return;
-        if(confirm(`TEM CERTEZA? Isso vai apagar o ${reg} para sempre do BrasilAviation.info!`)) {
-            try {
-                await deleteDoc(doc(db, "aeronaves", id));
-                alert("Apagado com sucesso."); limparForm();
-            } catch(e) { alert("Erro ao excluir: " + e.message); }
-        }
-    };
-
-    window.switchTab = (tab) => {
-        document.getElementById('tab-gestao').classList.toggle('hidden', tab !== 'gestao');
-        document.getElementById('tab-lista').classList.toggle('hidden', tab !== 'lista');
-        document.getElementById('tab-correcoes').classList.toggle('hidden', tab !== 'correcoes');
-        
-        document.getElementById('tab-btn-gestao').classList.toggle('active', tab === 'gestao');
-        document.getElementById('tab-btn-lista').classList.toggle('active', tab === 'lista');
-        document.getElementById('tab-btn-correcoes').classList.toggle('active', tab === 'correcoes');
-
-        if(tab === 'lista') carregarLista();
-        if(tab === 'correcoes') carregarCorrecoes();
-    };
-
-    async function carregarLista() {
-        const snap = await getDocs(collection(db, "aeronaves"));
-        document.getElementById('lista-corpo').innerHTML = snap.docs.map(doc => {
-            const d = doc.data();
-            return `<tr onclick="preencherForm('${d.id}')"><td><span class="badge-id">${d.matricula}</span></td><td>${d.msn}</td><td>${d.modelo}</td><td>${d.cia}</td></tr>`;
-        }).join('');
-    }
-
-    window.preencherForm = (id) => {
-        document.getElementById('search-input').value = id;
-        buscarHibrido();
-        switchTab('gestao');
-    };
-
-    window.filtrarTabela = () => {
-        const termo = document.getElementById('list-search').value.toLowerCase();
-        for (let row of document.getElementById('lista-corpo').rows) {
-            row.style.display = row.innerText.toLowerCase().includes(termo) ? "" : "none";
-        }
-    };
-
-    onSnapshot(query(collection(db, "correcoes"), where("status", "==", "pendente")), (snap) => {
-        const badge = document.getElementById('badge-correcoes');
-        badge.innerText = snap.size;
-        badge.classList.toggle('hidden', snap.size === 0);
-    });
-
-    async function carregarCorrecoes() {
-        const snap = await getDocs(query(collection(db, "correcoes"), orderBy("dataEnvio", "desc")));
-        const container = document.getElementById('lista-correcoes-container');
-        
-        if(snap.empty) {
-            container.innerHTML = "<p>Nenhuma correção enviada ainda.</p>";
-            return;
-        }
-
-        container.innerHTML = snap.docs.map(doc => {
-            const d = doc.data();
+    window.renderRemarks = () => {
+        const container = document.getElementById('remark-tags-container');
+        container.innerHTML = currentRemarks.map((item, index) => {
+            const displayPrefix = item.prefixo ? `<strong>${item.prefixo}</strong> ` : "";
             return `
-                <div class="correction-card" onclick="abrirModalCor('${doc.id}')" style="cursor:pointer">
-                    <div>
-                        <strong style="color:var(--primary)">${d.matricula}</strong><br>
-                        <small>Enviado por: ${d.nome}</small>
-                    </div>
-                    <div class="status-pill status-${d.status}">${d.status}</div>
+                <div class="remark-tag">
+                    <span>${displayPrefix}${item.texto}</span>
+                    <i class="fas fa-times" onclick="removeRemarkTag(${index})"></i>
                 </div>
             `;
         }).join('');
+    };
+
+    window.removeRemarkTag = (i) => { currentRemarks.splice(i, 1); renderRemarks(); };
+
+// --- INÍCIO DO BLOCO DE GESTÃO (BUSCA, PREENCHIMENTO E SALVAMENTO) ---
+
+window.buscarHibrido = async () => {
+    const termo = document.getElementById('search-input').value.toUpperCase().trim();
+    if(!termo) return;
+    document.getElementById('loader-overlay').classList.remove('hidden');
+    
+    try {
+        const queries = [
+            query(collection(db, "aeronaves"), where("matricula", "==", termo)),
+            query(collection(db, "aeronaves"), where("msn", "==", termo)),
+            query(collection(db, "aeronaves"), where("id", "==", termo))
+        ];
+
+        const res = await Promise.all(queries.map(q => getDocs(q)));
+        let documentosEncontrados = [];
+        res.forEach(r => r.forEach(doc => {
+            if (!documentosEncontrados.find(d => d.id === doc.id)) {
+                documentosEncontrados.push({id: doc.id, ...doc.data()});
+            }
+        }));
+
+        if(documentosEncontrados.length > 1) {
+            let msg = "Múltiplas aeronaves encontradas:\n\n";
+            documentosEncontrados.forEach((d, index) => {
+                msg += `${index + 1} - ${d.matricula} (${d.cia}) - MSN: ${d.msn}\n`;
+            });
+            const escolha = prompt(msg + "\nDigite o número da aeronave desejada:");
+            if(!escolha) return;
+            const selecionada = documentosEncontrados[parseInt(escolha) - 1];
+            if(selecionada) preencherCampos(selecionada);
+        } else if (documentosEncontrados.length === 1) {
+            preencherCampos(documentosEncontrados[0]);
+        } else {
+            alert("Nenhuma aeronave encontrada!");
+        }
+    } catch (error) {
+        console.error("Erro na busca:", error);
+        alert("Erro ao buscar: " + error.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+function preencherCampos(d) {
+    // ID e Identificação Básica
+    document.getElementById('aero-id').value = d.id || "";
+    document.getElementById('aero-reg').value = d.matricula || "";
+    document.getElementById('aero-msn').value = d.msn || "";
+            
+    // Tipo de Operação
+    const tipoOp = d.tipo_op || "nacional";
+    document.getElementById('aero-tipo-op').value = tipoOp;
+    toggleCiaText(); 
+
+    if(tipoOp === 'estrangeira') {
+        document.getElementById('aero-cia-ext').value = d.cia || "";
+        document.getElementById('aero-exibir-contexto').checked = d.exibirContexto || false;
+    } else {
+        document.getElementById('aero-cia').value = d.cia || "Azul";
+        document.getElementById('aero-subfrota').value = d.sub_frota || "Principal";
     }
 
-    let correcaoAtualId = "";
-    window.abrirModalCor = async (id) => {
-        correcaoAtualId = id;
-        const snap = await getDoc(doc(db, "correcoes", id));
-        const d = snap.data();
+    // Modelo e Motores
+    document.getElementById('aero-mod').value = d.modelo || "";
+    atualizarMotores(d.motores);
+
+    // Status e Hierarquia
+    document.getElementById('aero-status').value = d.status || "Ativa";
+    toggleStatusHierarchy(); 
+    
+    if(d.status === "Ativa") document.getElementById('aero-sub-status-ativa').value = d.sub_status || "Em Operação";
+    if(d.status === "Historico") document.getElementById('aero-sub-status-hist').value = d.sub_status || "Devolvido";
+    
+    toggleLocalEstocagem();
+    document.getElementById('aero-local-iata').value = d.local_iata || "";
+
+    // Configuração
+    document.getElementById('aero-config-uso').value = d.config_uso || "Passageiros";
+    toggleConfigAcentos();
+    document.getElementById('conf-f').value = d.conf_f || 0;
+    document.getElementById('conf-c').value = d.conf_c || 0;
+    document.getElementById('conf-w').value = d.conf_w || 0;
+    document.getElementById('conf-y').value = d.conf_y || 0;
+
+    // Datas
+    document.getElementById('check-fab-pendente').checked = (d.data_fab === "Pendente");
+    document.getElementById('aero-data-fab').value = (d.data_fab !== "Pendente") ? (d.data_fab || "") : "";
+    document.getElementById('check-ent-pendente').checked = (d.data_ent === "Pendente");
+    document.getElementById('aero-data-ent').value = (d.data_ent !== "Pendente") ? (d.data_ent || "") : "";
+    togglePendentes();
+
+    // Histórico de Saída
+    document.getElementById('hist-data-saida').value = d.hist_saida || "";
+    document.getElementById('hist-situacao').value = d.hist_situacao || "Devolvido";
+    document.getElementById('hist-destino-atual').value = d.hist_destino || "";
+
+    // Estética
+    document.getElementById('aero-batismo').value = d.batismo || "";
+    document.getElementById('aero-tipo-pintura').value = d.tipo_pintura || "Padrão";
+    document.getElementById('aero-nome-pintura').value = d.nome_pintura || "";
+    togglePintura();
+
+    // Origem
+    document.getElementById('aero-origem').value = d.origem || "Novo";
+    toggleOrigem();
+    document.getElementById('aero-reg-antiga').value = d.reg_antiga || "";
+    document.getElementById('aero-antigo-op').value = d.op_antigo || "";
+
+    // Remarks
+    currentRemarks = Array.isArray(d.remarks) ? d.remarks : [];
+    renderRemarks();
+    
+        // Carrega dados do Regime de Propriedade
+    document.getElementById('aero-regime-prop').value = d.regime_prop || "Proprio";
+    toggleRegimePropriedade(); // Executa para abrir a caixinha caso seja Dry/Wet lease
+    
+    if(d.regime_prop === 'Dry Lease' || d.regime_prop === 'Wet Lease') {
+        document.getElementById('aero-regime-cia').value = d.regime_cia || "";
+        document.getElementById('aero-regime-data').value = d.regime_data || "";
+        document.getElementById('aero-regime-pintura-estado').value = d.regime_pintura_estado || "Pintura Total do Operador";
+    }
+
+    document.getElementById('btn-excluir-aero').classList.remove('hidden');
+}
+
+window.salvarAero = async () => {
+    const reg = document.getElementById('aero-reg').value.toUpperCase().trim();
+    let id = document.getElementById('aero-id').value;
+    const statusMacro = document.getElementById('aero-status').value;
+    
+    if(!reg) return alert("Erro: A matrícula é obrigatória.");
+    document.getElementById('loader-overlay').classList.remove('hidden');
+
+    // Define o sub-status correto baseado no macro
+    let subStatusFinal = "Em Operação";
+    if (statusMacro === 'Ativa') subStatusFinal = document.getElementById('aero-sub-status-ativa').value;
+    else if (statusMacro === 'Historico') subStatusFinal = document.getElementById('aero-sub-status-hist').value;
+
+    const data = {
+        matricula: reg,
+        msn: document.getElementById('aero-msn').value.trim(),
+        tipo_op: document.getElementById('aero-tipo-op').value,
+        cia: document.getElementById('aero-tipo-op').value === 'nacional' ? document.getElementById('aero-cia').value : document.getElementById('aero-cia-ext').value,
+        exibirContexto: document.getElementById('aero-exibir-contexto').checked,
+        sub_frota: document.getElementById('aero-subfrota').value,
+        status: statusMacro,
+        sub_status: subStatusFinal,
+        local_iata: document.getElementById('aero-local-iata').value.toUpperCase().trim(),
+        modelo: document.getElementById('aero-mod').value,
+        motores: document.getElementById('aero-motores').value,
+        origem: document.getElementById('aero-origem').value,
+        reg_antiga: document.getElementById('aero-reg-antiga').value,
+        op_antigo: document.getElementById('aero-antigo-op').value,
+        config_uso: document.getElementById('aero-config-uso').value,
+        conf_f: parseInt(document.getElementById('conf-f').value) || 0,
+        conf_c: parseInt(document.getElementById('conf-c').value) || 0,
+        conf_w: parseInt(document.getElementById('conf-w').value) || 0,
+        conf_y: parseInt(document.getElementById('conf-y').value) || 0,
+        data_fab: document.getElementById('check-fab-pendente').checked ? "Pendente" : document.getElementById('aero-data-fab').value,
+        data_ent: document.getElementById('check-ent-pendente').checked ? "Pendente" : document.getElementById('aero-data-ent').value,
+        hist_saida: document.getElementById('hist-data-saida').value,
+        hist_situacao: document.getElementById('hist-situacao').value,
+        hist_destino: document.getElementById('hist-destino-atual').value,
+        remarks: currentRemarks,
+        batismo: document.getElementById('aero-batismo').value.trim(),
+        // ... outros dados já existentes ...
+        tipo_pintura: document.getElementById('aero-tipo-pintura').value,
+        nome_pintura: document.getElementById('aero-nome-pintura').value.trim(),
+        last_up: new Date().toISOString(),
+        regime_prop: document.getElementById('aero-regime-prop').value,
+        regime_cia: document.getElementById('aero-regime-cia').value,
+        regime_data: document.getElementById('aero-regime-data').value,
+        regime_pintura_estado: document.getElementById('aero-regime-pintura-estado').value
+    };
+
+    try {
+        if (id) {
+            // Atualiza documento existente
+            await setDoc(doc(db, "aeronaves", id), data, { merge: true });
+        } else {
+            // Cria novo documento
+            const novoDocRef = doc(collection(db, "aeronaves"));
+            data.id = novoDocRef.id;
+            await setDoc(novoDocRef, data);
+            document.getElementById('aero-id').value = novoDocRef.id;
+        }
+        alert("Dados salvos com sucesso!");
+    } catch (e) { 
+        console.error("Erro ao salvar:", e);
+        alert("Erro ao salvar: " + e.message); 
+    } finally { 
+        document.getElementById('loader-overlay').classList.add('hidden'); 
+    }
+};
+
+
+    window.switchTab = (tab) => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = document.getElementById(`tab-btn-${tab}`);
+        if(activeBtn) activeBtn.classList.add('active');
+        const tabs = ['gestao', 'lista', 'correcoes', 'operacoes'];
+        tabs.forEach(t => {
+            const el = document.getElementById(`tab-${t}`);
+            if(el) el.classList.add('hidden');
+        });
+        const targetTab = document.getElementById(`tab-${tab}`);
+        if(targetTab) targetTab.classList.remove('hidden');
+        if(tab === 'lista') carregarLista();
+        if(tab === 'correcoes') carregarCorrecoes();
+        if(tab === 'operacoes') carregarOperacoesRTS();
+    };
+
+async function carregarOperacoesRTS() {
+    const corpo = document.getElementById('lista-operacoes-corpo');
+    corpo.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Atualizando lista...</td></tr>';
+    
+    try {
+        const q = query(collection(db, "aeronaves"), orderBy("matricula"));
+        const snap = await getDocs(q);
         
-        document.getElementById('cor-modal-titulo').innerText = `Correção: ${d.matricula}`;
-        document.getElementById('cor-modal-info').innerHTML = `
-            <p><strong>Usuário:</strong> ${d.nome} (${d.email})</p>
-            <p><strong>Sugestão:</strong><br>${d.detalhes}</p>
-            <p><small>Data: ${new Date(d.dataEnvio).toLocaleString()}</small></p>
-        `;
-        document.getElementById('modal-detalhe-correcao').style.display = 'flex';
-    };
+        // Filtro para mostrar quem precisa de atenção no Painel de Operações
+        const filtrados = snap.docs.filter(doc => {
+            const d = doc.data();
+            const isFutura = d.status === "Futura";
+            // Mostra se for futura OU se estiver em manutenção/estocada para permitir o retorno (RTS)
+            const isForaDeServico = (d.status === "Ativa" && (d.sub_status === "Estocada" || d.sub_status === "Manutenção"));
+            return isFutura || isForaDeServico;
+        });
 
-    window.fecharModalCor = () => {
-        document.getElementById('modal-detalhe-correcao').style.display = 'none';
-    };
+        if(filtrados.length === 0) {
+            corpo.innerHTML = "<tr><td colspan='5' style='text-align:center'>Nenhuma aeronave pendente de entrega ou RTS.</td></tr>";
+            return;
+        }
 
-    document.getElementById('btn-concluir-cor').onclick = async () => {
-        if(!correcaoAtualId) return;
+        corpo.innerHTML = filtrados.map(doc => {
+            const d = doc.data();
+            let labelStatus = d.status === "Futura" ? "FUTURA" : d.sub_status.toUpperCase();
+            let corBadge = d.status === "Futura" ? "status-pendente" : "status-rejeitado";
+            
+            return `
+                <tr>
+                    <td><span class="badge-id">${d.matricula}</span></td>
+                    <td>${d.modelo}</td>
+                    <td><span class="status-pill ${corBadge}">${labelStatus}</span></td>
+                    <td>${d.local_iata || '---'}</td>
+                    <td>
+                        <button onclick="prepararAcaoRTS('${doc.id}')" style="padding:5px 10px; background:var(--primary); color:white; font-size:0.7rem; border-radius:5px; cursor:pointer;">
+                            <i class="fas fa-edit"></i> ATUALIZAR
+                        </button>
+                    </td>
+                </tr>`;
+        }).join('');
+    } catch (e) { 
+        console.error(e);
+        corpo.innerHTML = "<tr><td colspan='5'>Erro ao carregar dados.</td></tr>";
+    }
+}
+
+// Nova função para carregar os dados da aeronave selecionada no painel de baixo
+window.prepararAcaoRTS = async (id) => {
+    document.getElementById('loader-overlay').classList.remove('hidden');
+    try {
+        const docSnap = await getDoc(doc(db, "aeronaves", id));
+        if (docSnap.exists()) {
+            const aero = docSnap.data();
+            const panel = document.getElementById('rts-action-panel');
+            const info = document.getElementById('rts-aero-info');
+            
+            panel.dataset.currentId = id;
+            panel.dataset.currentStatus = aero.status;
+
+            info.innerHTML = `<strong>${aero.matricula}</strong> | ${aero.cia} - <small>Status Atual: ${aero.sub_status || aero.status}</small>`;
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+    } catch (e) {
+        alert("Erro ao carregar: " + e.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+window.processarMudancaRTS = async () => {
+    const panel = document.getElementById('rts-action-panel');
+    const idDoc = panel.dataset.currentId;
+    const novoSubStatus = document.getElementById('rts-motivo-select').value;
+    const iata = document.getElementById('rts-iata-input').value.toUpperCase().trim();
+    const dataEvento = document.getElementById('rts-data-evento').value;
+
+    if(!idDoc) return alert("Selecione uma aeronave primeiro.");
+
+    document.getElementById('loader-overlay').classList.remove('hidden');
+
+    try {
+        const ref = doc(db, "aeronaves", idDoc);
+        let updateData = { 
+            status: "Ativa",
+            sub_status: novoSubStatus,
+            local_iata: iata,
+            last_up: new Date().toISOString()
+        };
+
+        // Se for uma entrega (vinha de Futura), atualiza a data de entrega
+        if (panel.dataset.currentStatus === "Futura" && dataEvento) {
+            updateData.data_ent = dataEvento;
+        }
+
+        await updateDoc(ref, updateData);
+        alert("Status atualizado com sucesso!");
+        
+        panel.classList.add('hidden');
+        carregarOperacoesRTS(); // Recarrega a lista para sumir quem voltou a operar
+    } catch (e) {
+        alert("Erro ao salvar: " + e.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+    window.ativarAeronaveRapido = async (id) => {
+        if(!confirm("Confirmar ativação?")) return;
+        document.getElementById('loader-overlay').classList.remove('hidden');
         try {
-            await updateDoc(doc(db, "correcoes", correcaoAtualId), { status: "concluido" });
-            fecharModalCor();
-            carregarCorrecoes();
-        } catch(e) { alert("Erro ao atualizar status"); }
+            await updateDoc(doc(db, "aeronaves", id), {
+                status: "Ativa", sub_status: "Em Operação", local_iata: "", last_up: new Date().toISOString()
+            });
+            alert("Ativada!");
+            carregarOperacoesRTS();
+        } catch (e) { alert("Erro: " + e.message); }
+        finally { document.getElementById('loader-overlay').classList.add('hidden'); }
     };
 
-    limparForm();
+window.marcarForaDeServicoRapido = async () => {
+    const termo = document.getElementById('rts-search-input').value.toUpperCase().trim();
+    const motivo = document.getElementById('rts-motivo-select').value;
+    const iata = document.getElementById('rts-iata-input').value.toUpperCase().trim();
+    const dataEvento = document.getElementById('rts-data-evento').value;
+
+    if(!termo || !motivo || !dataEvento) return alert("Preencha Matrícula, Motivo e Data!");
+    
+    document.getElementById('loader-overlay').classList.remove('hidden');
+    try {
+        const q = query(collection(db, "aeronaves"), where("matricula", "==", termo));
+        const snap = await getDocs(q);
+        
+        if(snap.empty) return alert("Aeronave não encontrada.");
+
+        const docAlvo = snap.docs[0];
+
+        await updateDoc(doc(db, "aeronaves", docAlvo.id), { 
+            sub_status: motivo, 
+            local_iata: iata,
+            data_estocagem: dataEvento, 
+            last_up: new Date().toISOString()
+        });
+
+        alert(`Sucesso! Status de ${termo} atualizado.`);
+        
+        // Reset seguro da UI
+        document.getElementById('rts-search-input').value = "";
+        document.getElementById('rts-action-panel').classList.add('hidden');
+        carregarOperacoesRTS();
+
+    } catch (e) { 
+        alert("Erro: " + e.message); 
+    } finally { 
+        document.getElementById('loader-overlay').classList.add('hidden'); 
+    }
+};
+    window.atualizarMotores = (motorSalvo) => {
+        const mod = document.getElementById('aero-mod').value;
+        const sel = document.getElementById('aero-motores');
+        if(!sel) return;
+        sel.innerHTML = "";
+        if(MOTORES_POR_MODELO[mod]) {
+            MOTORES_POR_MODELO[mod].forEach(m => {
+                let opt = document.createElement('option'); opt.value = m; opt.text = m; sel.add(opt);
+            });
+            if(motorSalvo) sel.value = motorSalvo;
+        }
+    };
+
+async function carregarCorrecoes() {
+    onSnapshot(query(collection(db, "correcoes"), orderBy("dataEnvio", "desc")), (snap) => {
+        const container = document.getElementById('lista-correcoes-container');
+        const badge = document.getElementById('badge-correcoes');
+        let pendentes = 0;
+
+        container.innerHTML = snap.docs.map(doc => {
+            const d = doc.data();
+            if(d.status === 'pendente') pendentes++;
+            
+            let statusClass = d.status === "concluido" ? "status-concluido" : 
+                             (d.status === "rejeitado" ? "status-rejeitado" : "status-pendente");
+
+            return `
+                <div class="correction-card" onclick="abrirModalCor('${doc.id}')">
+                    <div>
+                        <strong>${d.matricula || 'Sem Matrícula'}</strong><br>
+                        <small>Enviado por: ${d.nome}</small>
+                    </div>
+                    <div class="status-pill ${statusClass}">${d.status.toUpperCase()}</div>
+                </div>`;
+        }).join('');
+
+        badge.innerText = pendentes;
+        badge.classList.toggle('hidden', pendentes === 0);
+    });
+}
+
+    let correcaoAtualId = "";
+
+window.abrirModalCor = async (id) => {
+    correcaoAtualId = id;
+    const snap = await getDoc(doc(db, "correcoes", id));
+    const d = snap.data();
+    
+    document.getElementById('cor-modal-titulo').innerText = `Sugestão: ${d.matricula}`;
+    document.getElementById('cor-admin-obs').value = d.adminObs || "";
+    
+    // Preenche as informações detalhadas que você pediu
+    document.getElementById('cor-modal-info').innerHTML = `
+        <p><strong>Enviado por:</strong> ${d.nome} (${d.email})</p>
+        <p><strong>MSN informado:</strong> ${d.msn || 'Não informado'}</p>
+        <p><strong>ID da Aeronave:</strong> ${d.aeroId || 'N/A'}</p>
+        <hr>
+        <p><strong>Relato do Usuário:</strong><br>${d.detalhes}</p>
+    `;
+
+    // Configura o botão de "Ir Editar" para usar o ID que veio na correção
+    document.getElementById('btn-ir-editar').onclick = () => {
+        if(!d.aeroId) return alert("Esta correção não possui um ID de aeronave vinculado.");
+        document.getElementById('search-input').value = d.aeroId;
+        fecharModalCor();
+        switchTab('gestao');
+        buscarHibrido();
+    };
+
+    document.getElementById('modal-detalhe-correcao').style.display = 'flex';
+};
+
+    onAuthStateChanged(auth, u => {
+        document.getElementById('login-area').classList.toggle('hidden', u);
+        document.getElementById('admin-content').classList.toggle('hidden', !u);
+        if(u) carregarCorrecoes();
+    });
+
+    document.getElementById('btn-login').onclick = async () => {
+        const e = document.getElementById('email').value; 
+        const p = document.getElementById('pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch(err) { alert("Erro de Login"); }
+    };
+    
+    window.fecharModalCor = () => {
+    document.getElementById('modal-detalhe-correcao').style.display = 'none';
+    correcaoAtualId = ""; // Limpa o ID da correção atual
+};
+    
+window.atualizarStatusCorrecao = async (novoStatus) => {
+    if (!correcaoAtualId) return;
+
+    const adminObs = document.getElementById('cor-admin-obs').value;
+    document.getElementById('loader-overlay').classList.remove('hidden');
+
+    try {
+        const corRef = doc(db, "correcoes", correcaoAtualId);
+        const snapCor = await getDoc(corRef);
+        const d = snapCor.data();
+
+        await updateDoc(corRef, {
+            status: novoStatus,
+            adminObs: adminObs,
+            dataProcessamento: new Date().toISOString()
+        });
+
+        alert(`Status atualizado para ${novoStatus}! Abrindo gerador de e-mail...`);
+        fecharModalCor();
+
+        // Abre o gerador passando os dados para preencher o e-mail automaticamente
+        const params = new URLSearchParams({
+            status: novoStatus,
+            nome: d.nome,
+            email: d.email,
+            reg: d.matricula,
+            obs: adminObs
+        });
+        
+        window.open(`gerador.html?${params.toString()}`, '_blank');
+
+    } catch (e) {
+        alert("Erro ao processar: " + e.message);
+    } finally {
+        document.getElementById('loader-overlay').classList.add('hidden');
+    }
+};
+
+    window.limparForm = () => {
+        document.querySelectorAll('#aero-card input, #aero-card select, #aero-card textarea').forEach(el => el.value = "");
+        document.getElementById('aero-tipo-op').value = "nacional";
+        document.getElementById('aero-status').value = "Ativa";
+        currentRemarks = [];
+        renderRemarks();
+        toggleCiaText();
+        document.getElementById('btn-excluir-aero').classList.add('hidden');
+                document.getElementById('aero-regime-prop').value = "Proprio";
+        toggleRegimePropriedade();
+    };
+
+    window.logout = () => signOut(auth);
+
+    const selMod = document.getElementById('aero-mod');
+    Object.keys(MOTORES_POR_MODELO).sort().forEach(m => {
+        let opt = document.createElement('option'); opt.value = m; opt.text = m; selMod.add(opt);
+    });
+
+async function carregarLista() {
+    const corpo = document.getElementById('lista-corpo');
+    corpo.innerHTML = '<tr><td colspan="4">Carregando...</td></tr>';
+    try {
+        const snap = await getDocs(query(collection(db, "aeronaves"), orderBy("matricula")));
+        corpo.innerHTML = snap.docs.map(doc => {
+            const d = doc.data();
+            // AJUSTE AQUI: Passamos o d.id (ID Único) para a função de edição
+            return `<tr onclick="carregarParaEdicao('${d.id}')">
+                        <td>${d.matricula}</td>
+                        <td>${d.msn}</td>
+                        <td>${d.modelo}</td>
+                        <td>${d.cia}</td>
+                    </tr>`;
+        }).join('');
+    } catch (e) { corpo.innerHTML = '<tr><td>Erro ao carregar lista</td></tr>'; }
+}
+
+window.carregarParaEdicao = (idUnico) => {
+    // Insere o ID único no campo de busca para garantir precisão total
+    document.getElementById('search-input').value = idUnico;
+    switchTab('gestao');
+    // Chama a busca que agora vai encontrar o documento exato pelo ID
+    buscarHibrido();
+};
+
+window.filtrarModelo = (modelo) => {
+    modeloFiltro = modelo;
+    modeloRealFiltro = null; // Reseta a variante específica ao trocar de família
+    paginaAtual = 1;
+    renderTabela();
+};
+
+window.filtrarVariante = (variante) => {
+    modeloRealFiltro = variante;
+    paginaAtual = 1;
+    renderTabela();
+};
+
+window.filtrarPinturas = () => {
+    const especiais = frotaRaw.filter(a => a.tipo_pintura && a.tipo_pintura !== "Padrão");
+    modeloFiltro = 'Especiais';
+    renderTabela(especiais);
+};
+
+window.setSub = (s) => {
+    subFiltro = s;
+    modeloFiltro = 'Todos';
+    modeloRealFiltro = null;
+    paginaAtual = 1;
+    
+    // Atualiza visual dos botões de subfrota
+    document.querySelectorAll('#subfrota-selector .sub-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === s);
+    });
+    
+    renderTabela();
+};
+
+window.mudarPagina = (dir) => {
+    paginaAtual += dir;
+    renderTabela();
+};
+
+window.renderTabela = (dadosManuais = null) => {
+    // 1. Base de dados (Filtra por Subfrota e Status)
+    let base = dadosManuais || frotaRaw.filter(a => {
+        const isSub = (subFiltro === 'Principal') ? (!a.sub_frota || a.sub_frota === 'Principal') : (a.sub_frota === subFiltro);
+        return isSub && a.status === statusFiltro;
+    });
+
+    // 2. Lógica de Famílias e Variantes
+    const familias = {}; 
+    base.forEach(a => {
+        if(a.modelo) {
+            let partes = a.modelo.split(' ');
+            let familia = partes[0] + (partes[1] ? ' ' + partes[1] : ''); // Ex: "Boeing 737" ou "Airbus A320"
+            
+            if(!familias[familia]) familias[familia] = { total: 0, variantes: {} };
+            familias[familia].total++;
+            
+            let varNome = a.modelo; // Ex: "Boeing 737-800"
+            familias[familia].variantes[varNome] = (familias[familia].variantes[varNome] || 0) + 1;
+        }
+    });
+
+    // 3. Renderiza os Cards de Categoria (Stats Grid)
+    let htmlStats = `<div class="stat-card ${modeloFiltro === 'Todos' ? 'active-filter' : ''}" onclick="filtrarModelo('Todos')">
+        <b>${base.length}</b><span>TOTAL</span></div>`;
+
+    Object.keys(familias).sort().forEach(f => {
+        htmlStats += `<div class="stat-card ${modeloFiltro === f ? 'active-filter' : ''}" onclick="filtrarModelo('${f}')">
+            <b>${familias[f].total}</b><span>${f}</span></div>`;
+    });
+    document.getElementById('stats-grid').innerHTML = htmlStats;
+
+    // 4. Se uma família estiver selecionada, mostra as VARIANTES abaixo
+    let htmlVariantes = "";
+    if (modeloFiltro !== 'Todos' && modeloFiltro !== 'Especiais' && familias[modeloFiltro]) {
+        htmlVariantes = `<div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px; flex-wrap:wrap; width:100%;">`;
+        Object.keys(familias[modeloFiltro].variantes).sort().forEach(v => {
+            const isActive = modeloRealFiltro === v;
+            htmlVariantes += `
+                <button onclick="filtrarVariante('${v}')" 
+                    style="padding:8px 15px; border-radius:20px; border:1px solid var(--cor-hero-1); 
+                    background:${isActive ? 'var(--cor-hero-1)' : 'transparent'}; 
+                    color:${isActive ? 'white' : 'var(--cor-hero-1)'}; font-weight:700; cursor:pointer; font-size:0.8rem;">
+                    ${v} (${familias[modeloFiltro].variantes[v]})
+                </button>`;
+        });
+        htmlVariantes += `</div>`;
+    }
+    
+    // Insere as variantes antes da tabela (opcional: pode criar uma div específica no HTML para isso)
+    const statsContainer = document.getElementById('stats-grid');
+    const existingVariantes = document.getElementById('variantes-container');
+    if (existingVariantes) existingVariantes.remove();
+    
+    if (htmlVariantes) {
+        const divVar = document.createElement('div');
+        divVar.id = 'variantes-container';
+        divVar.innerHTML = htmlVariantes;
+        statsContainer.parentNode.insertBefore(divVar, statsContainer.nextSibling);
+    }
+
+    // 5. Filtragem Final da Lista para a Tabela
+    let listaFiltrada = base;
+    if (modeloFiltro !== 'Todos' && modeloFiltro !== 'Especiais') {
+        listaFiltrada = base.filter(a => a.modelo.startsWith(modeloFiltro));
+        if (modeloRealFiltro) {
+            listaFiltrada = listaFiltrada.filter(a => a.modelo === modeloRealFiltro);
+        }
+    }
+
+    // 6. Ordenação e Paginação
+    const listaOrdenada = listaFiltrada.sort((a, b) => (a.modelo || "").localeCompare(b.modelo || "") || (a.matricula || "").localeCompare(b.matricula || ""));
+    const totalItens = listaOrdenada.length;
+    const totalPaginas = Math.ceil(totalItens / itensPorPagina) || 1;
+    if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+    const listaPaginada = listaOrdenada.slice((paginaAtual - 1) * itensPorPagina, paginaAtual * itensPorPagina);
+
+    // 7. Atualiza UI de Paginação
+    document.getElementById('current-page').innerText = paginaAtual;
+    document.getElementById('total-pages').innerText = totalPaginas;
+    document.getElementById('pagination-controls').style.display = totalItens > itensPorPagina ? 'flex' : 'none';
+
+    // 8. Renderiza Linhas da Tabela
+    document.getElementById('corpo-tabela').innerHTML = listaPaginada.map(a => `
+        <tr onclick="location.href='aeronave.html?msn=${a.msn}'" style="cursor:pointer">
+            <td><b style="color:var(--cor-hero-1)">${a.matricula}</b></td>
+            <td style="font-family:monospace; font-size:0.8rem">${a.msn}</td>
+            <td><span class="badge-model">${a.modelo}</span></td>
+            <td style="font-size:0.8rem">${formatarData(statusFiltro === 'Historico' ? a.hist_saida : a.data_ent)}</td>
+            <td>
+                ${a.batismo ? `<i style="display:block; font-size:0.75rem; color:var(--cor-hero-1)">"${a.batismo}"</i>` : ''}
+                ${a.tipo_pintura && a.tipo_pintura !== "Padrão" ? `<span class="remark-tag-mini" style="background:${a.status === 'Ativa' ? 'var(--cor-hero-1)' : '#666'}; color:white;">${a.nome_pintura || a.tipo_pintura}</span>` : ''}
+                ${(a.remarks || []).map(r => `<span class="remark-tag-mini">${r.prefixo}</span>`).join('')}
+            </td>
+        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center; padding:30px">Nenhuma aeronave encontrada.</td></tr>';
+
+    // Sincroniza abas
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    if(document.getElementById(`btn-${statusFiltro}`)) document.getElementById(`btn-${statusFiltro}`).classList.add('active');
+};
 </script>
 </body>
 </html>

@@ -2,281 +2,1269 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Frota | BrasilAviation.info</title>
+    
+    <link rel="icon" href="/logobrasilaviation.info.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #1a237e; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --radius: 16px; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        /* Variáveis Globais e Modo Escuro */
+        :root { 
+            --primary: #1a237e; 
+            --secondary: #2e7d32;
+            --bg: #f4f7f6; 
+            --card: #ffffff; 
+            --text-main: #1c1c1c; 
+            --text-muted: #757575; 
+            --radius: 20px;
+            --border: rgba(0,0,0,0.08);
+            --cor-hero-1: #1a237e;
+            --cor-hero-2: #283593;
+        }
+
+        body.dark-mode { 
+            --bg: #121212; 
+            --card: #1e1e1e; 
+            --text-main: #f0f0f0; 
+            --text-muted: #aaa;
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* Header & Search */
-        .search-wrapper { max-width: 800px; margin: 30px auto; padding: 0 20px; position: relative; }
-        .search-box { 
-            width: 100%; padding: 18px 20px 18px 55px; border-radius: 50px; 
-            border: 1px solid #e2e8f0; font-family: inherit; font-size: 1rem;
-            transition: 0.3s; box-sizing: border-box; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text-main); 
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden; 
+            width: 100%;
         }
-        .search-box:focus { outline: none; border-color: var(--primary); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .search-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: #64748b; }
 
-        /* Home - Cards de Companhias */
-        .hub-container { padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .grid-cias { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
-        .card-cia-horizontal { 
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 40px; border-radius: var(--radius); color: white;
-            text-decoration: none; transition: 0.3s; position: relative; overflow: hidden;
-            background: linear-gradient(90deg, var(--c1), var(--c2));
-        }
-        .card-cia-horizontal:hover { transform: scale(1.01); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .cia-info-main { display: flex; align-items: center; gap: 25px; }
-        .cia-logo-white { height: 35px; width: 120px; object-fit: contain; }
-        .cia-name { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-        .cia-fleet-count { background: rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; min-width: 100px; text-align: center; }
-
-        /* Painel de Detalhes */
-        .details-panel { 
-            background: white; border-radius: 12px; border: 1px solid #e2e8f0; 
-            margin-bottom: 25px; overflow: hidden; display: grid; grid-template-columns: 1fr 2fr;
-        }
-        .panel-logo-area { background: #f8fafc; display: flex; align-items: center; justify-content: center; padding: 40px; border-right: 1px solid #e2e8f0; }
-        .panel-logo-area img { max-width: 180px; height: auto; object-fit: contain; }
-        .panel-info-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .panel-info-table td { padding: 12px 20px; border-bottom: 1px solid #f1f5f9; }
-        .label-cell { font-weight: 600; color: #64748b; width: 35%; text-transform: uppercase; font-size: 0.7rem; }
-        .value-cell { font-weight: 700; color: #1e293b; }
-
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .stat-card { 
-            background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; 
-            text-align: center; cursor: pointer; transition: 0.2s; 
-        }
-        .stat-card:hover { border-color: var(--cor-hero-1); background: #fcfdfe; }
-        .stat-card.active-filter { border: 2px solid var(--cor-hero-1); background: #f0f4ff; }
-        .stat-card b { display: block; font-size: 1.2rem; color: var(--cor-hero-1); }
-        .stat-card span { font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
-
-        .hero-frota { padding: 40px 20px; background: linear-gradient(135deg, var(--cor-hero-1), var(--cor-hero-2)); color: white; text-align: center; }
-        .tabs { display: flex; justify-content: center; gap: 8px; margin: 25px 0; }
-        .tab-btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; background: #e2e8f0; color: #475569; font-size: 0.9rem; transition: 0.2s; }
-        .tab-btn.active { background: var(--cor-hero-1) !important; color: white !important; }
-
-        .table-container { max-width: 1100px; margin: 0 auto; padding: 0 20px 50px; overflow-x: auto; }
-        table.main-fleet-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .main-fleet-table th { background: #f8fafc; padding: 15px; text-align: left; font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-        .main-fleet-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        /* Estrutura de Containers */
+        #header-container { min-height: 60px; }
+        .hub-container { padding: 40px 20px; max-width: 1100px; margin: 0 auto; min-height: 80vh; }
         
-        .badge-model { background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; color: #475569; }
-        .remark-tag-mini { display: inline-block; background: #e2e8f0; color: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 4px; border: 1px solid #cbd5e1; }
+        /* Grid de Operadores Home */
+        .grid-cias { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin-top: 30px; 
+        }
+
+        .card-cia-v3 {
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            border-radius: var(--radius);
+            padding: 25px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-cia-v3:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+
+        .cia-logo-box-v3 { height: 50px; margin-bottom: 20px; display: flex; align-items: center; }
+.cia-logo-box-v3 { 
+    height: 70px;         /* Altura ideal para o quadradinho */
+    width: 100px;         /* Deixa ele com formato de caixinha/ícone de app */
+    margin-bottom: 20px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    
+    background: #ffffff;  /* Branco total igual ao do print */
+    border-radius: 20px;  /* Cantos super arredondados */
+    padding: 10px;        /* Espaço interno para a logo respirar */
+    
+    /* Sombra suave para dar o efeito flutuante em cima do degradê do card */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12); 
+}
+
+.cia-logo-box-v3 img { 
+    max-width: 100%;      /* Faz a logo se ajustar perfeitamente ao quadradinho */
+    max-height: 100%; 
+    object-fit: contain;  /* Não deixa a logo distorcer */
+}
+
+        .cia-info-v3 { color: white; }
+        .cia-name-v3 { font-weight: 800; font-size: 1.2rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: -0.5px; }
         
+        .fleet-stats-v3 { display: flex; gap: 10px; }
+        .stat-item-v3 {
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(10px);
+            padding: 5px 8px;
+            border-radius: 10px; 
+            flex: 1; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .stat-item-v3 span { display: block; font-size: 0.55rem; font-weight: 700; text-transform: uppercase; opacity: 0.8; margin-bottom: 1px; }
+        .stat-item-v3 b { font-size: 0.85rem; font-weight: 800; }
+
+        /* HERO - DASHBOARD */
+        .hero-frota { 
+            padding: 40px 20px 80px; 
+            background: linear-gradient(135deg, var(--cor-hero-1), var(--cor-hero-2)); 
+            color: white; text-align: center; border-radius: 0 0 40px 40px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .logo-wrapper-hero {
+            background: white;
+            padding: 12px 25px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        #logo-cia-dinamica { max-height: 50px; max-width: 200px; object-fit: contain; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 30px;
+        }
+
+        .info-card-modern {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 85px;
+        }
+
+        .info-card-modern:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
+
+        .info-card-modern .label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .info-card-modern .value { font-size: 1.05rem; font-weight: 800; }
+
+        .livery-btn-card {
+            background: linear-gradient(135deg, #ffd700, #facc15) !important;
+            color: #1e293b !important;
+            cursor: pointer;
+            border: none !important;
+        }
+        .livery-btn-card .label, .livery-btn-card .value { color: #1e293b !important; }
+
+        .subfrota-tabs { display: flex; gap: 10px; margin: 10px 0 0; justify-content: center; flex-wrap: wrap; }
+        .sub-btn { padding: 10px 20px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; cursor: pointer; font-weight: 700; transition: 0.2s; }
+        .sub-btn.active { background: white; color: var(--cor-hero-1); border-color: white; }
+
+        .overview-section { max-width: 1100px; margin: -40px auto 50px; padding: 0 20px; position: relative; z-index: 10; }
+/* Container de estatísticas compacto e com rolagem horizontal */
+.stats-grid { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 15px; 
+    overflow-x: auto; 
+    padding: 8px 2px;
+    scrollbar-width: none; /* Oculta a barra no Firefox */
+}
+.stats-grid::-webkit-scrollbar { 
+    display: none; /* Oculta a barra no Chrome/Safari */
+}
+
+/* Container de estatísticas compacto e com rolagem infinita de ponta a ponta */
+.stats-grid { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 15px; 
+    overflow-x: auto; 
+    
+    /* Quebra as paredes laterais do container pai */
+    margin-left: -20px;       
+    margin-right: -20px;      
+    /* Devolve o alinhamento interno para as pills não nascerem coladas na tela */
+    padding: 8px 20px;        
+    
+    scrollbar-width: none; /* Oculta a barra no Firefox */
+    -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+}
+.stats-grid::-webkit-scrollbar { 
+    display: none; /* Oculta a barra no Chrome/Safari */
+}
+
+/* Barra de Variantes com rolagem infinita de ponta a ponta */
+.variantes-bar { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 25px; 
+    overflow-x: auto; 
+    
+    /* Quebra as paredes laterais do container pai */
+    margin-left: -20px;
+    margin-right: -20px;
+    /* Devolve o alinhamento interno para os itens */
+    padding: 5px 20px;
+    
+    scrollbar-width: none; /* Oculta a barra no Firefox */
+    -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+}
+.variantes-bar::-webkit-scrollbar { 
+    display: none; /* Oculta a barra no Chrome/Safari */
+}
+
+/* Transformando os cards gigantes em Mini-Pills elegantes */
+.stat-card { 
+    background: var(--card); 
+    padding: 8px 16px; 
+    border-radius: 50px; 
+    border: 1px solid var(--border); 
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre o número e o nome */
+    cursor: pointer; 
+    color: var(--text-main); 
+    
+    /* ANIMAÇÃO CORES E ESCALA: Adicionamos o transform e uma curva de velocidade (cubic-bezier) que dá o efeito elástico */
+    transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                
+    white-space: nowrap; /* Impede que o texto quebre linha */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    user-select: none; /* Evita selecionar o texto acidentalmente ao clicar rápido */
+}
+
+/* Efeito ao passar o mouse (Hover) - Sobe levemente e destaca a borda */
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+body.dark-mode .stat-card:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Efeito de clique (Active) - Dá um leve "recolhimento" simulando um botão físico */
+.stat-card:active {
+    transform: scale(0.95) translateY(0);
+}
+
+/* Estado Ativo (Filtro selecionado) */
+.stat-card.active-filter { 
+    border-color: var(--cor-hero-1); 
+    background: var(--cor-hero-1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais viva no item ativo */
+}
+
+/* Mantém o hover do item ativo no lugar ou com um micro-ajuste */
+.stat-card.active-filter:hover {
+    transform: translateY(-1px);
+    border-color: var(--cor-hero-1);
+}
+
+.stat-card b { 
+    font-size: 0.9rem; 
+    color: var(--cor-hero-1); 
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 8px;
+    border-radius: 20px;
+    /* Transição suave para a cor interna do número */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+body.dark-mode .stat-card b {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Inverte as cores do texto e do número quando o filtro estiver ativo */
+.stat-card.active-filter b {
+    color: var(--cor-hero-1);
+    background: white;
+}
+
+.stat-card span { 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    color: var(--text-muted); 
+    transition: color 0.3s ease;
+}
+
+.stat-card.active-filter span {
+    color: white;
+}
+
+.stat-card.active-filter span {
+    color: white;
+}
+        /* Barra de Variantes */
+        .variantes-bar { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 25px; 
+            overflow-x: auto; 
+            padding: 5px 2px;
+            scrollbar-width: none;
+        }
+        .variantes-bar::-webkit-scrollbar { display: none; }
+        .variant-pill {
+            white-space: nowrap;
+            padding: 8px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-muted);
+        }
+        .variant-pill.active {
+            background: var(--cor-hero-1);
+            color: white;
+            border-color: var(--cor-hero-1);
+        }
+
+        .tabs { display: flex; justify-content: center; gap: 8px; margin: 30px 0; }
+        .tab-btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 700; background: var(--border); color: var(--text-muted); }
+        .tab-btn.active { background: var(--cor-hero-1); color: white; }
+
+        .table-container { background: var(--card); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .scroll-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        th { background: var(--bg); padding: 16px; text-align: left; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: var(--text-main); }
+        
+        .badge-model { 
+    background: none; 
+    padding: 0; 
+    border-radius: 0; 
+    font-weight: 700; 
+    font-size: 0.85rem; /* Um toque sutil menor ajuda a caber tudo no celular */
+    border: none; 
+    color: var(--text-main); 
+    white-space: nowrap; /* ISSO impede que o texto vá para a linha de baixo */
+}
+
+        .remark-tag-mini { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 4px; background: #fef3c7; color: #92400e; border: 1px solid #cbd5e1; }
+        
+        .loading { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .hidden { display: none !important; }
-        
+
         @media (max-width: 768px) {
-            .details-panel { grid-template-columns: 1fr; }
-            .panel-logo-area { border-right: none; border-bottom: 1px solid #e2e8f0; padding: 20px; }
-            .cia-name { font-size: 1.1rem; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-cias { grid-template-columns: 1fr; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-frota { padding-bottom: 60px; }
         }
+        
+                /* Abas de Visão (Frota Atual / História) */
+        .nav-tabs-visao {
+            display: flex;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 4px;
+            border-radius: 30px;
+            margin-top: 15px;
+            gap: 2px;
+        }
+        
+        .tab-visao-btn {
+            padding: 8px 24px;
+            border-radius: 25px;
+            border: none;
+            background: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tab-visao-btn.active {
+            background: white;
+            color: var(--cor-hero-1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Seletor de Subfrotas em formato de Mini-Pills de ponta a ponta */
+        .subfrota-pills-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            margin-left: -20px;
+            margin-right: -20px;
+            padding: 5px 20px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .subfrota-pills-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sub-pill {
+            white-space: nowrap;
+            padding: 8px 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .sub-pill:active {
+            transform: scale(0.95);
+        }
+
+        .sub-pill.active {
+            background: var(--cor-hero-1);
+            color: white;
+            border-color: var(--cor-hero-1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+      /* ==========================================================================
+   PAINEL DE ESTATÍSTICAS REFEITO: MINIMALISTA & EFEITO CORTINA
+   ========================================================================== */
+.cortina-estatisticas {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+}
+
+.cortina-estatisticas.aberta {
+    max-height: 1000px; /* Altura máxima para permitir o limite da expansão */
+    margin-bottom: 30px;
+}
+
+.btn-toggle-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 25px auto;
+    padding: 10px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.btn-toggle-stats:hover {
+    color: var(--primary);
+    border-color: rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+body.dark-mode .btn-toggle-stats:hover {
+    color: #0ea5e9;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-robust {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 5px 2px;
+}
+
+.card-robust {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.01);
+    transition: all 0.3s ease;
+}
+
+.card-robust:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+}
+
+body.dark-mode .card-robust:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.card-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.robust-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.robust-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.1;
+}
+
+.robust-value a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dashed var(--text-muted);
+    transition: 0.2s;
+}
+
+.robust-value a:hover {
+    color: var(--primary);
+    border-bottom-style: solid;
+}
+
+.robust-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .dashboard-robust {
+        grid-template-columns: repeat(2, 1fr); /* Fica em 2 colunas bem compactas no celular */
+        gap: 10px;
+    }
+    .card-robust { padding: 12px; }
+    .robust-value { font-size: 1.1rem; }
+}
+
+
     </style>
 </head>
 <body>
 
-    <div class="search-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="global-search" class="search-box" placeholder="Buscar matrícula ou MSN..." oninput="executarBusca(this.value)">
-    </div>
+    <div id="header-container"></div>
+    <div id="menu-container"></div>
 
-    <section id="home-hub" class="hub-container">
-        <h2 style="font-weight: 800; margin-bottom: 25px; color: var(--primary);">Operadores Brasileiros</h2>
-        <div id="grid-cias" class="grid-cias"></div>
-    </section>
+    <main>
+        <!-- Home Hub -->
+<!-- Home Hub -->
+<section id="home-hub" class="hub-container">
+    <h2 style="font-weight: 800; margin-bottom: 5px; color: var(--primary); letter-spacing: -0.5px;">Painel Geral de Frotas</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; font-weight: 500;">Dados analíticos e estatísticas em tempo real da aviação comercial brasileira</p>
 
-    <div id="frota-dinamica" class="hidden">
-        <section class="hero-frota">
-            <h1 id="nome-cia" style="margin:0; letter-spacing: -1px; font-weight: 800;">NOME DA CIA</h1>
-        </section>
+    <!-- Botão de Cortina para Mostrar/Ocultar -->
+    <button class="btn-toggle-stats" id="btn-toggle-stats" onclick="toggleEstatistiche()">
+        <i class="fas fa-chart-pie" id="icon-toggle-stats"></i> <span id="text-toggle-stats">Ver Estatísticas Gerais</span>
+    </button>
 
-        <div class="overview-section" style="max-width: 1100px; margin: 30px auto; padding: 0 20px;">
-            <div id="painel-info-detalhado" class="details-panel"></div>
-            <div id="stats-grid" class="stats-grid"></div>
-
-            <div class="tabs">
-                <button id="btn-Ativa" class="tab-btn" onclick="mudarStatus('Ativa')">Em Serviço</button>
-                <button id="btn-Futura" class="tab-btn" onclick="mudarStatus('Futura')">Pedidos</button>
-                <button id="btn-Historico" class="tab-btn" onclick="mudarStatus('Historico')">Histórico</button>
+    <!-- CORTINA DE ESTATÍSTICAS GERAIS -->
+    <div class="cortina-estatisticas" id="painel-cortina-stats">
+        <div class="dashboard-robust">
+            <!-- Card 1: Total -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Aeronaves Ativas</span>
+                    <b id="br-total-frota" class="robust-value loading">...</b>
+                    <p class="robust-sub">Em operação comercial</p>
+                </div>
             </div>
 
-            <div class="table-container">
-                <table class="main-fleet-table">
-                    <thead>
-                        <tr>
-                            <th>Matrícula</th>
-                            <th>MSN</th>
-                            <th>Modelo</th>
-                            <th id="data-label">Entrega</th>
-                            <th>Notas</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela"></tbody>
-                </table>
+            <!-- Card 2: Idade Média -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Idade Média</span>
+                    <b id="br-idade-media" class="robust-value loading">...</b>
+                    <p class="robust-sub">Média ponderada do país</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Modelo Líder -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Modelo Líder</span>
+                    <b id="br-modelo-lider" class="robust-value loading">...</b>
+                    <p class="robust-sub">Mais comum nos céus</p>
+                </div>
+            </div>
+
+            <!-- Card 4: Pinturas Especiais -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Pinturas Especiais</span>
+                    <b id="br-total-especiais" class="robust-value loading">...</b>
+                    <p class="robust-sub">Grafites e comemorações</p>
+                </div>
+            </div>
+
+            <!-- Card 5: Caçula -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Mais Recente</span>
+                    <b id="br-cacula-prefixo" class="robust-value loading">...</b>
+                    <p class="robust-sub" id="br-cacula-detalhe">Buscando entrega...</p>
+                </div>
+            </div>
+
+            <!-- Card 6: Vovó -->
+            <div class="card-robust">
+                <div class="card-data">
+                    <span class="robust-label">Mais Antiga</span>
+                    <b id="br-vovo-prefixo" class="robust-value loading">...</b>
+                    <p class="robust-sub" id="br-vovo-detalhe">Buscando tempo de serviço...</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <h3 style="font-weight: 800; margin-bottom: 15px; color: var(--primary); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px;">Frotas por Operador</h3>
+    <div id="grid-cias" class="grid-cias"></div>
+</section>
+
+        <!-- Página Dinâmica da Frota -->
+        <div id="frota-dinamica" class="hidden">
+            <section class="hero-frota">
+                <div class="logo-wrapper-hero">
+                    <img id="logo-cia-dinamica" src="">
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="info-card-modern">
+                        <span class="label"><i class="fas fa-barcode"></i> IATA / ICAO</span>
+                        <b class="value" id="dash-icao">-- / ---</b>
+                    </div>
+                    <div class="info-card-modern">
+                        <span class="label"><i class="fas fa-headset"></i> Callsign</span>
+                        <b class="value" id="dash-callsign">---</b>
+                    </div>
+                    <div class="info-card-modern">
+                        <span class="label"><i class="fas fa-history"></i> Vovó da Frota</span>
+                        <b class="value" id="fact-velha">...</b>
+                    </div>
+                    <div class="info-card-modern">
+                        <span class="label"><i class="fas fa-star"></i> Caçula</span>
+                        <b class="value" id="fact-nova">...</b>
+                    </div>
+                    <div class="info-card-modern livery-btn-card" id="btn-pinturas-especiais">
+                        <span class="label"><i class="fas fa-paint-brush"></i> Pinturas Especiais</span>
+                        <b class="value" id="fact-especiais">0</b>
+                    </div>
+                    <div class="info-card-modern" id="btn-fora-operacao" style="background: rgba(255, 255, 255, 0.1); cursor: pointer;">
+    <span class="label"><i class="fas fa-tools"></i> Fora de Operação</span>
+    <b class="value" id="fact-fora">0</b>
+</div>
+                </div>
+
+                <div class="nav-tabs-visao">
+                    <button class="tab-visao-btn active" id="tab-frota" onclick="alternarVisao('frota')">Frota Atual</button>
+                    <button class="tab-visao-btn" id="tab-historia" onclick="alternarVisao('historia')">História</button>
+                </div>
+
+                <div id="texto-historia" class="hidden" style="max-width: 850px; margin-top: 30px; font-size: 0.95rem; line-height: 1.7; background: rgba(0,0,0,0.15); padding: 25px; border-radius: 20px; text-align: justify;">
+                    <p id="p-historia"></p>
+                </div>
+            </section>
+            
+            <div class="overview-section">
+                <div id="subfrota-selector" class="subfrota-pills-bar"></div>
+
+                <div id="stats-grid" class="stats-grid"></div>
+                <div id="variantes-grid" class="variantes-bar hidden"></div>
+                
+                <div class="tabs">
+                    <button id="btn-Ativa" class="tab-btn" onclick="mudarStatus('Ativa')">EM SERVIÇO</button>
+                    <button id="btn-Futura" class="tab-btn" onclick="mudarStatus('Futura')">PEDIDOS</button>
+                    <button id="btn-Historico" class="tab-btn" onclick="mudarStatus('Historico')">HISTÓRICO</button>
+                </div>
+                
+                <div class="table-container">
+                    <div class="scroll-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Matrícula</th>
+                                    <th>MSN</th>
+                                    <th>Modelo</th>
+                                    <th id="data-label">Entrega</th>
+                                    <th>Notas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 25px;">
+                    <button id="prev-page" onclick="mudarPagina(-1)" style="padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); cursor: pointer; font-weight: 700; color: var(--text-main);">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <span id="page-info" style="font-weight: 700; font-size: 0.9rem; color: var(--text-muted);">
+                        Página <span id="current-page">1</span> de <span id="total-pages">1</span>
+                    </span>
+                    <button id="next-page" onclick="mudarPagina(1)" style="padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); cursor: pointer; font-weight: 700; color: var(--text-main);">
+                        Próxima <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <button onclick="window.location.href='?'" style="padding: 14px 30px; cursor: pointer; border: none; border-radius: 15px; font-weight: 700; background: #475569; color: white; transition: 0.3s;">
+                        <i class="fas fa-arrow-left"></i> Voltar para Lista
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script src="/loader.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
-            authDomain: "braviation3.firebaseapp.com",
-            projectId: "braviation3"
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g", 
+            authDomain: "braviation3.firebaseapp.com", 
+            projectId: "braviation3" 
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const operadoras = {
-            'GOL': { nome: 'GOL Linhas Aéreas', c1: '#ff671f', c2: '#cc5219', logo: 'gol-logo.png', iata: 'G3', icao: 'GLO', callsign: 'GOL', fundacao: '2001', grupo: 'Abra Group', hub: 'São Paulo (GRU)' },
-            'LATAM': { nome: 'LATAM Airlines Brasil', c1: '#950054', c2: '#6b003d', logo: 'latam-logo.png', iata: 'LA/JJ', icao: 'TAM', callsign: 'TAM', fundacao: '1961', grupo: 'LATAM Group', hub: 'São Paulo (GRU)' },
-            'Azul': { nome: 'Azul Linhas Aéreas', c1: '#003399', c2: '#002673', logo: 'azul-logo.png', iata: 'AD', icao: 'AZU', callsign: 'AZUL', fundacao: '2008', grupo: 'Independente', hub: 'Campinas (VCP)' },
-            'Sideral': { nome: 'Sideral Air Cargo', c1: '#1e144d', c2: '#120c2e', logo: 'sideral-logo.png', iata: '--', icao: 'SID', callsign: 'SIDERAL', fundacao: '2010', grupo: 'Sideral', hub: 'Curitiba (CWB)' },
-            'Total': { nome: 'Total Linhas Aéreas', c1: '#004a99', c2: '#003166', logo: 'total-logo.png', iata: 'L1', icao: 'TTL', callsign: 'TOTAL', fundacao: '1988', grupo: 'Independente', hub: 'Vix / GIG' },
-            'Avion': { nome: 'Avion Express Brasil', c1: '#e30613', c2: '#a5040e', logo: 'avionbrasil-logo.png', iata: '--', icao: 'AVB', callsign: 'AVION BRASIL', fundacao: '2024', grupo: 'Avion Express', hub: 'A definir' },
-            'Placar': { nome: 'Placar Linhas Aéreas', c1: '#00418c', c2: '#002b5c', logo: 'placar-logo.png', iata: '--', icao: 'PNC', callsign: 'PLACAR', fundacao: '2022', grupo: 'Grupo Crefisa', hub: 'Sorocaba (SOD)' },
-            'Modern': { nome: 'Modern Logistics', c1: '#1a1a1a', c2: '#000000', logo: 'modern-logo.png', iata: 'WD', icao: 'MWM', callsign: 'MODERN', fundacao: '2017', grupo: 'Independente', hub: 'Campinas (VCP)' },
-            'Levu': { nome: 'Levu Air Cargo', c1: '#2b2b2b', c2: '#000000', logo: 'levu-logo.png', iata: '--', icao: 'LVU', callsign: 'LEVU', fundacao: '2024', grupo: 'Independente', hub: 'Viracopos (VCP)' }
+            'Azul': { 
+    nome: 'Azul Linhas Aéreas', 
+    logo: 'azul-logo.png', 
+    c1: '#003399', 
+    c2: '#00b1ff', 
+    iata: 'AD', 
+    icao: 'AZU', 
+    callsign: 'AZUL', 
+    subs: ['Azul Conecta', 'Azul Logística'], 
+    historia: `em breve` 
+},
+            'GOL': { nome: 'GOL Linhas Aéreas', logo: 'gol-logo.png', c1: '#ff671f', c2: '#ff8c4a', iata: 'G3', icao: 'GLO', callsign: 'GOL', subs: ['GOLLOG'], historia: 'Em breve...' },
+            'LATAM Brasil': { nome: 'LATAM Brasil', logo: 'latam-logo.png', c1: '#1b1464', c2: '#e6004b', iata: 'JJ', icao: 'TAM', callsign: 'TAM', subs: ['LATAM Cargo'], historia: 'Em breve...' },
+            'Sideral': { nome: 'Sideral Linhas Aéreas', logo: 'sideral-logo.png', c1: '#3a2b8a', c2: '#3a2b8a', iata: '--', icao: 'SID', callsign: 'SIDERAL', historia: 'A Sideral Linhas Aéreas, com sede em São José dos Pinhais...' },
+            'Modern Logistics': { nome: 'Modern Logistics', logo: 'modern-logo.png', c1: '#8cc63f', c2: '#006837', iata: 'WD', icao: 'MWM', callsign: 'MODERNAIR', historia: 'Focada na integração logística...' },
+            'Placar': { nome: 'Placar Linhas Aéreas', logo: 'placar-logo.png', c1: '#004a99', c2: '#002a5a', iata: '---', icao: 'PLS', callsign: 'PLACAR', historia: 'A Placar Linhas Aéreas surgiu como uma iniciativa...' },
+            'Levu': { nome: 'Levu Air Cargo', logo: 'levu-logo.png', c1: '#A3C639', c2: '#004F4F', iata: '--', icao: 'LVU', callsign: 'LEVU', historia: 'A Levu Air Cargo é uma das mais recentes operadoras...' },
+            'Total Linhas Aéreas': { nome: 'Total Linhas Aéreas', logo: 'total-logo.png', c1: '#0000BB', c2: '#FF0000', iata: 'L1', icao: 'TTL', callsign: 'TOTAL', historia: 'Com décadas de atuação, a Total...' },
+            'Braspress': { nome: 'Braspress Air Cargo', logo: 'braspress-logo.png', c1: '#004a99', c2: '#0084ff', iata: '3B', icao: 'BPC', callsign: 'BRASPRESS', historia: 'Braço aéreo da gigante do transporte rodoviário...' }
         };
 
-        let frotaData = [];
+        let frotaRaw = [];
         let statusFiltro = 'Ativa';
         let modeloFiltro = 'Todos';
+        let modeloRealFiltro = null;
+        let subFiltro = 'Principal';
+        let paginaAtual = 1;
+        let apenasPinturasEspeciais = false;
+        let apenasForaOperacao = false;
+        const itensPorPagina = 40;
+
+window.mudarStatus = (s) => { 
+    statusFiltro = s; 
+    modeloFiltro = 'Todos'; 
+    modeloRealFiltro = null; 
+    apenasPinturasEspeciais = false;
+    apenasForaOperacao = false;
+    paginaAtual = 1; 
+    window.renderTabela(); 
+};
+
+window.setSub = (sub) => {
+    subFiltro = sub;
+    paginaAtual = 1;
+    modeloFiltro = 'Todos';
+    modeloRealFiltro = null;
+    
+    // CORREÇÃO: Seleciona as classes corretas .sub-pill e usa o atributo data-sub
+    const botoes = document.querySelectorAll('#subfrota-selector .sub-pill');
+    botoes.forEach(btn => {
+        if (btn.getAttribute('data-sub') === sub) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    window.renderTabela();
+};
+
+
+// Substitua sua window.filtrarPinturas por esta:
+window.filtrarPinturas = () => {
+    apenasPinturasEspeciais = !apenasPinturasEspeciais; // Alterna entre ligado/desligado
+    paginaAtual = 1; // Volta para a página 1 ao filtrar
+    window.renderTabela();
+    
+    // Feedback visual no botão de pinturas
+    const btn = document.getElementById('btn-pinturas-especiais');
+    if(apenasPinturasEspeciais) {
+        btn.style.boxShadow = "0 0 0 3px white";
+    } else {
+        btn.style.boxShadow = "none";
+    }
+};
+
+        window.filtrarModelo = (f) => {
+            if (modeloFiltro === f) {
+                modeloFiltro = 'Todos';
+                modeloRealFiltro = null;
+            } else {
+                modeloFiltro = f;
+                modeloRealFiltro = null;
+            }
+            paginaAtual = 1;
+            window.renderTabela();
+        };
+
+        window.filtrarVariante = (v) => {
+            modeloRealFiltro = v;
+            paginaAtual = 1;
+            window.renderTabela();
+        };
+
+        window.mudarPagina = (dir) => {
+            paginaAtual += dir;
+            window.renderTabela();
+        };
+
+        window.alternarVisao = (tipo) => {
+            const areaFrota = document.querySelector('.overview-section');
+            const areaHist = document.getElementById('texto-historia');
+            const tabFrota = document.getElementById('tab-frota');
+            const tabHist = document.getElementById('tab-historia');
+            if(tipo === 'historia') {
+                areaFrota.classList.add('hidden'); areaHist.classList.remove('hidden');
+                tabHist.classList.add('active'); tabFrota.classList.remove('active');
+            } else {
+                areaFrota.classList.remove('hidden'); areaHist.classList.add('hidden');
+                tabFrota.classList.add('active'); tabHist.classList.remove('active');
+            }
+        };
+window.filtrarForaOperacao = () => {
+    apenasForaOperacao = !apenasForaOperacao;
+    apenasPinturasEspeciais = false; // Desliga o outro filtro para não dar conflito
+    paginaAtual = 1;
+    window.renderTabela();
+    
+    // Feedback visual
+    const btn = document.getElementById('btn-fora-operacao');
+    if(apenasForaOperacao) {
+        btn.style.background = "rgba(255, 255, 255, 0.3)";
+        btn.style.boxShadow = "0 0 0 3px white";
+    } else {
+        btn.style.background = "rgba(255, 255, 255, 0.1)";
+        btn.style.boxShadow = "none";
+    }
+};
+
+window.renderTabela = (dadosManuais = null) => {
+    // 1. Filtragem Base (Subfrota e Status)
+    let base = frotaRaw.filter(a => {
+        const checkSub = (subFiltro === 'Principal') ? (!a.sub_frota || a.sub_frota === 'Principal') : (a.sub_frota === subFiltro);
+        const checkStatus = a.status === statusFiltro;
+        
+        // Checagem de Pinturas Especiais
+        if (apenasPinturasEspeciais) {
+            const ehEspecial = a.tipo_pintura && a.tipo_pintura !== "Padrão";
+            return checkSub && checkStatus && ehEspecial;
+        }
+
+        // NOVO: Checagem de Fora de Operação
+        if (apenasForaOperacao) {
+            const ehFora = (a.sub_status === 'Estocada' || a.sub_status === 'Manutenção');
+            return checkSub && checkStatus && ehFora;
+        }
+        
+        return checkSub && checkStatus;
+    });
+
+            // --- LÓGICA DE AGRUPAMENTO COM NOMES COMPLETOS ---
+            const identificarFamilia = (modelo) => {
+                if (!modelo) return "Outros";
+                let m = modelo.toUpperCase();
+                
+                // Agrupamentos específicos para aparecerem com nome completo
+                if (m.includes('A320') || m.includes('A318')) return "Airbus A320";
+                if (m.includes('A330')) return "Airbus A330";
+                if (m.includes('A319')) return "Airbus A319";
+                if (m.includes('A321')) return "Airbus A321";
+                if (m.includes('A350')) return "Airbus A350";
+                if (m.includes('195')) return "Embraer E195";
+                if (m.includes('737') || m.includes('MAX')) return "Boeing 737";
+                if (m.includes('767')) return "Boeing 767";
+                if (m.includes('777')) return "Boeing 777";
+                if (m.includes('787')) return "Boeing 787";
+                if (m.includes('208') || m.includes('CARAVAN')) return "Cessna 208";
+                if (m.includes('ATR 72')) return "ATR 72";
+
+                // Se não for nenhum desses, ele pega a primeira palavra (ex: "Boeing", "Airbus") 
+                // e tenta manter o que vier logo depois dela
+                return modelo.split('-')[0].trim(); 
+            };
+
+            const familias = {}; 
+            base.forEach(a => {
+                if(a.modelo) {
+                    let familia = identificarFamilia(a.modelo); 
+                    if(!familias[familia]) familias[familia] = { total: 0, variantes: {} };
+                    familias[familia].total++;
+                    familias[familia].variantes[a.modelo] = (familias[familia].variantes[a.modelo] || 0) + 1;
+                }
+            });
+
+let htmlStats = `<div class="stat-card ${modeloFiltro === 'Todos' ? 'active-filter' : ''}" onclick="filtrarModelo('Todos')">
+    <b>${base.length}</b><span>TOTAL</span></div>`;
+
+Object.keys(familias).sort().forEach(f => {
+    htmlStats += `<div class="stat-card ${modeloFiltro === f ? 'active-filter' : ''}" onclick="filtrarModelo('${f}')">
+        <b>${familias[f].total}</b><span>${f}</span></div>`;
+});
+document.getElementById('stats-grid').innerHTML = htmlStats;
+
+            // Barra de Variantes
+            const varGrid = document.getElementById('variantes-grid');
+            if (modeloFiltro !== 'Todos' && familias[modeloFiltro]) {
+                varGrid.classList.remove('hidden');
+                let htmlVar = `<div class="variant-pill ${!modeloRealFiltro ? 'active' : ''}" onclick="filtrarVariante(null)">Todas as versões</div>`;
+                Object.keys(familias[modeloFiltro].variantes).sort().forEach(v => {
+                    htmlVar += `<div class="variant-pill ${modeloRealFiltro === v ? 'active' : ''}" onclick="filtrarVariante('${v}')">
+                        ${v} (${familias[modeloFiltro].variantes[v]})</div>`;
+                });
+                varGrid.innerHTML = htmlVar;
+            } else { varGrid.classList.add('hidden'); }
+
+            const listaFiltrada = base.filter(a => {
+                if (modeloFiltro === 'Todos') return true;
+                if (modeloRealFiltro) return a.modelo === modeloRealFiltro;
+                // Garante que o item da tabela pertence à família "Bonitona" selecionada
+                return identificarFamilia(a.modelo) === modeloFiltro;
+            });
+
+
+            const listaOrdenada = listaFiltrada.sort((a, b) => (a.modelo || "").localeCompare(b.modelo || "") || (a.matricula || "").localeCompare(b.matricula || ""));
+            const totalItens = listaOrdenada.length;
+            const totalPaginas = Math.ceil(totalItens / itensPorPagina) || 1;
+            if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
+            if (paginaAtual < 1) paginaAtual = 1;
+            const listaPaginada = listaOrdenada.slice((paginaAtual - 1) * itensPorPagina, paginaAtual * itensPorPagina);
+
+            document.getElementById('current-page').innerText = paginaAtual;
+            document.getElementById('total-pages').innerText = totalPaginas;
+            document.getElementById('pagination-controls').style.display = totalItens > itensPorPagina ? 'flex' : 'none';
+            document.getElementById('prev-page').disabled = paginaAtual === 1;
+            document.getElementById('next-page').disabled = paginaAtual === totalPaginas;
+
+            document.getElementById('corpo-tabela').innerHTML = listaPaginada.map(a => {
+                // Lógica de Cor para Estocada/Manutenção (Texto Neutro)
+                let statusExtraHtml = '';
+                if (a.status === 'Ativa' && (a.sub_status === 'Estocada' || a.sub_status === 'Manutenção')) {
+                    const isEstocada = a.sub_status === 'Estocada';
+                    const corTexto = isEstocada ? '#f59e0b' : '#eab308'; // Laranja ou Amarelo
+                    statusExtraHtml = `<div style="font-size: 0.75rem; font-weight: 800; color: ${corTexto}; margin-top: 2px;">
+                        ${a.sub_status} ${a.local_iata ? `em ${a.local_iata}` : ''}
+                    </div>`;
+                }
+
+                return `
+                <tr onclick="location.href='aeronave.html?msn=${a.msn}'" style="cursor:pointer">
+                    <td><b style="color:var(--cor-hero-1)">${a.matricula}</b></td>
+                    <td style="font-family:monospace; font-size:0.8rem">${a.msn}</td>
+                    <td><span class="badge-model">${a.modelo}</span></td>
+                    <td style="font-size:0.8rem">${formatarData(statusFiltro === 'Historico' ? a.hist_saida : a.data_ent)}</td>
+                    <td>
+                        ${a.batismo ? `<i style="display:block; font-size:0.75rem; color:var(--cor-hero-1); margin-bottom: 2px;">"${a.batismo}"</i>` : ''}
+                        ${statusExtraHtml}
+                        ${a.tipo_pintura && a.tipo_pintura !== "Padrão" ? `<span class="remark-tag-mini" style="background:var(--cor-hero-1); color:white; border:none; display:inline-block; margin-top:4px;">${a.nome_pintura || a.tipo_pintura}</span>` : ''}
+                        ${(a.remarks || []).map(r => `<span class="remark-tag-mini">${r.prefixo}</span>`).join('')}
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:30px">Nenhuma aeronave encontrada.</td></tr>';
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${statusFiltro}`);
+            if(activeBtn) activeBtn.classList.add('active');
+        };
+
+        function formatarData(str) {
+            if (!str || str === "Pendente") return "A informar";
+            const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            const p = str.split('-');
+            return p.length >= 2 ? `${meses[parseInt(p[1])-1]} de ${p[0]}` : str;
+        }
+
+        function calcularFacts(dados) {
+            const ativasComData = dados.filter(a => a.status === 'Ativa' && a.data_fab && a.data_fab !== "Pendente");
+            if(ativasComData.length > 0) {
+                const ordenadas = [...ativasComData].sort((a, b) => a.data_fab.localeCompare(b.data_fab));
+                const vovo = ordenadas[0];
+                const cacula = ordenadas[ordenadas.length - 1];
+                document.getElementById('fact-velha').innerHTML = `<a href="aeronave.html?msn=${vovo.msn}" style="color:inherit; text-decoration:none">${vovo.matricula}</a>`;
+                document.getElementById('fact-nova').innerHTML = `<a href="aeronave.html?msn=${cacula.msn}" style="color:inherit; text-decoration:none">${cacula.matricula}</a>`;
+            }
+            const especiais = dados.filter(a => a.tipo_pintura && a.tipo_pintura !== "Padrão" && a.status === 'Ativa').length;
+            document.getElementById('fact-especiais').innerText = especiais;
+        
+        const foraOperacao = dados.filter(a => a.status === 'Ativa' && (a.sub_status === 'Estocada' || a.sub_status === 'Manutenção')).length;
+    document.getElementById('fact-fora').innerText = foraOperacao;
+}
 
         async function init() {
             const params = new URLSearchParams(window.location.search);
             const ciaID = params.get('cia');
-            if (ciaID && operadoras[ciaID]) { 
-                carregarPaginaCia(ciaID); 
-            } else { 
-                renderizarHome();
-                await atualizarContagemFrota(); 
-            }
+            if (ciaID && operadoras[ciaID]) carregarPaginaCia(ciaID);
+            else { renderizarHome(); atualizarContagemTotal(); }
         }
 
         function renderizarHome() {
             const container = document.getElementById('grid-cias');
-            container.innerHTML = Object.keys(operadoras).map(key => {
-                const cia = operadoras[key];
-                // Inserção do degradê dinâmico via variáveis CSS injetadas no style do card
-                return `
-                    <a href="?cia=${key}" class="card-cia-horizontal" style="--c1: ${cia.c1}; --c2: ${cia.c2}">
-                        <div class="cia-info-main">
-                            <img src="${cia.logo}" class="cia-logo-white" alt="${cia.nome}">
-                            <div class="cia-name">${cia.nome}</div>
+            container.innerHTML = Object.keys(operadoras).map(key => `
+                <a href="?cia=${encodeURIComponent(key)}" class="card-cia-v3" style="--c1:${operadoras[key].c1}; --c2:${operadoras[key].c2}">
+                    <div class="cia-logo-box-v3"><img src="${operadoras[key].logo}" alt="${key}"></div>
+                    <div class="cia-info-v3">
+                        <div class="cia-name-v3">${operadoras[key].nome}</div>
+                        <div class="fleet-stats-v3">
+                            <div class="stat-item-v3"><span>Em Serviço</span><b id="ativa-${key.replace(/\s/g, '')}" class="loading">...</b></div>
+                            <div class="stat-item-v3"><span>Pedidos</span><b id="futura-${key.replace(/\s/g, '')}" class="loading">...</b></div>
                         </div>
-                        <div class="cia-fleet-count" id="count-${key}">... Aeronaves</div>
-                    </a>`;
-            }).join('');
+                    </div>
+                </a>`).join('');
         }
 
-        async function atualizarContagemFrota() {
-            const q = query(collection(db, "aeronaves"), where("status", "==", "Ativa"));
-            const snap = await getDocs(q);
-            
-            const contagemGlobal = {};
-            snap.forEach(doc => {
-                const data = doc.data();
-                contagemGlobal[data.cia] = (contagemGlobal[data.cia] || 0) + 1;
-            });
+async function atualizarContagemTotal() {
+    const snap = await getDocs(collection(db, "aeronaves"));
+    
+    // Contadores por cia
+    const ativas = {}; 
+    const futuras = {};
+    
+    // Variáveis para estatísticas gerais do Brasil
+    let totalAeronavesAtivasGeral = 0;
+    let somaIdadesGeral = 0;
+    let contagemIdadesGeral = 0;
+    let totalPinturasEspeciaisGeral = 0;
+    const contagemModelosGeral = {};
 
-            Object.keys(operadoras).forEach(key => {
-                const countEl = document.getElementById(`count-${key}`);
-                if(countEl) {
-                    countEl.innerText = `${contagemGlobal[key] || 0} Aeronaves`;
+    // Variáveis para rastrear a Vovó e a Caçula do Brasil
+    let aeronaveVovo = null;
+    let aeronaveCacula = null;
+
+    const anoAtual = new Date().getFullYear();
+
+    snap.forEach(doc => {
+        const d = doc.data(); 
+        const target = d.parent_cia || d.cia;
+        
+        if (target) {
+            if (d.status === "Ativa") {
+                ativas[target] = (ativas[target] || 0) + 1;
+                totalAeronavesAtivasGeral++;
+
+                // 1. Rastreamento da Idade da Frota (Nacional)
+                if (d.data_fab && d.data_fab !== "Pendente") {
+                    const anoFab = parseInt(d.data_fab.split('-')[0]);
+                    if (!isNaN(anoFab) && anoFab > 1900 && anoFab <= anoAtual) {
+                        somaIdadesGeral += (anoAtual - anoFab);
+                        contagemIdadesGeral++;
+
+                        // Verifica se é a mais antiga (Vovó)
+                        if (!aeronaveVovo || d.data_fab < aeronaveVovo.data_fab) {
+                            aeronaveVovo = d;
+                        }
+                        // Verifica se é a mais recente (Caçula)
+                        if (!aeronaveCacula || d.data_fab > aeronaveCacula.data_fab) {
+                            aeronaveCacula = d;
+                        }
+                    }
                 }
-            });
+
+                // 2. Contagem do Modelo EXATO
+                if (d.modelo) {
+                    const modeloExato = d.modelo.trim();
+                    contagemModelosGeral[modeloExato] = (contagemModelosGeral[modeloExato] || 0) + 1;
+                }
+
+                // 3. Contagem de Pinturas Especiais
+                if (d.tipo_pintura && d.tipo_pintura !== "Padrão") {
+                    totalPinturasEspeciaisGeral++;
+                }
+            }
+            if (d.status === "Futura") {
+                futuras[target] = (futuras[target] || 0) + 1;
+            }
         }
+    });
+
+    // --- ATUALIZA OS CARDS DAS COMPANHIAS ---
+    Object.keys(operadoras).forEach(key => {
+        const safeKey = key.replace(/\s/g, '');
+        const elAtiva = document.getElementById(`ativa-${safeKey}`);
+        const elFutura = document.getElementById(`futura-${safeKey}`);
+        if(elAtiva) { elAtiva.innerText = ativas[key] || 0; elAtiva.classList.remove('loading'); }
+        if(elFutura) { elFutura.innerText = futuras[key] || 0; elFutura.classList.remove('loading'); }
+    });
+
+    // --- ATUALIZA O DASHBOARD GERAL (BRASIL) ---
+    
+    // 1. Total Geral
+    const elTotalGeral = document.getElementById('br-total-frota');
+    if(elTotalGeral) {
+        elTotalGeral.innerText = totalAeronavesAtivasGeral;
+        elTotalGeral.classList.remove('loading');
+    }
+
+    // 2. Idade Média Geral
+    const elIdadeMedia = document.getElementById('br-idade-media');
+    if(elIdadeMedia) {
+        const media = contagemIdadesGeral > 0 ? (somaIdadesGeral / contagemIdadesGeral).toFixed(1) : "---";
+        elIdadeMedia.innerText = `${media} anos`;
+        elIdadeMedia.classList.remove('loading');
+    }
+
+    // 3. Modelo Líder Exato
+    const elModeloLider = document.getElementById('br-modelo-lider');
+    if(elModeloLider) {
+        let maxAeronaves = 0;
+        let modeloMaisComum = "---";
+        
+        Object.keys(contagemModelosGeral).forEach(mod => {
+            if(contagemModelosGeral[mod] > maxAeronaves) {
+                maxAeronaves = contagemModelosGeral[mod];
+                modeloMaisComum = mod;
+            }
+        });
+        
+        elModeloLider.innerText = modeloMaisComum;
+        elModeloLider.classList.remove('loading');
+        elModeloLider.style.fontSize = "0.85rem"; 
+    }
+
+    // 4. Total de Pinturas Especiais
+    const elEspeciaisGeral = document.getElementById('br-total-especiais');
+    if(elEspeciaisGeral) {
+        elEspeciaisGeral.innerText = totalPinturasEspeciaisGeral;
+        elEspeciaisGeral.classList.remove('loading');
+    }
+
+    // 5. Renderização da Caçula Nacional
+    const elCaculaPrefixo = document.getElementById('br-cacula-prefixo');
+    const elCaculaDetalhe = document.getElementById('br-cacula-detalhe');
+    if(elCaculaPrefixo && aeronaveCacula) {
+        elCaculaPrefixo.innerHTML = `<a href="aeronave.html?msn=${aeronaveCacula.msn}" style="color:inherit; text-decoration:none">${aeronaveCacula.matricula}</a>`;
+        elCaculaPrefixo.classList.remove('loading');
+        if(elCaculaDetalhe) {
+            elCaculaDetalhe.innerText = `${aeronaveCacula.modelo} (${aeronaveCacula.cia})`;
+        }
+    } else if (elCaculaPrefixo) {
+        elCaculaPrefixo.innerText = "---";
+        elCaculaPrefixo.classList.remove('loading');
+    }
+
+    // 6. Renderização da Vovó Nacional
+    const elVovoPrefixo = document.getElementById('br-vovo-prefixo');
+    const elVovoDetalhe = document.getElementById('br-vovo-detalhe');
+    if(elVovoPrefixo && aeronaveVovo) {
+        elVovoPrefixo.innerHTML = `<a href="aeronave.html?msn=${aeronaveVovo.msn}" style="color:inherit; text-decoration:none">${aeronaveVovo.matricula}</a>`;
+        elVovoPrefixo.classList.remove('loading');
+        if(elVovoDetalhe) {
+            elVovoDetalhe.innerText = `${aeronaveVovo.modelo} (${aeronaveVovo.cia})`;
+        }
+    } else if (elVovoPrefixo) {
+        elVovoPrefixo.innerText = "---";
+        elVovoPrefixo.classList.remove('loading');
+    }
+}
 
         async function carregarPaginaCia(id) {
             const cia = operadoras[id];
             document.getElementById('home-hub').classList.add('hidden');
             document.getElementById('frota-dinamica').classList.remove('hidden');
-            
             document.documentElement.style.setProperty('--cor-hero-1', cia.c1);
             document.documentElement.style.setProperty('--cor-hero-2', cia.c2);
-            document.getElementById('nome-cia').innerText = cia.nome;
+            document.getElementById('logo-cia-dinamica').src = `/${cia.logo}`;
+            document.getElementById('dash-icao').innerText = `${cia.iata} / ${cia.icao}`;
+            document.getElementById('dash-callsign').innerText = cia.callsign;
+            document.getElementById('p-historia').innerHTML = cia.historia;
 
-            document.getElementById('painel-info-detalhado').innerHTML = `
-                <div class="panel-logo-area"><img src="${cia.logo}" alt="${cia.nome}"></div>
-                <table class="panel-info-table">
-                    <tr><td class="label-cell">Código IATA/ICAO</td><td class="value-cell">${cia.iata} / ${cia.icao}</td></tr>
-                    <tr><td class="label-cell">Callsign</td><td class="value-cell">${cia.callsign}</td></tr>
-                    <tr><td class="label-cell">Fundação / Grupo</td><td class="value-cell">${cia.fundacao} / ${cia.grupo}</td></tr>
-                    <tr><td class="label-cell">Base Operacional</td><td class="value-cell">${cia.hub}</td></tr>
-                </table>`;
-
-            const q = query(collection(db, "aeronaves"), where("cia", "==", id));
-            const snap = await getDocs(q);
-            frotaData = snap.docs.map(doc => doc.data());
-            renderTabela();
-        }
-
-        function formatarDataExtenso(dataStr) {
-            if (!dataStr || dataStr === '---' || dataStr === 'Pendente') return 'A informar';
-            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-            const partes = dataStr.split('-');
-            if (partes.length === 3) return `${parseInt(partes[2])} de ${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
-            if (partes.length === 2) return `${meses[parseInt(partes[1]) - 1]} de ${partes[0]}`;
-            return dataStr;
-        }
-
-        window.mudarStatus = (s) => {
-            statusFiltro = s;
-            modeloFiltro = 'Todos';
-            document.getElementById('data-label').innerText = s === 'Historico' ? 'Saída' : 'Entrega';
-            renderTabela();
-        };
-
-        window.filtrarModelo = (m) => {
-            modeloFiltro = m;
-            renderTabela();
-        };
-
-        function renderTabela() {
-            const corpo = document.getElementById('corpo-tabela');
-            const stats = document.getElementById('stats-grid');
-            const baseStatus = frotaData.filter(a => a.status === statusFiltro);
-            const contagem = {};
-            baseStatus.forEach(a => contagem[a.modelo] = (contagem[a.modelo] || 0) + 1);
+            const subBox = document.getElementById('subfrota-selector');
+            if (cia.subs && cia.subs.length > 0) {
+                subBox.classList.remove('hidden');
+                let subBtns = `<button class="sub-pill active" data-sub="Principal" onclick="setSub('Principal')">Principal</button>`;
+                cia.subs.forEach(s => {
+                    subBtns += `<button class="sub-pill" data-sub="${s}" onclick="setSub('${s}')">${s}</button>`;
+                });
+                subBox.innerHTML = subBtns;
+            } else {
+                subBox.innerHTML = '';
+                subBox.classList.add('hidden');
+            }
+            const q1 = query(collection(db, "aeronaves"), where("cia", "==", id));
+            const q2 = query(collection(db, "aeronaves"), where("parent_cia", "==", id));
+            const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+            frotaRaw = [...snap1.docs.map(d => d.data()), ...snap2.docs.map(d => d.data())];
             
-            let htmlStats = `<div class="stat-card ${modeloFiltro === 'Todos' ? 'active-filter' : ''}" onclick="filtrarModelo('Todos')"><b>${baseStatus.length}</b><span>FROTA TOTAL</span></div>`;
-            Object.keys(contagem).sort().forEach(mod => {
-                htmlStats += `<div class="stat-card ${modeloFiltro === mod ? 'active-filter' : ''}" onclick="filtrarModelo('${mod}')"><b>${contagem[mod]}</b><span>${mod}</span></div>`;
-            });
-            stats.innerHTML = htmlStats;
-
-            const listaFinal = modeloFiltro === 'Todos' ? baseStatus : baseStatus.filter(a => a.modelo === modeloFiltro);
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            if(document.getElementById(`btn-${statusFiltro}`)) document.getElementById(`btn-${statusFiltro}`).classList.add('active');
-
-            corpo.innerHTML = listaFinal.sort((a,b) => a.matricula.localeCompare(b.matricula)).map(a => {
-                const dataPura = statusFiltro === 'Historico' ? (a.hist_saida || '---') : (a.data_ent || '---');
-                let tagsHtml = Array.isArray(a.remarks) ? a.remarks.map(r => `<span class="remark-tag-mini"><b>${r.prefixo}</b> ${r.texto}</span>`).join('') : "";
-                return `
-                <tr class="clickable-row" style="cursor:pointer" onclick="window.location='aeronave.html?msn=${a.msn}'">
-                    <td><b style="color:var(--cor-hero-1)">${a.matricula}</b></td>
-                    <td style="font-family:monospace; color:#64748b">${a.msn}</td>
-                    <td><span class="badge-model">${a.modelo}</span></td>
-                    <td style="text-transform: capitalize;">${formatarDataExtenso(dataPura)}</td>
-                    <td>
-                        ${a.batismo ? `<b style="font-size:0.8rem; display:block; margin-bottom:5px;">"${a.batismo}"</b>` : ''}
-                        <div class="tags-container">${tagsHtml}</div>
-                    </td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:40px; color:#94a3b8;">Nenhum registro encontrado.</td></tr>';
+            calcularFacts(frotaRaw);
+            window.renderTabela();
         }
+
+        document.getElementById('btn-pinturas-especiais').addEventListener('click', window.filtrarPinturas);
+        
+        document.getElementById('btn-fora-operacao').addEventListener('click', window.filtrarForaOperacao)
+        
+        window.toggleEstatistiche = () => {
+    const painel = document.getElementById('painel-cortina-stats');
+    const botaoTexto = document.getElementById('text-toggle-stats');
+    const botaoIcone = document.getElementById('icon-toggle-stats');
+    
+    painel.classList.toggle('aberta');
+    
+    if (painel.classList.contains('aberta')) {
+        botaoTexto.innerText = "Ocultar Estatísticas";
+        botaoIcone.className = "fas fa-chevron-up";
+    } else {
+        botaoTexto.innerText = "Ver Estatísticas Gerais";
+        botaoIcone.className = "fas fa-chart-pie";
+    }
+};
 
         init();
     </script>

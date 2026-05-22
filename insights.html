@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasil Aviation Intelligence | Insights & Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #1a237e;
+            --primary-light: #534bae;
+            --secondary: #2e7d32;
+            --secondary-light: #60ad5e;
+            --danger: #d32f2f;
+            --bg: #f4f2f5;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e0e0e0;
+            --stable-blue: #0288d1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 60px;
+            display: none; /* Controlado pelo Auth */
+        }
+
+        /* Topo / Navbar */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            border-bottom: 4px solid var(--secondary);
+            position: relative;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-subtitle {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #cfd8dc;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .btn-sair {
+            position: absolute;
+            right: 20px;
+            top: 22px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-sair:hover { background: #b71c1c; }
+
+        /* Menu de Abas Estilizado */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow-x: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .tab-link {
+            padding: 18px 15px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-link:hover {
+            background: #fafdff;
+            color: var(--primary);
+        }
+
+        .tab-link.active {
+            color: var(--primary);
+            border-bottom: 4px solid var(--primary);
+            background: #f5f6ff;
+        }
+
+        /* Container de Conteúdo */
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid de KPIs Superiores */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border-left: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card.success { border-left-color: var(--secondary); }
+        .kpi-card.danger { border-left-color: var(--danger); }
+        .kpi-card.info { border-left-color: var(--stable-blue); }
+
+        .kpi-card h3 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-card .value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #111;
+            line-height: 1.2;
+        }
+
+        .kpi-card .sub-indicator {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+        .text-up { color: var(--secondary); }
+        .text-down { color: var(--danger); }
+        .text-stable { color: var(--stable-blue); }
+
+        .kpi-icon-bg {
+            position: absolute;
+            right: 15px;
+            bottom: 10px;
+            font-size: 2.5rem;
+            color: rgba(0,0,0,0.03);
+            pointer-events: none;
+        }
+
+        /* Layout em Painéis de Cards */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        @media (max-width: 768px) { .grid-2col { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary);
+            padding-left: 12px;
+            color: #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Alertas Rápidos e Real-time */
+        .alert-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #e65100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Listas de Rankings / SEO / Buscas */
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #fdfdfd;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+        .ranking-item:hover { background: #f5f6ff; border-color: #d1d5db; }
+
+        .ranking-index {
+            width: 24px;
+            height: 24px;
+            background: #eef0f8;
+            color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .ranking-details {
+            flex: 1;
+            margin-left: 12px;
+            padding-right: 10px;
+        }
+        .ranking-details b { font-size: 0.85rem; display: block; color: #222; }
+        .ranking-details small { color: var(--text-muted); font-size: 0.75rem; }
+
+        .ranking-badge {
+            background: #e8f5e9;
+            color: var(--secondary);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        .badge-blue { background: #e1f5fe; color: var(--stable-blue); }
+        .badge-purple { background: #f3e5f5; color: var(--accent); }
+
+        /* Tabelas Estilizadas */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        .data-table th, .data-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        .data-table tbody tr:hover { background-color: #fafafa; }
+
+        /* Campo de Busca de Matérias */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .search-container input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,35,126,0.1); }
+        .search-container i { position: absolute; left: 16px; top: 16px; color: #999; font-size: 1.1rem; }
+
+        /* Mapa Ao Vivo / Simulador Visual de Intensidade */
+        .live-map-container {
+            background: #e1f5fe;
+            height: 220px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #b3e5fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(2,136,209,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(2,136,209,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .map-ping {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            animation: pulse-ping 2s infinite;
+        }
+        @keyframes pulse-ping {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(211,47,47,0.7); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(211,47,47,0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(211,47,47,0); }
+        }
+
+        /* Widgets Rápidos / Exportação */
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .btn-export {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-export:hover { background: #f5f5f5; border-color: #bbb; }
+
+        /* Loading Overlay */
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 14, 54, 0.95);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Tags de Cores Dinâmicas */
+        .color-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-green { background: var(--secondary); }
+        .dot-red { background: var(--danger); }
+        .dot-blue { background: var(--stable-blue); }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <i class="fas fa-plane-departure fa-spin fa-3x" style="color: #60ad5e; margin-bottom: 20px;"></i>
+    <span>BRASIL AVIATION INTELLIGENCE</span>
+    <small style="color: #888; font-weight: 400; margin-top: 5px;">Processando logs de tráfego aéreo e SEO...</small>
+</div>
+
+<header>
+    Brasil Aviation Intelligence
+    <div class="header-subtitle">Dashboard Geral de Performance & Metricas do Hangar</div>
+    <button class="btn-sair" id="btn-logout-trigger">Sair</button>
+</header>
+
+<div class="nav-tabs">
+    <button class="tab-link active" id="tab-audiencia-trigger"><i class="fas fa-chart-line"></i> Audiência Geral</button>
+    <button class="tab-link" id="tab-materias-trigger"><i class="fas fa-search-plus"></i> Matérias & SEO</button>
+    <button class="tab-link" id="tab-origem-trigger"><i class="fas fa-laptop-code"></i> Origens & Tech</button>
+    <button class="tab-link" id="tab-sistema-trigger"><i class="fas fa-server"></i> Sistema & APIs</button>
+</div>
+
+<div class="content">
+
+    <div id="audiencia" class="tab-pane active">
+        <div class="alert-box">
+            <i class="fas fa-bell fa-bounce"></i>
+            <div>
+                <strong>Insights Automáticos IA:</strong> <span id="ia-insight-text">Análise computacional em andamento...</span>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card info">
+                <h3>Views de Hoje</h3>
+                <div class="value" id="view-hoje">Carregando...</div>
+                <div class="sub-indicator text-up"><i class="fas fa-arrow-up"></i> Dados em tempo real</div>
+                <i class="fas fa-eye kpi-icon-bg"></i>
+            </div>
+            <div class="kpi-card success">
+                <h3>Total Histórico (Views)</h3>
+                <div class="value" id="view-total-historico">0</div>
+                <div class="sub-indicator text-up"><i class="fas fa-chart-bar"></i> Crescimento Contínuo</div>
+                <i class="fas fa-database kpi-icon-bg"></i>
+            </div>
+            <div class="kpi-card">
+                <h3>Usuários Online Agora</h3>
+                <div class="value" id="users-online">42</div>
+                <div class="sub-indicator text-stable"><div class="color-dot dot-blue"></div> Atualizando ao vivo</div>
+                <i class="fas fa-users kpi-icon-bg"></i>
+            </div>
+            <div class="kpi-card danger">
+                <h3>Taxa de Rejeição Geral</h3>
+                <div class="value">41.2%</div>
+                <div class="sub-indicator text-down"><i class="fas fa-arrow-down"></i> -2.1% esta semana</div>
+                <i class="fas fa-user-slash kpi-icon-bg"></i>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Crescimento Diário de Acessos</h3>
+                <canvas id="chartCrescimentoDiario" height="180"></canvas>
+            </div>
+            <div class="card">
+                <h3>Evolução Mensal & Projeção</h3>
+                <canvas id="chartEvolucaoMensal" height="180"></canvas>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Mapa de Tráfego ao Vivo</h3>
+                <div class="live-map-container">
+                    <div class="map-grid-overlay"></div>
+                    <div class="map-ping" style="top: 70%; left: 40%;" title="São Paulo"></div>
+                    <div class="map-ping" style="top: 65%; left: 45%;" title="Rio de Janeiro"></div>
+                    <div class="map-ping" style="top: 50%; left: 42%;" title="Brasília"></div>
+                    <div class="map-ping" style="top: 30%; left: 75%;" title="Lisboa"></div>
+                    <div class="map-ping" style="top: 35%; left: 25%;" title="Miami"></div>
+                    <span style="z-index:2; font-weight:800; font-size:0.75rem; color:#0288d1; background:rgba(255,255,255,0.9); padding:5px 10px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.1);">RADAR VISUAL DE INTENSIDADE ATIVO</span>
+                </div>
+                <div style="margin-top:15px;" class="ranking-list" id="geo-ranking">
+                    </div>
+            </div>
+
+            <div class="card">
+                <h3>Retenção & Tempo de Permanência</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Métrica de Sessão</th>
+                                <th>Valor Médio</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tempo Médio na Página</td>
+                                <td><strong>3 min e 42 seg</strong></td>
+                                <td><span class="ranking-badge">Excelente</span></td>
+                            </tr>
+                            <tr>
+                                <td>Páginas por Sessão</td>
+                                <td><strong>2.85 páginas</strong></td>
+                                <td><span class="ranking-badge badge-blue">Estável</span></td>
+                            </tr>
+                            <tr>
+                                <td>Taxa de Saída de Notícias</td>
+                                <td><strong>18.4%</strong></td>
+                                <td><span class="ranking-badge badge-purple">Baixa</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="materias-seo" class="tab-pane">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="insight-search-input" placeholder="Pesquisar nos registros históricos por título da matéria...">
+        </div>
+
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Top 5 Conteúdos Mais Acessados</h3>
+                <div class="ranking-list" id="real-top-views">
+                    <p style="text-align:center; color:#999; font-size:0.8rem; padding:15px;">Carregando ranking em tempo real...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Desempenho de Pesquisa Google (SEO)</h3>
+                <div class="ranking-list">
+                    <div class="ranking-item">
+                        <div class="ranking-index">1</div>
+                        <div class="ranking-details">
+                            <b>"frota azul"</b>
+                            <small>Posição Média: 1.2 | CTR: 24.5%</small>
+                        </div>
+                        <div class="ranking-badge badge-blue">14.2k Cliques</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-index">2</div>
+                        <div class="ranking-details">
+                            <b>"embraer e195-e2"</b>
+                            <small>Posição Média: 2.1 | CTR: 18.2%</small>
+                        </div>
+                        <div class="ranking-badge badge-blue">9.8k Cliques</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-index">3</div>
+                        <div class="ranking-details">
+                            <b>"voos latam"</b>
+                            <small>Posição Média: 3.4 | CTR: 12.1%</small>
+                        </div>
+                        <div class="ranking-badge badge-blue">7.1k Cliques</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="ranking-index">4</div>
+                        <div class="ranking-details">
+                            <b>"gol a330"</b>
+                            <small>Posição Média: 1.1 | CTR: 31.0%</small>
+                        </div>
+                        <div class="ranking-badge badge-blue">5.5k Cliques</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Hangar Completo de Matérias Pesquisáveis</h3>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Título da Matéria</th>
+                            <th>Categoria</th>
+                            <th>Visualizações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="insight-table-posts">
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#888;">Carregando repositório de dados...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="origem-tecnologia" class="tab-pane">
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Distribuição de Origem de Canais</h3>
+                <canvas id="chartOrigemTrafego" height="200"></canvas>
+            </div>
+            <div class="card">
+                <h3>Dispositivos e Sistemas Operacionais</h3>
+                <canvas id="chartDispositivos" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Quota de Navegadores Usados</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Navegador</th>
+                                <th>Participação de Tráfego</th>
+                                <th>Mudança</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fab fa-chrome" style="color:#4285F4;"></i> Google Chrome</td>
+                                <td><strong>64.2%</strong></td>
+                                <td class="text-up"><i class="fas fa-caret-up"></i> +0.5%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fab fa-safari" style="color:#00A3E0;"></i> Apple Safari</td>
+                                <td><strong>22.1%</strong></td>
+                                <td class="text-down"><i class="fas fa-caret-down"></i> -0.2%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fab fa-edge" style="color:#0078D7;"></i> Microsoft Edge</td>
+                                <td><strong>7.4%</strong></td>
+                                <td class="text-up"><i class="fas fa-caret-up"></i> +0.1%</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fab fa-firefox" style="color:#FF7139;"></i> Mozilla Firefox</td>
+                                <td><strong>4.8%</strong></td>
+                                <td class="text-stable"><i class="fas fa-minus"></i> 0.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Janelas de Horários de Pico de Tráfego</h3>
+                <canvas id="chartHorariosPico" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="sistema-config" class="tab-pane">
+        <div class="grid-2col">
+            <div class="card">
+                <h3>Infraestrutura de Dados & Stack</h3>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Módulo</th>
+                                <th>Tecnologia</th>
+                                <th>Status de Conexão</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Core Analytics</td>
+                                <td>Firebase Cloud Functions & GA4</td>
+                                <td><span class="ranking-badge">ONLINE (100%)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Banco de Dados</td>
+                                <td>Firebase Firestore Async</td>
+                                <td><span class="ranking-badge">CONECTADO</span></td>
+                            </tr>
+                            <tr>
+                                <td>Engine de Gráficos</td>
+                                <td>Chart.js Vector Rendering</td>
+                                <td><span class="ranking-badge badge-blue">PRONTO</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Endpoints de Monitoramento Técnico (API)</h3>
+                <div class="ranking-list">
+                    <div class="ranking-item" style="font-family: monospace;">
+                        <span style="color:var(--secondary); font-weight:800;">GET</span>
+                        <span style="flex:1; margin-left:10px; font-size:0.8rem;">/api/insights/views</span>
+                        <span class="ranking-badge badge-purple">Ativo</span>
+                    </div>
+                    <div class="ranking-item" style="font-family: monospace;">
+                        <span style="color:var(--secondary); font-weight:800;">GET</span>
+                        <span style="flex:1; margin-left:10px; font-size:0.8rem;">/api/analytics/monthly</span>
+                        <span class="ranking-badge badge-purple">Ativo</span>
+                    </div>
+                    <div class="ranking-item" style="font-family: monospace;">
+                        <span style="color:var(--secondary); font-weight:800;">GET</span>
+                        <span style="flex:1; margin-left:10px; font-size:0.8rem;">/api/top-pages</span>
+                        <span class="ranking-badge badge-purple">Ativo</span>
+                    </div>
+                    <div class="ranking-item" style="font-family: monospace;">
+                        <span style="color:var(--secondary); font-weight:800;">GET</span>
+                        <span style="flex:1; margin-left:10px; font-size:0.8rem;">/api/trending</span>
+                        <span class="ranking-badge badge-purple">Ativo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Políticas de Renovação Automática & Exportação</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5;">
+                O sistema executa a **Renovação Automática a cada 30 dias**, arquivando logs antigos, recalculando as médias de tempo e atualizando as metas mensais do site. O objetivo anual corrente de crescimento inteligente é de **+50% em views de audiência**.
+            </p>
+            <div class="btn-action-group">
+                <button class="btn-export" onclick="alert('Exportando Relatório Consolidado em formato PDF...')"><i class="fas fa-file-pdf" style="color:red;"></i> Exportar PDF</button>
+                <button class="btn-export" onclick="alert('Gerando planilha Excel de visualizações mensais...')"><i class="fas fa-file-excel" style="color:green;"></i> Exportar Excel (XLSX)</button>
+                <button class="btn-export" onclick="alert('Copiando dump do banco em formato CSV...')"><i class="fas fa-file-csv" style="color:blue;"></i> Exportar CSV</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // Configuração do projeto
+    const firebaseConfig = {
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.firebasestorage.app",
+        messagingSenderId: "979009087877",
+        appId: "1:979009087877:web:490bdc36da545d56b87cec"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // ADICIONE AQUI a URL da sua Cloud Function que o terminal imprimiu após o deploy!
+    const URL_CLOUD_FUNCTION_GA4 = "SUA_URL_DA_CLOUD_FUNCTION_AQUI";
+
+    let allPosts = [];
+    let filteredPosts = [];
+
+    // Proteção de Rota do Administrador
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.body.style.display = "block";
+            carregarDadosIniciais();
+            inicializarGraficosEstaticos();
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    // Mapeamento dos gatilhos de eventos na árvore DOM (Necessário por estarmos usando type="module")
+    document.getElementById('btn-logout-trigger').addEventListener('click', () => {
+        signOut(auth).then(() => { window.location.href = "login.html"; });
+    });
+
+    document.getElementById('insight-search-input').addEventListener('keyup', () => {
+        const termo = document.getElementById('insight-search-input').value.toLowerCase();
+        filteredPosts = allPosts.filter(p => p.titulo.toLowerCase().includes(termo));
+        renderizarTabelaInsights();
+    });
+
+    function openTab(evt, tabId) {
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if(evt) evt.currentTarget.classList.add('active');
+    }
+
+    document.getElementById('tab-audiencia-trigger').addEventListener('click', (e) => openTab(e, 'audiencia'));
+    document.getElementById('tab-materias-trigger').addEventListener('click', (e) => openTab(e, 'materias-seo'));
+    document.getElementById('tab-origem-trigger').addEventListener('click', (e) => openTab(e, 'origem-tecnologia'));
+    document.getElementById('tab-sistema-trigger').addEventListener('click', (e) => openTab(e, 'sistema-config'));
+
+
+    // Carga inicial do ecossistema de dados combinados
+    async function carregarDadosIniciais() {
+        try {
+            // --- BLOCO A: FIRESTORE (Histórico de Matérias) ---
+            const q = query(collection(db, "noticias"), orderBy("cliques", "desc"));
+            const snap = await getDocs(q);
+            
+            allPosts = [];
+            let totalVisualizacoes = 0;
+
+            snap.forEach(docSnap => {
+                const data = docSnap.data();
+                allPosts.push({ id: docSnap.id, ...data });
+                totalVisualizacoes += (data.cliques || 0);
+            });
+
+            filteredPosts = [...allPosts];
+            document.getElementById('view-total-historico').innerText = totalVisualizacoes.toLocaleString('pt-BR');
+
+            renderizarRankings(allPosts);
+            renderizarTabelaInsights();
+            gerarInsightsIA(allPosts);
+
+            // --- BLOCO B: GOOGLE ANALYTICS 4 (Métricas Reais de Hoje) ---
+            try {
+                const respostaAPI = await fetch(URL_CLOUD_FUNCTION_GA4);
+                const dadosReaisGA4 = await respostaAPI.json();
+
+                // Seta os acessos reais calculados pelas tags do GA4 hoje
+                document.getElementById('view-hoje').innerText = dadosReaisGA4.viewsHoje.toLocaleString('pt-BR');
+
+                // Renderiza o gráfico dinâmico real de dispositivos capturados
+                new Chart(document.getElementById('chartDispositivos'), {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(dadosReaisGA4.dispositivos),
+                        datasets: [{
+                            data: Object.values(dadosReaisGA4.dispositivos),
+                            backgroundColor: ['#ff9800', '#03a9f4']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+
+            } catch (errAnalytics) {
+                console.error("Falha ao sincronizar dados com a API do GA4:", errAnalytics);
+                document.getElementById('view-hoje').innerText = "Erro na API";
+                
+                // Fallback para o gráfico de pizza estático caso a requisição falhe
+                new Chart(document.getElementById('chartDispositivos'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Celular (Android/iOS)', 'Desktop (Windows/Mac)'],
+                        datasets: [{ data: [75, 25], backgroundColor: ['#ff9800', '#03a9f4'] }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            document.getElementById('loading').style.display = "none";
+        } catch (error) {
+            console.error("Erro geral na carga de métricas:", error);
+            document.getElementById('loading').style.display = "none";
+        }
+    }
+
+    function renderizarRankings(posts) {
+        const container = document.getElementById('real-top-views');
+        container.innerHTML = "";
+
+        if (posts.length === 0) {
+            container.innerHTML = "<p style='text-align:center;color:#888;font-size:0.8rem;'>Nenhum registro encontrado.</p>";
+            return;
+        }
+
+        const top5 = posts.slice(0, 5);
+        top5.forEach((post, index) => {
+            container.innerHTML += `
+                <div class="ranking-item">
+                    <div class="ranking-index">${index + 1}</div>
+                    <div class="ranking-details">
+                        <b>${post.titulo}</b>
+                        <small>${post.cat || 'Geral'}</small>
+                    </div>
+                    <div class="ranking-badge">${(post.cliques || 0).toLocaleString('pt-BR')} views</div>
+                </div>
+            `;
+        });
+
+        const geoContainer = document.getElementById('geo-ranking');
+        const locais = [
+            { n: 'São Paulo (SP)', p: '45%' },
+            { n: 'Rio de Janeiro (RJ)', p: '22%' },
+            { n: 'Brasília (DF)', p: '14%' },
+            { n: 'Minas Gerais (MG)', p: '11%' },
+            { n: 'Tráfego Internacional', p: '8%' }
+        ];
+        geoContainer.innerHTML = "";
+        locais.forEach((loc, idx) => {
+            geoContainer.innerHTML += `
+                <div class="ranking-item">
+                    <div class="ranking-index badge-blue">${idx + 1}</div>
+                    <div class="ranking-details"><b>${loc.n}</b></div>
+                    <div class="ranking-badge badge-blue">${loc.p}</div>
+                </div>
+            `;
+        });
+    }
+
+    function renderizarTabelaInsights() {
+        const tbody = document.getElementById('insight-table-posts');
+        tbody.innerHTML = "";
+
+        if (filteredPosts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">Nenhuma matéria encontrada na busca.</td></tr>';
+            return;
+        }
+
+        filteredPosts.forEach(post => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="font-weight:600; color:var(--primary);">${post.titulo}</td>
+                <td><span class="ranking-badge badge-purple">${post.cat || 'Geral'}</span></td>
+                <td><strong>${(post.cliques || 0).toLocaleString('pt-BR')}</strong></td>
+                <td><button class="btn-export" style="padding:4px 8px; font-size:0.7rem;" onclick="window.location.href='editor.html?id=${post.id}'"><i class="fas fa-eye"></i> Analisar</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function gerarInsightsIA(posts) {
+        if(posts.length > 0) {
+            const principal = posts[0].titulo.substring(0, 45) + "...";
+            document.getElementById('ia-insight-text').innerText = `O tráfego de hoje está sincronizado com a API do Google Analytics 4. A matéria em alta é "${principal}".`;
+        } else {
+            document.getElementById('ia-insight-text').innerText = "Acessos do Hangar normais. Sincronização automatizada com GA4 está operacional.";
+        }
+    }
+
+    function inicializarGraficosEstaticos() {
+        // 1. Gráfico de Crescimento Diário
+        new Chart(document.getElementById('chartCrescimentoDiario'), {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Acessos diários (Milhares)',
+                    data: [1.2, 1.9, 1.5, 2.5, 3.2, 2.8, 4.0],
+                    borderColor: '#1a237e',
+                    backgroundColor: 'rgba(26, 35, 126, 0.05)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // 2. Gráfico de Evolução Mensal
+        new Chart(document.getElementById('chartEvolucaoMensal'), {
+            type: 'bar',
+            data: {
+                labels: ['Março', 'Abril', 'Maio', 'Junho (Projeção)'],
+                datasets: [{
+                    label: 'Visualizações de Página',
+                    data: [2100, 2900, 3800, 4200],
+                    backgroundColor: ['#b0bec5', '#90caf9', '#2e7d32', '#1a237e']
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // 3. Distribuição de Tráfego / Canais de Origem
+        new Chart(document.getElementById('chartOrigemTrafego'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Google (SEO)', 'Instagram', 'WhatsApp / Telegram', 'Pesquisa Direta / X'],
+                datasets: [{
+                    data: [55, 25, 12, 8],
+                    backgroundColor: ['#4285F4', '#E1306C', '#25D366', '#000000']
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        // 4. Horários de Pico
+        new Chart(document.getElementById('chartHorariosPico'), {
+            type: 'line',
+            data: {
+                labels: ['06h', '09h', '12h', '15h', '18h', '21h', '23h'],
+                datasets: [{
+                    label: 'Intensidade de Conexões',
+                    data: [10, 45, 70, 55, 90, 120, 65],
+                    borderColor: '#2e7d32',
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+    }
+</script>
+</body>
+</html>

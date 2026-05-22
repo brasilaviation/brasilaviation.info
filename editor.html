@@ -206,6 +206,10 @@
         <label><i class="fas fa-heading"></i> Título da Notícia</label>
         <input type="text" id="post-titulo" placeholder="Ex: Boeing 737 MAX 8 da GOL entra em operação...">
 
+        <label><i class="fas fa-search"></i> Descrição SEO (Prévia do Google/WhatsApp)</label>
+        <input type="text" id="post-seo-desc" maxlength="160" placeholder="Resumo de 2 linhas para o Google e redes sociais...">
+        <p class="tag-hint">Essa é a frase que aparece embaixo do link no Google e no WhatsApp.</p>
+
         <label><i class="fas fa-link"></i> Slug amigável (URL)</label>
         <div class="slug-container">
             <input type="text" id="post-slug" placeholder="boeing-737-max-gol">
@@ -244,6 +248,9 @@
             <p style="font-size: 13px; margin-bottom: 10px; color: var(--primary); font-weight: 600;">Opção B: URL Externa (ImgBB)</p>
             <input type="text" id="post-foto-url" placeholder="https://i.ibb.co/exemplo.jpg">
         </div>
+        
+        <label><i class="fas fa-eye"></i> Texto Alternativo da Foto (SEO Imagens)</label>
+        <input type="text" id="post-foto-alt" placeholder="Ex: Aeronave Boeing da Gol estacionada no pátio">
         
         <label><i class="fas fa-copyright"></i> Créditos da Foto de Capa</label>
         <input type="text" id="post-capa-desc" placeholder="Nome do Fotógrafo / Fonte">
@@ -315,6 +322,8 @@
             if(ds.exists()){
                 const n = ds.data();
                 document.getElementById('post-titulo').value = n.titulo || "";
+                document.getElementById('post-seo-desc').value = n.seo_description || "";
+                document.getElementById('post-foto-alt').value = n.foto_alt || "";
                 document.getElementById('post-slug').value = n.slug || "";
                 document.getElementById('editor').innerHTML = n.texto || "";
                 document.getElementById('post-capa-desc').value = n.legenda || "";
@@ -394,6 +403,8 @@
         const dataManual = document.getElementById('post-data').value;
         const tags = document.getElementById('post-tags').value;
         const urlFotoDireta = document.getElementById('post-foto-url').value;
+        const seoDesc = document.getElementById('post-seo-desc').value;
+        const fotoAlt = document.getElementById('post-foto-alt').value;
 
         if(!titulo || !slug || !textoHtml) return alert("Por favor, preencha os campos obrigatórios (Título, Slug e Texto).");
 
@@ -416,6 +427,8 @@
         const dados = {
             titulo: titulo, 
             slug: slug,
+            seo_description: seoDesc,
+            foto_alt: fotoAlt,
             autor: document.getElementById('post-autor').value,
             cat: document.getElementById('post-cat-select').value,
             tags: tags,

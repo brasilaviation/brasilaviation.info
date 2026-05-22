@@ -75,6 +75,83 @@
 
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+        /* --- Estilos da Cortina de Manutenção --- */
+        .maintenance-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: var(--radius);
+            backdrop-filter: blur(4px);
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        body.dark-mode .maintenance-overlay {
+            background: rgba(30, 30, 30, 0.96);
+        }
+        .maintenance-overlay i.main-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        .maintenance-overlay h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .maintenance-overlay p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 80%;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .maintenance-overlay a {
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .maintenance-overlay a:hover {
+            text-decoration: underline;
+        }
+        .countdown-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .countdown-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+        .countdown-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        body.dark-mode .countdown-number {
+            color: #fff;
+        }
+        .countdown-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +160,34 @@
 <div id="menu-container"></div>
 
 <main>
-    <div class="contact-card">
+    <div class="contact-card" style="position: relative;">
+        
+        <!-- Cortina de Manutenção Opcional -->
+        <div id="maintenance-screen" class="maintenance-overlay">
+            <i class="fas fa-tools main-icon"></i>
+            <h2>Formulário em Manutenção</h2>
+            <p>Estamos ajustando nosso sistema de atendimento. Por enquanto, você pode enviar suas dúvidas, sugestões ou flagras diretamente para o e-mail provisório: <a href="mailto:brasilaviation.info@gmail.com">brasilaviation.info@gmail.com</a></p>
+            
+            <div class="countdown-container">
+                <div class="countdown-box">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Dias</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Horas</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Min</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Seg</span>
+                </div>
+            </div>
+        </div>
+
         <div class="contact-header">
             <h1>Fale Conosco</h1>
             <p>Dúvidas, sugestões de pauta ou parcerias? Envie sua mensagem para a nossa redação.</p>
@@ -163,6 +267,38 @@
             }
         });
     }
+
+    // Lógica do Temporizador de Manutenção (1 mês e 2 horas a partir de agora)
+    const overlay = document.getElementById('maintenance-screen');
+    
+    // Define o tempo final: Tempo atual + 30 dias (1 mês) + 2 horas
+    const durationInMs = (30 * 24 * 60 * 60 * 1000) + (2 * 60 * 60 * 1000);
+    const countdownDate = new Date().getTime() + durationInMs;
+
+    const timerInterval = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+
+        // Cálculos de tempo para dias, horas, minutos e segundos
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Exibe o resultado nos elementos correspondentes
+        document.getElementById("days").innerText = String(days).padStart(2, '0');
+        document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+        document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+        document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+
+        // Quando a contagem regressiva terminar, esconde a cortina automaticamente
+        if (distance < 0) {
+            clearInterval(timerInterval);
+            overlay.style.opacity = "0";
+            overlay.style.visibility = "hidden";
+            setTimeout(() => overlay.remove(), 500); // Remove do DOM após a transição
+        }
+    }, 1000);
 </script>
 
 </body>

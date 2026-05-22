@@ -38,6 +38,17 @@
         .btn-del { background: var(--danger); }
         .btn-send { background: var(--secondary); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; }
         #loading { position: fixed; inset: 0; background: rgba(0,0,0,0.8); color: white; display: none; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; }
+        
+        /* Novos estilos da área de formulários de contato integrados */
+        .table-responsive { width: 100%; overflow-x: auto; margin-top: 15px; }
+        .msg-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        .msg-table th, .msg-table td { padding: 12px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .msg-table th { background-color: #f9f9f9; font-weight: 700; text-transform: uppercase; font-size: 11px; color: #666; }
+        .msg-row:hover { background-color: #fafafa; }
+        .badge-assunto { background-color: #e0e0e0; color: #333; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; }
+        .btn-attachment { color: var(--secondary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+        .btn-attachment:hover { text-decoration: underline; }
+        .texto-mensagem { max-width: 250px; white-space: pre-wrap; word-break: break-word; }
     </style>
 </head>
 <body>
@@ -52,6 +63,7 @@
 <div class="nav-tabs">
     <button class="tab-link active" onclick="openTab(event, 'dash')">Estatísticas</button>
     <button class="tab-link" onclick="openTab(event, 'posts')">Posts</button>
+    <button class="tab-link" onclick="openTab(event, 'formularios')">Formulários</button>
     <button class="tab-link" onclick="window.location.href='editor.html'">Escrever</button>
 </div>
 
@@ -90,6 +102,31 @@
         </div>
     </div>
 
+    <!-- Nova aba restrita de visualização de formulários de contato recebidos -->
+    <div id="formularios" class="tab-pane">
+        <div class="card">
+            <h3>Formulários Recebidos</h3>
+            <div class="table-responsive">
+                <table class="msg-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Remetente</th>
+                            <th>Assunto</th>
+                            <th>Mensagem</th>
+                            <th>Anexo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-mensagens">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #888;">Carregando mensagens do banco...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div id="categorias" class="tab-pane">
         <div class="card">
             <h3>Gerenciar Categorias</h3>
@@ -104,7 +141,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -145,6 +182,7 @@
         if(evt) evt.currentTarget.classList.add('active');
         if(name === 'posts') loadPosts();
         if(name === 'dash') loadStats();
+        if(name === 'formularios') loadMensagensFormulario();
     }
 
     async function loadStats() {
@@ -173,7 +211,6 @@
         div.innerHTML = "Carregando todas as notícias...";
         
         try {
-            // Removido o limite para carregar todas e permitir pesquisa
             const q = query(collection(db, "noticias"), orderBy("data", "desc"));
             const snap = await getDocs(q);
             
@@ -256,6 +293,51 @@
     }
 
     window.delCat = async function(id) { await deleteDoc(doc(db, "categorias", id)); loadCats(); }
+
+    // Nova função para escutar a coleção de contatos em tempo real
+    function loadMensagensFormulario() {
+        const tabelaCorpo = document.getElementById('lista-mensagens');
+        const qForm = query(collection(db, "contatos"), orderBy("dataEnvio", "desc"));
+        
+        onSnapshot(qForm, (snapshot) => {
+            tabelaCorpo.innerHTML = "";
+            
+            if (snapshot.empty) {
+                tabelaCorpo.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">Nenhum formulário de contato recebido ainda.</td></tr>';
+                return;
+            }
+            
+            snapshot.forEach((documento) => {
+                const item = documento.data();
+                const linha = document.createElement('tr');
+                linha.className = "msg-row";
+                
+                let dataFormatada = "---";
+                if (item.dataEnvio) {
+                    const dataObj = item.dataEnvio.toDate();
+                    dataFormatada = dataObj.toLocaleDateString('pt-BR') + " " + dataObj.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                }
+                
+                let markupAnexo = '<span style="color: #888;">Nenhum</span>';
+                if (item.arquivoUrl) {
+                    markupAnexo = `<a href="${item.arquivoUrl}" target="_blank" class="btn-attachment"><i class="fas fa-paperclip"></i> Ver Arquivo</a>`;
+                }
+                
+                linha.innerHTML = `
+                    <td style="white-space: nowrap;">${dataFormatada}</td>
+                    <td><strong>${item.nome}</strong><br><small style="color: #666;">${item.email}</small></td>
+                    <td><span class="badge-assunto">${item.assunto}</span></td>
+                    <td class="texto-mensagem">${item.mensagem}</td>
+                    <td>${markupAnexo}</td>
+                `;
+                
+                tabelaCorpo.appendChild(linha);
+            });
+        }, (erro) => {
+            console.error("Erro ao escutar atualizações de contatos: ", erro);
+            tabelaCorpo.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao carregar os dados.</td></tr>';
+        });
+    }
 </script>
 </body>
 </html>

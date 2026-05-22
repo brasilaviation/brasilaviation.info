@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manutenção IDs | BrasilAviation.info</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #003399;
+            --success: #059669;
+            --bg: #f8fafc;
+            --text: #334155;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 40px 20px; }
+        .wrapper { max-width: 500px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 1.5rem; font-weight: 600; margin: 0; color: #1e293b; }
+        
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .card h2 { font-size: 1.1rem; margin-top: 0; color: var(--primary); }
+        .card p { font-size: 0.9rem; line-height: 1.5; color: #64748b; }
+        
+        .btn { 
+            width: 100%; background: var(--success); color: white; border: none; padding: 12px; 
+            border-radius: 8px; font-size: 0.95rem; font-weight: 500; cursor: pointer; 
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        .status { margin-top: 15px; padding: 12px; border-radius: 6px; font-size: 0.85rem; display: none; background: #f1f5f9; border-left: 3px solid var(--primary); }
+        .loader { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <h1>Manutenção de Banco</h1>
+        <p style="font-size: 0.85rem; color: #94a3b8;">BrasilAviation.info - Sincronização de IDs</p>
+    </header>
+
+    <div class="card">
+        <h2><i class="fas fa-fingerprint"></i> Sincronizar IDs Automáticos</h2>
+        <p>Esta ferramenta percorre todos os aviões e grava o <strong>ID Único do Firebase</strong> dentro de cada registro. Isso corrige a busca para aeronaves cadastradas antigamente.</p>
+        
+        <button class="btn" id="btn-sync" onclick="sincronizarIDs()">
+            <i class="fas fa-sync"></i> Iniciar Mapeamento
+            <i class="fas fa-spinner fa-spin loader" id="loader-sync"></i>
+        </button>
+    </div>
+
+    <div id="status-box" class="status">
+        <div id="status-msg"></div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.75rem; color: #cbd5e1; margin-top: 20px;">Acesso Restrito - Admin</p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g", 
+        authDomain: "braviation3.firebaseapp.com", 
+        projectId: "braviation3" 
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.sincronizarIDs = async () => {
+        if(!confirm("Deseja atualizar a frota agora?")) return;
+
+        const btn = document.getElementById('btn-sync');
+        const loader = document.getElementById('loader-sync');
+        const statusBox = document.getElementById('status-box');
+        const statusMsg = document.getElementById('status-msg');
+
+        btn.disabled = true;
+        loader.style.display = "inline-block";
+        statusBox.style.display = "block";
+        statusMsg.innerText = "Lendo banco de dados...";
+
+        try {
+            const snap = await getDocs(collection(db, "aeronaves"));
+            const batch = [];
+            let alterados = 0;
+
+            snap.docs.forEach(aeroDoc => {
+                const data = aeroDoc.data();
+                
+                // Verifica se o campo 'id' interno existe e se é igual ao ID real do doc
+                if (!data.id || data.id !== aeroDoc.id) {
+                    alterados++;
+                    const ref = doc(db, "aeronaves", aeroDoc.id);
+                    // Adiciona a atualização à lista de promessas
+                    batch.push(updateDoc(ref, {
+                        id: aeroDoc.id,
+                        last_up: new Date().toISOString()
+                    }));
+                }
+            });
+
+            if(batch.length > 0) {
+                statusMsg.innerText = `Atualizando ${alterados} aeronaves...`;
+                await Promise.all(batch);
+                statusMsg.innerHTML = `<strong>Sucesso!</strong> ${alterados} registros foram sincronizados com IDs automáticos.`;
+            } else {
+                statusMsg.innerText = "Tudo em ordem! Todas as aeronaves já possuem IDs sincronizados.";
+            }
+
+        } catch (e) {
+            console.error(e);
+            statusMsg.innerHTML = `<span style="color:red">Erro: ${e.message}</span>`;
+        } finally {
+            loader.style.display = "none";
+            btn.disabled = false;
+        }
+    };
+</script>
+
+</body>
+</html>

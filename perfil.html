@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autor</title>
+    <title>Autor | BrasilAviation.info</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -96,23 +96,29 @@
     const dadosAutores = {
         'Miguel Barbosa': {
             cargo: 'Fundador & Editor-Chefe',
-            bio: 'Idealizador do BrasilAviation.info, entusiasta de frotas e spotter. Focado em trazer a verdade técnica da aviação nacional.',
-            foto: 'IMG_7814_edited.jpg'
+            bio: 'Estudante e fundador do BrasilAviation.info. Atua como planespotter com foco em aviação comercial e análise detalhada de frotas das companhias aéreas.',
+            foto: 'miguel.jpg'
         },
         'Henrique Saito': {
-            cargo: 'Colunista & Redator',
-            bio: 'Especialista em redação jornalística e cobertura de frotas internacionais e movimentações de longo curso.',
-            foto: 'placeholder.jpg'
+            cargo: 'Colunista Especializado',
+            bio: 'Estudante de Jornalismo e planespotter desde a infância. Especialista na família Airbus A320, dedica-se à cobertura técnica e analítica do setor.',
+            foto: 'henrique.jpg'
         },
-        'Murilo': {
-            cargo: 'Redator & Social Media',
-            bio: 'Responsável pela cobertura de notícias de última hora e engajamento da comunidade aeronáutica.',
-            foto: 'placeholder.jpg'
+        'Johnny Galvão': {
+            cargo: 'Colunista de Flight Review',
+            bio: 'Avgeek com vasta experiência internacional, acumulando mais de 420 voos em 33 companhias diferentes. Especialista em avaliações de experiências de bordo ao redor do mundo.',
+            foto: 'johnny.jpg'
+        },
+        'Renan Rocha': {
+            cargo: 'Redator e Planespotter',
+            bio: 'Redator e entusiasta da fotografia aeronáutica. Dedica-se ao desenvolvimento do projeto através da cobertura de eventos e notícias do setor.',
+            foto: 'renan.jpg'
+        },
+        'Murilo Marinho': {
+            cargo: 'Redator e Planespotter',
+            bio: 'Apaixonado por aviação, atua na redação com ênfase em aviação comercial e temas gerais da indústria aeronáutica brasileira.',
+            foto: 'murilo.jpg'
         }
-        'Murilo': {
-            cargo: 'Redator & Social Media',
-            bio: 'Responsável pela cobertura de notícias de última hora e engajamento da comunidade aeronáutica.',
-            foto: 'placeholder.jpg'
     };
 
     async function carregarPerfil() {
@@ -144,6 +150,7 @@
                 posts.push({ id: d.id, ...d.data() });
             });
 
+            // Ordenação por data (assumindo que o campo se chama 'data' no seu Firebase)
             posts.sort((a, b) => (b.data?.seconds || 0) - (a.data?.seconds || 0));
 
             document.getElementById('contador-posts').innerHTML = `<i class="fas fa-pen-nib"></i> ${posts.length} matérias publicadas no portal`;

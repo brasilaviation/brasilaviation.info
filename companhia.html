@@ -32,6 +32,42 @@
         .cia-nome { font-size: 1.8rem; font-weight: 800; }
         .cia-sub { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 5px; }
 
+        /* --- NOVO ESTILO DO BOTÃO ROBUSTO --- */
+        .btn-frota {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-frota i { font-size: 1rem; transition: 0.3s; }
+
+        .btn-frota:hover {
+            background: #ffffff;
+            color: var(--cor-cia);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border-color: #ffffff;
+        }
+
+        .btn-frota:hover i { transform: translateX(3px) rotate(-10deg); }
+        .btn-frota:active { transform: scale(0.98); }
+        /* ------------------------------------ */
+
         main { max-width: 900px; margin: 0 auto; padding-bottom: 60px; min-height: 50vh; }
         .feed-container { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 0 15px; }
         @media (min-width: 768px) { .feed-container { grid-template-columns: 1fr 1fr; } }
@@ -57,7 +93,11 @@
         <img id="cia-logo" src="" alt="Logo">
     </div>
     <h1 class="cia-nome" id="cia-titulo">Carregando...</h1>
-   <a href="/frotas?" class="cia-titulo"><i class="fas fa-list-circle"></i> Ver frota</a></li>
+    
+    <a href="/frotas" class="btn-frota">
+        <i class="fas fa-plane-up"></i>
+        Ver detalhes da frota
+    </a>
 </section>
 
 <main>

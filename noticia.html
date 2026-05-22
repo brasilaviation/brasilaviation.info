@@ -11,8 +11,22 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasilaviation.info</title>
+    <title>BrasilAviation.info | Carregando Notícia...</title>
     
+    <meta name="description" id="meta-desc" content="Acompanhe as principais notícias da aviação brasileira e mundial no BrasilAviation.info">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:title" id="og-title" content="BrasilAviation.info">
+    <meta property="og:description" id="og-desc" content="Notícias atualizadas sobre a aviação.">
+    <meta property="og:image" id="og-image" content="https://www.brasilaviation.info/logobrasilaviation.info.png">
+    <meta property="og:url" id="og-url" content="https://www.brasilaviation.info">
+    <meta property="og:site_name" content="BrasilAviation.info">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="tw-title" content="BrasilAviation.info">
+    <meta name="twitter:description" id="tw-desc" content="Acompanhe as principais notícias da aviação.">
+    <meta name="twitter:image" id="tw-image" content="https://www.brasilaviation.info/logobrasilaviation.info.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/style.css">
@@ -21,6 +35,7 @@
         :root {
             --primary: #1a237e; --secondary: #2e7d32; --bg: #ffffff;
             --text-main: #1c1c1c; --text-muted: #666; --radius: 12px;
+            --whatsapp: #25d366;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; transition: 0.3s; margin: 0; }
@@ -41,29 +56,70 @@
         .meta-item a { color: inherit; text-decoration: none; font-weight: 600; }
         .meta-item a:hover { color: var(--secondary); }
 
-        .noticia-imagem-container { width: 100%; margin-bottom: 10px; }
-        .noticia-imagem-container img { width: 100%; border-radius: var(--radius); object-fit: cover; }
+        /* ESTILO DO BLOCO BONITINHO */
+        .mid-section-community {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--whatsapp);
+            color: white !important;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            text-decoration: none !important;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .mid-section-community:hover { opacity: 0.9; transform: scale(1.01); }
+        .community-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+        .community-btn { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+
+        .noticia-imagem-container-capa { width: 100%; margin-bottom: 10px; }
+        /* AJUSTE DE REDIMENSIONAMENTO DA CAPA */
+        .noticia-imagem-container-capa img { width: 100%; height: auto; max-width: 100%; border-radius: var(--radius); object-fit: cover; }
         
         .noticia-legenda { 
             font-size: 14px; 
             color: var(--text-muted); 
             border-left: 4px solid var(--secondary); 
             padding-left: 12px; 
-            margin: 10px 0 30px 0; 
+            margin: 10px 0 10px 0; 
             font-style: italic; 
             display: block;
         }
 
         .noticia-corpo { font-size: 18px; margin-bottom: 30px; color: var(--text-main); }
         .noticia-corpo p { margin-bottom: 20px; }
-        .noticia-corpo img { max-width: 100%; height: auto; border-radius: var(--radius); display: block; margin-bottom: 10px; }
+        
+        /* AJUSTE DE REDIMENSIONAMENTO PARA IMAGENS DENTRO DO TEXTO */
+        .noticia-corpo img { max-width: 100% !important; height: auto !important; border-radius: var(--radius); }
+        
+        .noticia-corpo a { color: var(--primary); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(26, 35, 126, 0.2); transition: 0.2s; }
+        .noticia-corpo a:hover { border-bottom-color: var(--primary); background: rgba(26, 35, 126, 0.05); }
+        body.dark-mode .noticia-corpo a { color: #8c9eff; border-bottom-color: rgba(140, 158, 255, 0.2); }
+
+        .noticia-corpo iframe { width: 100%; border-radius: var(--radius); margin: 20px 0; border: none; min-height: 350px; }
+
+        .article-channel-invite {
+            background: rgba(37, 211, 102, 0.08);
+            border: 1px solid rgba(37, 211, 102, 0.2);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .article-channel-invite i { font-size: 30px; color: var(--whatsapp); }
+        .article-channel-invite .text h4 { font-size: 16px; font-weight: 800; color: var(--secondary); margin-bottom: 2px; }
+        .article-channel-invite .text p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.3; }
 
         .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
         .tag-item { background: rgba(0,0,0,0.05); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s; border: 1px solid transparent; }
         .tag-item:hover { border-color: var(--secondary); color: var(--secondary); background: transparent; }
         body.dark-mode .tag-item { background: #252525; }
 
-        /* BARRA DE COMPARTILHAMENTO ATUALIZADA */
         .share-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; display: block; }
         .share-bar { display: flex; align-items: center; gap: 8px; margin: 20px 0 40px; flex-wrap: wrap; }
         .share-btn { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; cursor: pointer; border: none; font-size: 16px; transition: 0.2s; }
@@ -109,6 +165,10 @@
         .rel-card-content h5 { font-size: 0.95rem; font-weight: 600; line-height: 1.3; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.9em; }
 
         .loading { text-align: center; padding: 100px 20px; color: var(--text-muted); }
+
+        #menu-container img {
+            content-visibility: visible;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +204,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Funções de Compartilhamento
     window.copiarLink = function() {
         navigator.clipboard.writeText(window.location.href);
         alert("Link copiado para a área de transferência!");
@@ -191,9 +250,31 @@
             }
 
             if (n) {
+                const textoPuro = n.texto.replace(/<[^>]*>/g, '');
+                const descricaoFinal = n.seo_description || textoPuro.substring(0, 160);
+                const fullUrl = window.location.href;
+                
+                let imagemMeta = n.foto;
+                if (!n.foto.startsWith('http')) {
+                    const prefixo = n.foto.startsWith('/') ? '' : '/';
+                    imagemMeta = `https://www.brasilaviation.info${prefixo}${n.foto}`;
+                }
+
+                document.title = `${n.titulo} | BrasilAviation.info`;
+                document.querySelector('meta[name="description"]').setAttribute("content", descricaoFinal);
+                
+                document.querySelector('meta[property="og:title"]').setAttribute("content", n.titulo);
+                document.querySelector('meta[property="og:description"]').setAttribute("content", descricaoFinal);
+                document.querySelector('meta[property="og:image"]').setAttribute("content", imagemMeta);
+                document.querySelector('meta[property="og:url"]').setAttribute("content", fullUrl);
+
+                document.getElementById('tw-title').content = n.titulo;
+                document.getElementById('tw-desc').content = descricaoFinal;
+                document.getElementById('tw-image').content = imagemMeta;
+
                 updateDoc(docRefReal, { cliques: increment(1) });
                 const dataFmt = n.data ? new Date(n.data.seconds * 1000).toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric'}) : "";
-                const currentUrl = encodeURIComponent(window.location.href);
+                const currentUrl = encodeURIComponent(fullUrl);
                 const shareTxt = encodeURIComponent(n.titulo);
 
                 let tagsHtml = "";
@@ -204,6 +285,8 @@
                         tagsHtml += `<a href="/pesquisa.html?q=${encodeURIComponent(t)}" class="tag-item">#${t}</a>`;
                     });
                 }
+
+                let embedHtml = n.embed ? `<div class="noticia-embed">${n.embed}</div>` : "";
 
                 document.getElementById('noticia-layout').innerHTML = `
                     <div class="breadcrumb">
@@ -223,12 +306,32 @@
                         </div>
                     </div>
 
-                    <div class="noticia-imagem-container">
-                        <img src="${n.foto}">
+                    <a href="https://chat.whatsapp.com/K3n6hd7RaVaLDOnmwpy5vO" class="mid-section-community" target="_blank">
+                        <div class="community-info">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Comunidade BrasilAviation.info</span>
+                        </div>
+                        <div class="community-btn">Entrar no Grupo &nbsp; &rsaquo;</div>
+                    </a>
+
+                    <div class="noticia-imagem-container-capa">
+                        <img src="${n.foto.startsWith('http') ? n.foto : '/' + n.foto.replace(/^\//, '')}" alt="${n.foto_alt || n.titulo}">
                         <div class="noticia-legenda">${n.legenda || 'Foto: Reprodução'}</div>
                     </div>
 
-                    <div class="noticia-corpo">${n.texto}</div>
+                    <div class="noticia-corpo">
+                        ${n.texto}
+
+                        <a href="https://whatsapp.com/channel/0029VazMYP65kg6yrmC8N41h" class="article-channel-invite" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            <div class="text">
+                                <h4>Siga nosso Canal no WhatsApp</h4>
+                                <p>Receba as notícias em tempo real diretamente no seu celular!</p>
+                            </div>
+                        </a>
+
+                        ${embedHtml}
+                    </div>
                     
                     <div class="tag-list">${tagsHtml}</div>
                     
@@ -250,8 +353,34 @@
                         </div>
                     </section>
                 `;
-                document.title = `${n.titulo} | BrasilAviation.info`;
+
+                if (window.twttr && window.twttr.widgets) {
+                    window.twttr.widgets.load();
+                } else if (n.embed && n.embed.includes("twitter-tweet")) {
+                    const s = document.createElement('script');
+                    s.src = "https://platform.twitter.com/widgets.js";
+                    s.charset = "utf-8";
+                    s.async = true;
+                    document.head.appendChild(s);
+                }
+
+                if (window.instgrm && window.instgrm.Embeds) {
+                    window.instgrm.Embeds.process();
+                } else if (n.embed && n.embed.includes("instagram-media")) {
+                    const s = document.createElement('script');
+                    s.src = "//www.instagram.com/embed.js";
+                    s.async = true;
+                    document.head.appendChild(s);
+                }
+
                 carregarRelacionadas(tagsArray, idOuSlug);
+
+                document.querySelectorAll('#menu-container img').forEach(img => {
+                    let src = img.getAttribute('src');
+                    if(src && !src.startsWith('/') && !src.startsWith('http')) {
+                        img.src = '/' + src;
+                    }
+                });
             }
         } catch (e) { console.error(e); }
     }
@@ -284,9 +413,10 @@
             let h = "";
             docsEncontrados.slice(0, 5).forEach(data => {
                 const url = data.slug ? `/noticia/${data.slug}` : `/noticia/${data.id}`;
+                const fotoFinal = data.foto.startsWith('http') ? data.foto : '/' + data.foto.replace(/^\//, '');
                 h += `
                 <div class="rel-card" onclick="location.href='${url}'">
-                    <img src="${data.foto}">
+                    <img src="${fotoFinal}" alt="${data.titulo}">
                     <div class="rel-card-content"><h5>${data.titulo}</h5></div>
                 </div>`;
             });

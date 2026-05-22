@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2416175312043304" crossorigin="anonymous"></script>
+
+    <link rel="icon" href="/logobrasilaviation.info.png" type="image/png">
+    <link rel="apple-touch-icon" href="/logobrasilaviation.info.png">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDDLX428B0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WDDLX428B0');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrasilAviation.info | Mídia Kit 2026</title>
+    
+    <meta property="og:title" content="BrasilAviation.info | Anuncie Conosco">
+    <meta property="og:description" content="Conecte sua marca ao público apaixonado por aviação. Conheça nossos números e formatos de parceria.">
+    <meta property="og:type" content="website">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    
+    <style>
+        :root {
+            --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6;
+            --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575;
+            --radius: 18px;
+            --whatsapp: #25d366;
+            --twitter: #1da1f2;
+            --instagram: #e1306c;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.5; transition: 0.3s; padding-top: 20px; }
+        body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; }
+
+        #header-container { min-height: 60px; }
+        main { max-width: 900px; margin: 0 auto; padding: 0 15px 60px; }
+
+        /* Animação de Entrada Geral */
+        .animate-fade {
+            animation: fadeInUp 0.6s ease-out both;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Título de Seção */
+        .section-title { padding: 30px 0 15px; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: rgba(0,0,0,0.08); }
+        body.dark-mode .section-title::after { background: rgba(255,255,255,0.08); }
+
+        /* Banner de Introdução do Mídia Kit */
+        .kit-hero {
+            background: linear-gradient(135deg, var(--primary), #0d1b60);
+            color: #ffffff;
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(26, 35, 126, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .kit-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+        .kit-hero p { font-size: 1rem; opacity: 0.9; font-weight: 500; max-width: 600px; margin: 0 auto; }
+        .kit-hero-badge { background: var(--secondary); color: #fff; padding: 4px 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; border-radius: 20px; margin-bottom: 15px; display: inline-block; letter-spacing: 1px; }
+
+        /* Grid de Métricas Principais */
+        .metrics-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
+        @media (min-width: 600px) { .metrics-grid { grid-template-columns: repeat(3, 1fr); } }
+        
+        .metric-card {
+            background: var(--card);
+            padding: 25px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-bottom: 4px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .metric-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .metric-card i { font-size: 1.5rem; color: var(--secondary); margin-bottom: 10px; }
+        .metric-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        body.dark-mode .metric-number { color: #fff; }
+        .metric-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+
+        /* Bloco de Informações de Público */
+        .info-wrapper { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .info-wrapper { grid-template-columns: 1.2fr 0.8fr; } }
+
+        .info-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+        .info-card p { margin-bottom: 15px; font-size: 0.95rem; color: var(--text-main); }
+        
+        .bullet-list { list-style: none; }
+        .bullet-list li { position: relative; padding-left: 25px; margin-bottom: 12px; font-size: 0.9rem; }
+        .bullet-list li i { position: absolute; left: 0; top: 3px; color: var(--secondary); font-size: 0.95rem; }
+
+        /* Social Badges */
+        .social-row { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .social-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg);
+            padding: 12px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .social-item:hover { transform: translateX(3px); background: rgba(0,0,0,0.03); }
+        body.dark-mode .social-item:hover { background: rgba(255,255,255,0.03); }
+        .social-item div { display: flex; align-items: center; gap: 10px; }
+        .social-item i.fa-instagram { color: var(--instagram); font-size: 1.1rem; }
+        .social-item i.fa-x-twitter { color: var(--text-main); font-size: 1.1rem; }
+
+        /* Tabela / Grid de Formatos de Anúncio Comercial */
+        .formats-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 768px) { .formats-container { grid-template-columns: 1fr 1fr; } }
+        
+        .format-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .format-card:hover { border-color: var(--secondary); transform: scale(1.01); }
+        .format-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .format-icon { width: 35px; height: 35px; background: rgba(46, 125, 50, 0.1); color: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
+        .format-header h4 { font-size: 1rem; font-weight: 700; color: var(--primary); }
+        body.dark-mode .format-header h4 { color: #fff; }
+        .format-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+
+        /* Caixa de Ecossistema de Parceiros */
+        .network-box {
+            background: rgba(26, 35, 126, 0.04);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+        body.dark-mode .network-box { background: rgba(255, 255, 255, 0.04); }
+
+        /* Banner de CTA / Formulário de Contato */
+        .cta-banner {
+            margin-top: 40px;
+            background: var(--card);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-left: 4px solid var(--secondary);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+        }
+        .cta-banner h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; color: var(--primary); }
+        body.dark-mode .cta-banner h3 { color: #fff; }
+        .cta-banner p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--secondary);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            transition: 0.3s;
+        }
+        .cta-btn:hover { background: #235e26; transform: translateY(-2px); box-shadow: 0 6px 18px rgba(46, 125, 50, 0.3); }
+    </style>
+</head>
+<body>
+
+<!-- Os blocos de menu e cabeçalho são injetados de forma modular, igual ao seu index -->
+<div id="header-container"></div>
+<div id="menu-container"></div>
+
+<main class="animate-fade">
+    
+    <!-- Hero Banner do Mídia Kit -->
+    <div class="kit-hero">
+        <span class="kit-hero-badge">Mídia Kit 2026</span>
+        <h1>Anuncie no BrasilAviation.info</h1>
+        <p>Conecte o seu negócio, produto ou serviço aeronáutico diretamente com quem respira aviação comercial e geral todos os dias.</p>
+    </div>
+
+    <!-- Seção de Métricas de Audiência -->
+    <section class="section-title">Nossa Audiência</section>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <i class="fas fa-users"></i>
+            <div class="metric-number">5k a 7k</div>
+            <div class="metric-label">Leitores / Mês</div>
+        </div>
+        <div class="metric-card">
+            <i class="fas fa-chart-line"></i>
+            <div class="metric-number">+4.000</div>
+            <div class="metric-label">Comunidade Geral</div>
+        </div>
+        <div class="metric-card">
+            <i class="fas fa-arrow-trend-up"></i>
+            <div class="metric-number">Orgânico</div>
+            <div class="metric-label">Em Amplo Crescimento</div>
+        </div>
+    </div>
+
+    <!-- Divisão de Informações de Perfil e Canais -->
+    <div class="info-wrapper">
+        <div class="info-card">
+            <h3 style="margin-bottom: 12px; font-weight: 700; font-size: 1.1rem;">Quem lê o BrasilAviation.info?</h3>
+            <p>Nosso público é composto por leitores qualificados e altamente nichados, apresentando excelente engajamento com temas voltados a viagens, turismo, milhas e mercado aeroespacial.</p>
+            <ul class="bullet-list">
+                <li><i class="fas fa-check-circle"></i> <strong>Faixa Etária:</strong> Alta concentração de tomadores de decisão entre 18 e 45 anos.</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Perfil dos Usuários:</strong> Passageiros frequentes, entusiastas (spotters), pilotos, tripulantes e profissionais da indústria da aviação.</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Principais Hubs de Tráfego:</strong> Forte tração urbana concentrada nos estados de São Paulo e Minas Gerais (Belo Horizonte).</li>
+            </ul>
+        </div>
+        
+        <div class="info-card">
+            <h3 style="margin-bottom: 12px; font-weight: 700; font-size: 1.1rem;">Presença Digital</h3>
+            <p>Expandimos o alcance do site por meio de canais e redes sociais integradas:</p>
+            <div class="social-row">
+                <a href="https://instagram.com/brasilviation.info" target="_blank" class="social-item">
+                    <div><i class="fab fa-instagram"></i> <span>Instagram</span></div>
+                    <span style="color: var(--text-muted);">@brasilviation.info</span>
+                </a>
+                <a href="https://x.com/brasilviation" target="_blank" class="social-item">
+                    <div><i class="fab fa-x-twitter"></i> <span>Twitter / X</span></div>
+                    <span style="color: var(--text-muted);">@brasilviation</span>
+                </a>
+            </div>
+            <div class="network-box">
+                <i class="fas fa-network-wired" style="color: var(--primary); margin-right: 5px;"></i> 
+                <strong>Rede Colaborativa:</strong> Mantemos parcerias e intercâmbio de tráfego com o ecossistema do site <strong>aeronaves.info</strong>.
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Formatos Disponíveis -->
+    <section class="section-title">Formatos de Parceria & Anúncio</section>
+    <div class="formats-container">
+        
+        <div class="format-card">
+            <div class="format-header">
+                <div class="format-icon"><i class="fas fa-file-alt"></i></div>
+                <h4>Artigos Patrocinados</h4>
+            </div>
+            <p>Publicação de publiposts estratégicos, reviews de produtos, plataformas de milhas, divulgação de livros ou cursos. Fica indexado permanentemente e otimizado para buscadores.</p>
+        </div>
+
+        <div class="format-card">
+            <div class="format-header">
+                <div class="format-icon"><i class="fas fa-handshake"></i></div>
+                <h4>Parcerias de Conteúdo</h4>
+            </div>
+            <p>Troca técnica de informações e cross-posting com plataformas consolidadas do segmento aéreo e portais de turismo de grande porte.</p>
+        </div>
+
+        <div class="format-card">
+            <div class="format-header">
+                <div class="format-icon"><i class="fas fa-rectangle-ad"></i></div>
+                <h4>Anúncios & Banners Display</h4>
+            </div>
+            <p>Inserções visuais estáticas ou dinâmicas no layout da página (espaço entre os feeds, cabeçalho ou rodapé) dividindo espaço de forma limpa e otimizada com o Google AdSense.</p>
+        </div>
+
+        <div class="format-card">
+            <div class="format-header">
+                <div class="format-icon"><i class="fas fa-camera-retro"></i></div>
+                <h4>Cobertura de Eventos</h4>
+            </div>
+            <p>Divulgação e cobertura de feiras do setor, plantões de novidades, inaugurações de rotas ou novas frotas de companhias aéreas brasileiras.</p>
+        </div>
+
+    </div>
+
+    <!-- Call to Action Final (Formulário de Contato) -->
+    <div class="cta-banner">
+        <h3>Quer construir uma parceria conosco?</h3>
+        <p>Avaliamos propostas comerciais de forma individualizada para garantir total fit com os interesses de nossa comunidade.</p>
+        <a href="/contato" class="cta-btn">
+            <i class="fas fa-envelope"></i> Enviar Proposta via Formulário
+        </a>
+    </div>
+
+</main>
+
+<div id="footer-container"></div>
+
+<script type="module">
+    // Carregamento modular idêntico à arquitetura nativa do seu index
+    async function loadComp(id, path) {
+        try {
+            const r = await fetch('/' + path + "?v=" + Date.now());
+            if(r.ok) {
+                const content = await r.text();
+                document.getElementById(id).innerHTML = content;
+                ativarInteracoesUI();
+            }
+        } catch (e) { console.error("Erro ao carregar componente:", path); }
+    }
+
+    function activarInteracoesUI() {
+        const btnDark = document.getElementById('dark-toggle-header');
+        const btnMenu = document.getElementById('open-menu');
+        const sideMenu = document.getElementById('side-menu');
+        const btnClose = document.getElementById('close-menu');
+
+        if (btnMenu && sideMenu) btnMenu.onclick = () => sideMenu.style.left = "0";
+        if (btnClose && sideMenu) btnClose.onclick = () => sideMenu.style.left = "-100%";
+
+        if (btnDark) {
+            btnDark.onclick = () => {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            };
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+    }
+
+    // Inicialização idêntica dos blocos externos
+    loadComp('header-container', 'cabecalho.html');
+    loadComp('footer-container', 'rodape.html');
+    loadComp('menu-container', 'menu.html');
+</script>
+</body>
+</html>

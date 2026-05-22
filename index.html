@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2416175312043304" crossorigin="anonymous"></script>
+
+    <link rel="icon" href="/logobrasilaviation.info.png" type="image/png">
+    <link rel="apple-touch-icon" href="/logobrasilaviation.info.png">
+    <link rel="manifest" href="/manifest.json">
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WDDLX428B0"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -14,7 +20,7 @@
     <title>BrasilAviation.info | Pagina inicial</title>
     
     <meta property="og:title" content="BrasilAviation.info | Notícias da Aviação">
-    <meta property="og:description" content="Acompanhe notícias da aviação brasileira. Saiba de tudo que acontece nas companhias, aeroportos e frota.">
+    <meta property="og:description" content="Acompanhe noticias da aviação brasileira. Saiba de tudo que acontece nas companhias, aeroportos e frota.">
     <meta property="og:type" content="website">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,10 +32,32 @@
             --primary: #1a237e; --secondary: #2e7d32; --bg: #f4f7f6;
             --card: #ffffff; --text-main: #1c1c1c; --text-muted: #757575;
             --radius: 18px;
+            --whatsapp: #25d366;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.4; transition: 0.3s; }
         body.dark-mode { --bg: #121212; --card: #1e1e1e; --text-main: #f0f0f0; --text-muted: #aaa; }
+
+        /* Banner de Interação Estilo "Linha" entre seções */
+        .mid-section-community {
+            margin: 10px 15px 25px;
+            background: var(--card);
+            border-left: 4px solid var(--whatsapp);
+            padding: 12px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .mid-section-community:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .community-info { display: flex; align-items: center; gap: 12px; }
+        .community-info i { color: var(--whatsapp); font-size: 20px; }
+        .community-info span { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+        .community-btn { font-size: 0.75rem; font-weight: 800; color: var(--whatsapp); text-transform: uppercase; }
 
         .logo-site {
             display: block;
@@ -88,6 +116,63 @@
 </div>
 <div id="menu-container"></div>
 
+<style>
+    /* Estilo para o efeito cortina */
+    #fleet-accordion {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+        padding: 0 15px;
+    }
+    #fleet-accordion.open {
+        max-height: 500px; /* Altura suficiente para 5 linhas */
+        margin-bottom: 20px;
+    }
+    .fleet-toggle-btn {
+        margin: 10px 15px;
+        background: var(--card);
+        border: 1px solid rgba(0,0,0,0.08);
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--primary);
+    }
+    .fleet-table tr { cursor: pointer; transition: 0.2s; }
+    .fleet-table tr:hover { background: rgba(0,0,0,0.02); }
+</style>
+
+<div class="fleet-toggle-btn" id="btn-frota-cortina">
+    <span><i class="fas fa-plane-up" style="margin-right: 8px;"></i> Últimas Atualizações de Frota</span>
+    <i class="fas fa-chevron-down" id="icon-frota"></i>
+</div>
+
+<div id="fleet-accordion">
+    <div class="news-card" style="display: block; padding: 15px; border-radius: 14px;">
+        <table class="fleet-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+            <thead>
+                <tr style="text-align: left; color: var(--text-muted); border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <th style="padding-bottom: 8px;">Matrícula</th>
+                    <th style="padding-bottom: 8px;">Modelo</th>
+                    <th style="padding-bottom: 8px;">Cia</th>
+                </tr>
+            </thead>
+            <tbody id="fleet-updates-body">
+                <tr><td colspan="3" style="text-align:center; padding: 20px;">Carregando dados...</td></tr>
+            </tbody>
+        </table>
+        <div style="text-align: center; margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px;">
+            <a href="/frotas.html" style="font-size: 0.7rem; font-weight: 800; color: var(--secondary); text-decoration: none; text-transform: uppercase;">
+                Ver Frota Completa <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
 <main>
     <section class="section-title">Destaques</section>
     <div class="carousel-wrapper">
@@ -99,6 +184,14 @@
             </div>
         </div>
     </div>
+
+    <a href="https://chat.whatsapp.com/K3n6hd7RaVaLDOnmwpy5vO" class="mid-section-community" target="_blank">
+        <div class="community-info">
+            <i class="fab fa-whatsapp"></i>
+            <span>Comunidade BrasilAviation.info</span>
+        </div>
+        <div class="community-btn">Entrar no Grupo <i class="fas fa-chevron-right"></i></div>
+    </a>
 
     <section class="section-title">Mais Recentes</section>
     <div id="news-feed" class="feed-container">
@@ -173,11 +266,9 @@
         if (btnDark) {
             btnDark.onclick = () => {
                 document.body.classList.toggle('dark-mode');
-                // Alterado para 'theme' para unificar com o resto do site
                 localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
             };
         }
-        // Verifica o tema salvo
         if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
     }
 
@@ -187,11 +278,11 @@
 
     let lastDocs = []; 
     let currentPage = 1;
-    const pageSize = 12;
+    const pageSize = 20;
 
     async function getDestaques() {
         try {
-            const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(3));
+            const q = query(collection(db, "noticias"), orderBy("cliques", "desc"), limit(5));
             const snap = await getDocs(q);
             let h = "";
             snap.docs.forEach((ds, i) => {
@@ -223,6 +314,66 @@
         prevBtn.onclick = (e) => { e.stopPropagation(); move(idx-1); };
         setInterval(() => move(idx+1), 6000);
     }
+    
+document.getElementById('btn-frota-cortina').onclick = function() {
+    const content = document.getElementById('fleet-accordion');
+    const icon = document.getElementById('icon-frota');
+    content.classList.toggle('open');
+    icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+    icon.style.transition = '0.3s';
+};
+
+async function getFleetUpdates() {
+    try {
+        // Busca as 5 aeronaves que tiveram a 'last_up' (última atualização) mais recente
+        const q = query(
+            collection(db, "aeronaves"), 
+            orderBy("last_up", "desc"), 
+            limit(5)
+        );
+        
+        const snap = await getDocs(q);
+        let h = "";
+        
+        if (snap.empty) {
+            document.getElementById('fleet-updates-body').innerHTML = "<tr><td colspan='3' style='text-align:center;'>Sem atualizações.</td></tr>";
+            return;
+        }
+
+        snap.forEach(doc => {
+            const aero = doc.data();
+            
+            // Lógica de nome: Prioriza Sub-frota (ex: Azul Conecta) se existir, senão usa a Cia principal
+            const nomeExibicao = aero.sub_frota !== "Principal" ? aero.sub_frota : aero.cia;
+            
+            // Define a cor do status para dar um visual profissional
+            let corStatus = "#1e3a8a"; // Azul padrão
+            if(aero.sub_status === "Estocada") corStatus = "#ef4444"; // Vermelho
+            if(aero.sub_status === "Manutenção") corStatus = "#f59e0b"; // Laranja
+
+            h += `
+            <tr onclick="window.location.href='/aeronave.html?msn=${aero.msn}'" style="cursor:pointer; border-bottom: 1px solid #eee;">
+                <td style="padding: 12px 8px;">
+                    <b style="color: var(--primary);">${aero.matricula}</b>
+                </td>
+                <td style="padding: 12px 8px; font-size: 0.85rem;">
+                    ${aero.modelo}<br>
+                    <small style="color: ${corStatus}; font-weight: bold;">${aero.sub_status || aero.status}</small>
+                </td>
+                <td style="padding: 12px 8px; text-align: right; font-weight: 600; color: #64748b;">
+                    ${nomeExibicao}
+                </td>
+            </tr>`;
+        });
+        
+        document.getElementById('fleet-updates-body').innerHTML = h;
+    } catch (e) { 
+        console.error("Erro ao carregar atualizações:", e);
+    }
+}
+
+// Inicializa a busca (ela roda em background e os dados já estarão lá quando o user abrir a cortina)
+getFleetUpdates();
 
     async function getFeed() {
         try {

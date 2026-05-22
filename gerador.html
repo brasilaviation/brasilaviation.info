@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador BrasilAviation.info</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #002776;
+            --secondary-green: #009739;
+            --dark-bg: #1a1a1a;
+            --text-gray: #dddddd;
+        }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Tela de Login */
+        #login-screen {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 50px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Área do Gerador (escondida inicialmente) */
+        #main-content { display: none; width: 100%; max-width: 600px; }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 { color: var(--primary-blue); text-align: center; margin-top: 0; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background-color: var(--secondary-green);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { opacity: 0.9; }
+
+        /* Estilo da área de captura - FUNDO TRANSPARENTE */
+        #capture-area {
+            width: 600px;
+            background-color: transparent;
+            padding: 0; 
+            margin: 0 auto;
+        }
+        .email-card {
+            background-color: var(--dark-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .header {
+            background-color: var(--primary-blue);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-green);
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .content {
+            padding: 40px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .status-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        .status-rejeitado { background-color: #ef4444; color: white; }
+        .status-aprovado { background-color: var(--secondary-green); color: white; }
+        .footer {
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+        @media (max-width: 650px) {
+            #capture-area { width: 95vw; }
+            .content { padding: 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <img src="https://brasilaviation.info/favicon.ico" alt="Logo" style="width: 50px; margin-bottom: 10px;">
+        <h2>Acesso Equipe</h2>
+        <input type="text" id="user" placeholder="Nome Sobrenome">
+        <input type="password" id="pass" placeholder="Senha">
+        <button onclick="login()">ENTRAR</button>
+        <p id="login-error" style="color: red; font-size: 12px; display: none; margin-top: 10px;">Usuário ou senha incorretos!</p>
+    </div>
+
+    <div id="main-content">
+        <div class="form-container">
+            <h2>Gerador BrasilAviation</h2>
+            
+            <label>Membro Responsável:</label>
+            <input type="text" id="membro" readonly style="background: #f9f9f9; cursor: not-allowed;">
+
+            <input type="text" id="nome" placeholder="Nome do Colaborador" oninput="update()">
+            <input type="text" id="acft" placeholder="Modelo (ex: A330-900)" oninput="update()">
+            <input type="text" id="mat" placeholder="Matrícula (ex: PR-ANY)" oninput="update()">
+            <input type="text" id="msn" placeholder="MSN" oninput="update()">
+            
+            <select id="status" onchange="update()">
+                <option value="rejeitado">Sugestão não aplicada (Rejeitado)</option>
+                <option value="aprovado">Sugestão aplicada (Aprovado)</option>
+            </select>
+            
+            <textarea id="motivo" placeholder="Explique o motivo aqui..." rows="3" oninput="update()"></textarea>
+            <button onclick="gerarFoto()">GERAR E BAIXAR FOTO</button>
+        </div>
+
+        <div id="capture-area">
+            <div class="email-card">
+                <div class="header">
+                    <h1>BrasilAviation.info</h1>
+                </div>
+                <div class="content">
+                    <div id="v-tag" class="status-tag status-rejeitado">ATUALIZAÇÃO DE FROTA</div>
+                    <p>Olá, <strong id="v-nome">[Nome]</strong>,</p>
+                    <p>Agradecemos o envio da sua sugestão para o portal <strong>BrasilAviation.info</strong>.</p>
+                    <p>Sobre a aeronave <strong id="v-acft">[Modelo]</strong>, matrícula <strong id="v-mat">[Matrícula]</strong> (MSN <span id="v-msn">[MSN]</span>):</p>
+                    
+                    <div style="background: #252525; padding: 15px; border-left: 4px solid var(--secondary-green); margin: 20px 0;">
+                        <span id="v-status-txt">Não foi possível realizar a alteração desta vez.</span><br>
+                        <span style="font-style: italic; color: #aaa; font-size: 14px;" id="v-motivo">"Motivo aparecerá aqui..."</span>
+                    </div>
+
+                    <p style="font-size: 14px; color: #009739;">
+                        Obrigado por enviar! Isso ajuda a manter nosso sistema atualizado. Sempre que tiver novidades, por favor, nos envie!
+                    </p>
+
+                    <p>Atenciosamente,<br><strong id="v-membro">Equipe</strong> | <a href="https://brasilaviation.info" style="color: #009739; text-decoration: none;">BrasilAviation.info</a></p>
+                </div>
+                <div class="footer">
+                    © 2026 BrasilAviation.info
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lista de usuários autorizados
+        const equipeAutorizada = [
+            "Guilherme Cotta",
+            "Miguel Barbosa",
+            "Pedro Junqueira",
+            "Vinícius ray"
+        ];
+
+        function login() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value;
+            
+            // Senha: BR202326
+            const senhaCorreta = "BR202326";
+
+            if(equipeAutorizada.includes(u) && p === senhaCorreta) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                // Preenche o campo de membro automaticamente com o nome do login
+                document.getElementById('membro').value = u;
+                document.getElementById('v-membro').innerText = u;
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+
+        function update() {
+            document.getElementById('v-membro').innerText = document.getElementById('membro').value;
+            document.getElementById('v-nome').innerText = document.getElementById('nome').value || '[Nome]';
+            document.getElementById('v-acft').innerText = document.getElementById('acft').value || '[Modelo]';
+            document.getElementById('v-mat').innerText = document.getElementById('mat').value || '[Matrícula]';
+            document.getElementById('v-msn').innerText = document.getElementById('msn').value || '[MSN]';
+            document.getElementById('v-motivo').innerText = document.getElementById('motivo').value || '...';
+            
+            const status = document.getElementById('status').value;
+            const tag = document.getElementById('v-tag');
+            const txt = document.getElementById('v-status-txt');
+
+            if(status === 'aprovado') {
+                tag.innerText = 'SUGESTÃO APROVADA';
+                tag.className = 'status-tag status-aprovado';
+                txt.innerText = 'Temos o prazer de informar que sua sugestão foi aplicada com sucesso.';
+            } else {
+                tag.innerText = 'ATUALIZAÇÃO DE FROTA';
+                tag.className = 'status-tag status-rejeitado';
+                txt.innerText = 'Não foi possível realizar a alteração desta vez.';
+            }
+        }
+
+        function gerarFoto() {
+            const area = document.getElementById('capture-area');
+            
+            html2canvas(area, { 
+                scale: 3, 
+                backgroundColor: null,
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `resposta-${document.getElementById('v-mat').innerText}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

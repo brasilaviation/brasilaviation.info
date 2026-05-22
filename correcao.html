@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Correção | BrasilAviation.info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #003399; 
+            --bg: #f8f9fb; 
+            --card: #ffffff; 
+            --text: #1a1d23; 
+            --text-muted: #64748b;
+            --border: #eef0f2; 
+            --success: #22c55e;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.5; }
+        .container-corr { max-width: 850px; margin: 40px auto; }
+        
+        header { margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; font-weight: 800; margin: 0; letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
+
+        /* Instruções Detalhadas */
+        .instrucoes { background: #1e293b; color: #cbd5e1; padding: 25px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 30px; border-left: 5px solid var(--primary); }
+        .instrucoes b { color: #fff; display: block; margin-bottom: 12px; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .instrucoes ul { padding-left: 18px; margin: 10px 0; }
+        .instrucoes li { margin-bottom: 8px; }
+
+        /* Seletor de Matrícula */
+        .selector-section { margin-bottom: 30px; }
+        .section-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        .ac-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .ac-item { 
+            background: var(--card); border: 2px solid var(--border); padding: 16px; border-radius: 12px; 
+            cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
+        }
+        .ac-item:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+        .ac-item.selected { border-color: var(--primary); background: rgba(0, 51, 153, 0.03); box-shadow: 0 4px 12px rgba(0,51,153,0.1); }
+        .ac-item.selected::after { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 10px; right: 10px; color: var(--primary); }
+        .ac-item b { display: block; font-size: 1.1rem; color: var(--primary); margin-bottom: 2px; }
+        .ac-item span { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+
+        /* Formulário */
+        .form-card { background: var(--card); padding: 35px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 25px; }
+        .full-width { grid-column: span 2; }
+        
+        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; color: var(--text-muted); }
+        textarea, input { 
+            width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); 
+            font-family: 'Inter'; box-sizing: border-box; transition: 0.2s; background: #fcfdfe;
+        }
+        textarea:focus, input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(0,51,153,0.05); }
+        
+        /* Upload Area */
+        .upload-area { 
+            border: 2px dashed #cbd5e1; padding: 30px; text-align: center; border-radius: 12px; 
+            cursor: pointer; color: var(--text-muted); transition: 0.2s; background: #fcfdfe;
+        }
+        .upload-area:hover { border-color: var(--primary); background: #fff; }
+        .upload-area i { font-size: 2rem; margin-bottom: 12px; color: var(--primary); display: block; }
+        .upload-area p { margin: 0; font-size: 0.85rem; font-weight: 600; }
+        .file-info { margin-top: 8px; font-size: 0.75rem; color: var(--success); font-weight: 700; display: none; }
+
+        .btn-send { 
+            background: var(--primary); color: white; border: none; width: 100%; padding: 18px; 
+            border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; 
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(0,51,153,0.2); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-send:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,51,153,0.3); }
+        .btn-send:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .full-width { grid-column: span 1; } }
+        
+        /* Estilo da Linha de Conversão Automática */
+.conversion-row {
+    background: linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.conversion-line {
+    padding: 8px 20px !important;
+    border-left: 4px solid var(--success);
+    font-size: 0.75rem !important;
+    font-weight: 700;
+    color: var(--success);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.conversion-line i {
+    margin-right: 8px;
+}
+    </style>
+</head>
+<body>
+
+<div class="container-corr">
+    <header>
+        <h1 id="main-title">Enviar correção para MSN <span id="msn-val">---</span></h1>
+        <div class="subtitle">Ajude-nos a manter a base de dados mais precisa da aviação brasileira.</div>
+    </header>
+
+    <div class="instrucoes">
+    <b><i class="fas fa-shield-halved"></i> Diretrizes de Colaboração</b>
+    <p>Para manter a precisão do nosso banco de dados e garantir que sua contribuição seja aprovada pelo painel de editores, siga os critérios abaixo:</p>
+    
+    <ul>
+        <li><b>Fatos, Não Boatos:</b> Evite informações baseadas em especulações de redes sociais ou "ouvi dizer". Priorize dados concretos e verificáveis.</li>
+        <li><b>Mudanças de Status & Voos:</b> Ao informar que uma aeronave começou a voar, saiu de estocagem ou mudou de base, tente incluir a data exata, o número do voo e o local (aeroporto). Quanto mais detalhes, mais rápida é a aprovação.</li>
+        <li><b>Pinturas e Adesivações:</b> Para novos esquemas visuais ou adesivos comemorativos, é obrigatório o envio de um link (JetPhotos, Planespotters ou foto própria) que comprove a alteração.</li>
+        <li><b>Fontes Oficiais:</b> Damos prioridade a registros do Diário Oficial (DOU), sistemas da ANAC, comunicados de imprensa das companhias aéreas ou fotos recentes com data/local.</li>
+        <li><b>Acompanhamento por E-mail:</b> Nossa equipe revisa cada sugestão individualmente. Você receberá um e-mail informando se sua colaboração foi <b>Aprovada</b> ou <b>Reprovada</b>. Por isso, certifique-se de que seu e-mail está correto.</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px solid #ccc; margin: 15px 0;">
+    
+    <p><i class="fas fa-circle-info"></i> <b>Nota sobre Reprovações:</b> Se sua sugestão não for aceita desta vez, não desanime! Pode ser apenas a falta de uma fonte ou um dado divergente. Continue colaborando para mantermos a aviação brasileira atualizada.</p>
+</div>
+
+    <div class="selector-section">
+        <div class="section-label"><i class="fas fa-plane"></i> 1. Qual aeronave possui o erro?</div>
+        <div class="ac-list" id="lista-historico">
+            <!-- Gerado via JS -->
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="section-label"><i class="fas fa-edit"></i> 2. Detalhes da Atualização</div>
+        <form id="formFinal">
+            <div class="form-group full-width">
+                <label>Descrição da Correção *</label>
+                <textarea id="msg" rows="5" placeholder="Ex: A aeronave foi estocada em SJK no dia 15/03/2024 para revisão de entrega..." required></textarea>
+            </div>
+
+<div class="form-grid">
+    <div class="form-group">
+        <label>Nome*</label>
+        <input type="text" id="autor" placeholder="Insira seu nome e sobrenome" required>
+    </div>
+
+    <div class="form-group">
+        <label>Seu E-mail para Contato *</label>
+        <input type="email" id="email_contato" placeholder="Ex: seuemail@dominio.com" required>
+    </div>
+
+    <div class="form-group full-width">
+        <label>Fonte ou Link da Prova *</label>
+        <input type="text" id="fonte" placeholder="Link ou nome da fonte que comprove a informação..." required>
+    </div>
+</div>
+            </div>
+            
+
+<div class="form-group full-width">
+    <label>Anexar Comprovante (PDF, Imagem, Documento)</label>
+    <div class="upload-area" id="drop-zone" onclick="document.getElementById('file').click()">
+        <i class="fas fa-file-import"></i>
+        <p id="file-label">Arraste ou clique para carregar qualquer arquivo</p>
+        <div id="file-info" class="file-info" style="display:none; color: var(--success); font-weight: bold; margin-top: 10px;"></div>
+        <input type="file" id="file" hidden accept="image/*,.pdf,.doc,.docx">
+    </div>
+</div>
+
+            <button type="submit" class="btn-send" id="btnSubmit">ENVIAR PARA REVISÃO</button>
+        </form>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyDm_UDs4KE7j8BuGdw9kClsSrKwxLWbt7g",
+        authDomain: "braviation3.firebaseapp.com",
+        projectId: "braviation3",
+        storageBucket: "braviation3.appspot.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Variáveis de Controle (Declaradas apenas UMA vez)
+    const params = new URLSearchParams(window.location.search);
+    const msn = params.get('msn');
+    let idSelecionado = params.get('id_atual');
+    let base64File = "";
+    let fileName = "";
+    let fileType = "";
+
+    // URL do seu Script do Google Drive
+    const GOOGLE_DRIVE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzihlNvc1GdiWCuaCz8plht7IjP7BC3sfGJEHX1HnMkxrvC2dR4SQnAq0EVvks31mAt2w/exec";
+
+    // Exibe o MSN no título imediatamente
+    if (msn) {
+        const msnDisplay = document.getElementById('msn-val');
+        if(msnDisplay) msnDisplay.innerText = msn;
+    }
+
+    // Carregar aeronaves com o mesmo MSN
+    async function carregarOpcoes() {
+        if(!msn) return;
+        try {
+            const q = query(collection(db, "aeronaves"), where("msn", "==", msn));
+            const snap = await getDocs(q);
+            const container = document.getElementById('lista-historico');
+            
+            let html = "";
+            snap.forEach(doc => {
+                const d = doc.data();
+                const isSelected = (idSelecionado && doc.id === idSelecionado) || (!idSelecionado && d.status === 'Ativa');
+                if(isSelected) idSelecionado = doc.id;
+
+                html += `
+                    <div class="ac-item ${isSelected ? 'selected' : ''}" onclick="window.selecionar('${doc.id}', this)">
+                        <b>${d.matricula}</b>
+                        <span>${d.cia}</span>
+                        <div style="font-size:0.6rem; margin-top:4px;">STATUS: ${d.status}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (error) {
+            console.error("Erro ao buscar aeronaves:", error);
+        }
+    }
+
+    // Função global para o clique na aeronave
+    window.selecionar = (id, element) => {
+        idSelecionado = id;
+        document.querySelectorAll('.ac-item').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+    };
+
+    // Lógica do Arquivo
+    document.getElementById('file').onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert("O arquivo é muito grande! Máximo 5MB.");
+                this.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            fileName = file.name;
+            fileType = file.type;
+
+            reader.onload = function(event) {
+                base64File = event.target.result.split(',')[1];
+                const infoDiv = document.getElementById('file-info');
+                infoDiv.innerText = `✓ Pronto: ${fileName}`;
+                infoDiv.style.display = "block";
+                document.getElementById('file-label').innerText = "Arquivo carregado!";
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+document.getElementById('formFinal').onsubmit = async (e) => {
+    e.preventDefault();
+    
+    if(!idSelecionado) {
+        alert("Selecione a matrícula no passo 1.");
+        return;
+    }
+
+    const btn = document.getElementById('btnSubmit');
+    btn.innerText = "ENVIANDO...";
+    btn.disabled = true;
+
+    try {
+        const matriculaVisual = document.querySelector('.ac-item.selected b')?.innerText || "---";
+
+// Substitua o bloco addDoc no correcoes.html por este:
+await addDoc(collection(db, "correcoes"), {
+    aeroId: idSelecionado,       // O Painel espera 'aeroId'
+    matricula: matriculaVisual,  // O Painel espera 'matricula'
+    msn: msn,
+    detalhes: document.getElementById('msg').value, // O Painel espera 'detalhes'
+    fonte: document.getElementById('fonte').value,
+    nome: document.getElementById('autor').value,
+    email: document.getElementById('email_contato').value,
+    dataEnvio: new Date().toISOString(),
+    status: "pendente"
+});
+
+        alert("Sucesso! A correção foi enviada.");
+        window.history.back();
+
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao enviar.");
+        btn.disabled = false;
+        btn.innerText = "REENTAR ENVIAR";
+    }
+};
+
+    // Inicializa a página
+    carregarOpcoes();
+</script>
+</body>
+</html>

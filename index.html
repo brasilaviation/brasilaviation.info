@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2416175312043304" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8012248125445744"
+     crossorigin="anonymous"></script>
 
     <link rel="icon" href="/logobrasilaviation.info.png" type="image/png">
     <link rel="apple-touch-icon" href="/logobrasilaviation.info.png">
@@ -235,7 +236,7 @@
         } catch (e) { console.error("Erro ao carregar componente:", path); }
     }
 
-    function ativarBuscaIndex() {
+    function activarBuscaIndex() {
         const searchBox = document.getElementById('search-box-header');
         const btnLupa = document.getElementById('btn-lupa-header');
         const inputBusca = document.getElementById('input-busca-header');
@@ -315,17 +316,23 @@
         setInterval(() => move(idx+1), 6000);
     }
     
-document.getElementById('btn-frota-cortina').onclick = function() {
-    const content = document.getElementById('fleet-accordion');
-    const icon = document.getElementById('icon-frota');
-    content.classList.toggle('open');
-    icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-    icon.style.transition = '0.3s';
-};
+    let frotaCarregada = false;
+
+    document.getElementById('btn-frota-cortina').onclick = function() {
+        const content = document.getElementById('fleet-accordion');
+        const icon = document.getElementById('icon-frota');
+        content.classList.toggle('open');
+        icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        icon.style.transition = '0.3s';
+
+        if (content.classList.contains('open') && !frotaCarregada) {
+            getFleetUpdates();
+            frotaCarregada = true;
+        }
+    };
 
 async function getFleetUpdates() {
     try {
-        // Busca as 5 aeronaves que tiveram a 'last_up' (última atualização) mais recente
         const q = query(
             collection(db, "aeronaves"), 
             orderBy("last_up", "desc"), 
@@ -342,14 +349,11 @@ async function getFleetUpdates() {
 
         snap.forEach(doc => {
             const aero = doc.data();
-            
-            // Lógica de nome: Prioriza Sub-frota (ex: Azul Conecta) se existir, senão usa a Cia principal
             const nomeExibicao = aero.sub_frota !== "Principal" ? aero.sub_frota : aero.cia;
             
-            // Define a cor do status para dar um visual profissional
-            let corStatus = "#1e3a8a"; // Azul padrão
-            if(aero.sub_status === "Estocada") corStatus = "#ef4444"; // Vermelho
-            if(aero.sub_status === "Manutenção") corStatus = "#f59e0b"; // Laranja
+            let corStatus = "#1e3a8a"; 
+            if(aero.sub_status === "Estocada") corStatus = "#ef4444"; 
+            if(aero.sub_status === "Manutenção") corStatus = "#f59e0b"; 
 
             h += `
             <tr onclick="window.location.href='/aeronave.html?msn=${aero.msn}'" style="cursor:pointer; border-bottom: 1px solid #eee;">
@@ -371,9 +375,6 @@ async function getFleetUpdates() {
         console.error("Erro ao carregar atualizações:", e);
     }
 }
-
-// Inicializa a busca (ela roda em background e os dados já estarão lá quando o user abrir a cortina)
-getFleetUpdates();
 
     async function getFeed() {
         try {
